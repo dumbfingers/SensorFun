@@ -9,8 +9,103 @@
     tools:context=".MainActivity" >
 
     <TextView
+        android:id="@+id/textAccelerometer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        android:text="Accelerometer"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/textAmbientTemp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textAccelerometer"
+        android:layout_centerHorizontal="true"
+        android:text="Ambient Temperature"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/textGravity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textAmbientTemp"
+        android:layout_centerHorizontal="true"
+        android:text="Gravity"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/textGyroscope"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textGravity"
+        android:layout_centerHorizontal="true"
+        android:text="Gyroscope"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/textLight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textGyroscope"
+        android:layout_centerHorizontal="true"
+        android:text="Light"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/textLinearAcc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textLight"
+        android:layout_centerHorizontal="true"
+        android:text="Linear Acceleration"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/textMagField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textLinearAcc"
+        android:layout_centerHorizontal="true"
+        android:text="Magnetic Field"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/textPressure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textMagField"
+        android:layout_centerHorizontal="true"
+        android:text="Pressure"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/textProximity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textPressure"
+        android:layout_centerHorizontal="true"
+        android:text="Proximity"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/textRelaHumid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textProximity"
+        android:layout_centerHorizontal="true"
+        android:text="Relative Humidity"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/textRotVect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textRelaHumid"
+        android:layout_centerHorizontal="true"
+        android:text="Rotation Vector"
+        android:visibility="gone" />
 
 </RelativeLayout>
