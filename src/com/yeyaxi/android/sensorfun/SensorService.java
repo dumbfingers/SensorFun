@@ -24,15 +24,15 @@ public class SensorService extends Service implements SensorEventListener{
 	private static final String TAG = SensorService.class.getSimpleName();
 	private LocalBroadcastManager mLocalBroadcastManager;
 	
+	// This is the object that receives interactions from clients.  See
+	// RemoteService for a more complete example.
+	private final IBinder mBinder = new SensorBinder();
+	
 	public class SensorBinder extends Binder {
 		SensorService getService() {
 			return SensorService.this;
 		}
 	}
-
-	// This is the object that receives interactions from clients.  See
-	// RemoteService for a more complete example.
-	private final IBinder mBinder = new SensorBinder();
 
 	@Override
 	public void onCreate() {
@@ -176,7 +176,7 @@ public class SensorService extends Service implements SensorEventListener{
 	}
 	
 	private void sendMessage(String sensorName, float[] values) {
-		Intent intent = new Intent(TAG);
+		Intent intent = new Intent("SensorData");
 		intent.putExtra(sensorName, values);
 		mLocalBroadcastManager.sendBroadcast(intent);
 	}

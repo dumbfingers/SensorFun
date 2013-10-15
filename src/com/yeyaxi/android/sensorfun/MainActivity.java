@@ -7,11 +7,13 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -63,10 +65,18 @@ public class MainActivity extends Activity {
 			@Override
 			public void onReceive(Context context, Intent intent) {
 				float[] accFloats = intent.getFloatArrayExtra("accelerometer");
-				accelerometerTextView.append(" :" + Float.toString(accFloats[0]) + Float.toString(accFloats[1]) + Float.toString(accFloats[2]));
+				float[] magFloats = intent.getFloatArrayExtra("magnetic");
 				
+				if (accFloats != null)
+					accelerometerTextView.append(" :" + Float.toString(accFloats[0]) + Float.toString(accFloats[1]) + Float.toString(accFloats[2]));
+				else if (magFloats != null)
+					magneticTextView.append(" :" + 
+								accFloats[0] +
+							" " + accFloats[1] + 
+							" " + accFloats[2]);
 			}
 		};
+		
 	}
 
 	@Override
@@ -85,12 +95,14 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("SensorData"));
 		doBindService();
 	}
 	
 	@Override
 	protected void onPause() {
 	  super.onPause();
+	  LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
 	  doUnbindService();
 	}
 	
@@ -100,7 +112,7 @@ public class MainActivity extends Activity {
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
 			// TODO Auto-generated method stub
-			
+			isBind = false;
 		}
 		
 		@Override
@@ -109,18 +121,17 @@ public class MainActivity extends Activity {
 			mBoundService = ((SensorService.SensorBinder) service).getService();
 //			mBoundService.getMsg();
 			mSensorManager = mBoundService.getSensorManager();
+			isBind = true;
 			detectSensors();
 		}
 	};
 	
 	private void doBindService() {
 		bindService(new Intent(this, SensorService.class), mConnection, Context.BIND_AUTO_CREATE);
-		isBind = true;
 	}
 	
 	private void doUnbindService() {
 		unbindService(mConnection);
-		isBind = false;
 	}
 	
 	private void detectSensors() {		
