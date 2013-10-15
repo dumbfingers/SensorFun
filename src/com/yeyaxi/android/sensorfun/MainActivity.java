@@ -64,16 +64,74 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onReceive(Context context, Intent intent) {
-				float[] accFloats = intent.getFloatArrayExtra("accelerometer");
-				float[] magFloats = intent.getFloatArrayExtra("magnetic");
-				
-				if (accFloats != null)
-					accelerometerTextView.append(" :" + Float.toString(accFloats[0]) + Float.toString(accFloats[1]) + Float.toString(accFloats[2]));
-				else if (magFloats != null)
-					magneticTextView.append(" :" + 
-								accFloats[0] +
+
+				if (intent.getFloatArrayExtra("accelerometer") != null) {
+					float[] accFloats = intent.getFloatArrayExtra("accelerometer");
+					accelerometerTextView.setText("Accelerometer: " + 
+							accFloats[0] + 
 							" " + accFloats[1] + 
 							" " + accFloats[2]);
+				}
+				if (intent.getFloatArrayExtra("magnetic_field") != null) {
+					float[] magFloats = intent.getFloatArrayExtra("magnetic_field");
+					magneticTextView.setText("Magnetic Field: " + 
+								magFloats[0] +
+							" " + magFloats[1] + 
+							" " + magFloats[2]);
+				}
+				if (intent.getFloatArrayExtra("gyroscope") != null) {
+					float[] gyroFloats = intent.getFloatArrayExtra("gyroscope");
+					gyroTextView.setText("Gyroscope: " + 
+							gyroFloats[0] +
+							" " + gyroFloats[1] + 
+							" " + gyroFloats[2]);
+				}
+				if (intent.getFloatArrayExtra("light") != null) {
+					float[] lightFloats = intent.getFloatArrayExtra("light");
+					lightTextView.setText("Light: " + 
+							lightFloats[0]);
+				}
+				if (intent.getFloatArrayExtra("pressure") != null) {
+					float[] pressureFloats = intent.getFloatArrayExtra("pressure");
+					pressureTextView.setText("Pressure: " + 
+							pressureFloats[0]);
+				}
+				if (intent.getFloatArrayExtra("proximity") != null) {
+					float[] proxiFloats = intent.getFloatArrayExtra("proximity");
+					proxiTextView.setText("Proximity: " + 
+							proxiFloats[0]);
+				}
+				if (intent.getFloatArrayExtra("gravity") != null) {
+					float[] gravityFloats = intent.getFloatArrayExtra("gravity");
+					gravityTextView.setText("Gravity: " + 
+							gravityFloats[0] +
+							" " + gravityFloats[1] + 
+							" " + gravityFloats[2]);
+				}
+				if (intent.getFloatArrayExtra("linear_acceleration") != null) {
+					float[] linearAccFloats = intent.getFloatArrayExtra("linear_acceleration");
+					linearAccTextView.setText("Linear Acceleration: " + 
+							linearAccFloats[0] +
+							" " + linearAccFloats[1] + 
+							" " + linearAccFloats[2]);
+				}
+				if (intent.getFloatArrayExtra("rotation_vector") != null) {
+					float[] rotVecFloats = intent.getFloatArrayExtra("rotation_vector");
+					rotVecTextView.setText("Rotation Vector: " + 
+							rotVecFloats[0] +
+							" " + rotVecFloats[1] + 
+							" " + rotVecFloats[2]);
+				}
+				if (intent.getFloatArrayExtra("relative_humidity") != null) {
+					float[] relatHumidFloats = intent.getFloatArrayExtra("relative_humidity");
+					relatHumidTextView.setText("Relative Humidity: " + 
+							relatHumidFloats[0]);
+				}
+				if (intent.getFloatArrayExtra("ambient_temperature") != null) {
+					float[] ambTempFloats = intent.getFloatArrayExtra("ambient_temperature");
+					ambTempTextView.setText("Ambient Temperature: " + 
+							ambTempFloats[0]);
+				}
 			}
 		};
 		

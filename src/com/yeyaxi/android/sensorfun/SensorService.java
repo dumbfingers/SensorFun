@@ -83,26 +83,32 @@ public class SensorService extends Service implements SensorEventListener{
 			sendMessage("gyroscope", event.values);
 
 		} else if (mSensor.getType() == Sensor.TYPE_LIGHT) {
-			Log.i(TAG, "Accelerometer");
+//			Log.i(TAG, "Accelerometer");
+			sendMessage("light", event.values);
 
 		} else if (mSensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
-			Log.i(TAG, "Accelerometer");
+//			Log.i(TAG, "Accelerometer");
+			sendMessage("linear_acceleration", event.values);
 
 		} else if (mSensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-			Log.i(TAG, "Accelerometer");
+//			Log.i(TAG, "Accelerometer");
+			sendMessage("magnetic_field", event.values);
 
 		} else if (mSensor.getType() == Sensor.TYPE_PRESSURE) {
-			Log.i(TAG, "Accelerometer");
+//			Log.i(TAG, "Accelerometer");
+			sendMessage("pressure", event.values);
 
 		} else if (mSensor.getType() == Sensor.TYPE_PROXIMITY) {
-			Log.i(TAG, "Accelerometer");
+//			Log.i(TAG, "Accelerometer");
+			sendMessage("proximity", event.values);
 
 		} else if (mSensor.getType() == Sensor.TYPE_RELATIVE_HUMIDITY) {
-			Log.i(TAG, "Accelerometer");
+//			Log.i(TAG, "Accelerometer");
+			sendMessage("relative_humidity", event.values);
 
-		} else if (mSensor.getType() == Sensor.TYPE_GAME_ROTATION_VECTOR) {
-			Log.i(TAG, "Accelerometer");
-
+		} else if (mSensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
+//			Log.i(TAG, "Accelerometer");
+			sendMessage("rotation_vector", event.values);
 		}
 	}
 
