@@ -2,6 +2,8 @@ package com.yeyaxi.android.sensorfun;
 
 import java.util.List;
 
+import com.yeyaxi.android.sensorfun.util.SensorDataUtility;
+
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -26,17 +28,40 @@ public class MainActivity extends Activity {
 	private List<Sensor> deviceSensors;
 	private static final String TAG = MainActivity.class.getSimpleName();
 	
-	private TextView accelerometerTextView;
-	private TextView ambTempTextView;
-	private TextView gyroTextView;
-	private TextView gravityTextView;
-	private TextView lightTextView;
-	private TextView magneticTextView;
-	private TextView linearAccTextView;
-	private TextView pressureTextView;
-	private TextView proxiTextView;
-	private TextView relatHumidTextView;
-	private TextView rotVecTextView;
+	private TextView accValX;
+	private TextView accValY;
+	private TextView accValZ;
+	
+	private TextView ambTempVal;
+	
+	private TextView gyroValX;
+	private TextView gyroValY;
+	private TextView gyroValZ;
+
+	private TextView gravityX;
+	private TextView gravityY;
+	private TextView gravityZ;
+
+	private TextView lightVal;
+	
+	private TextView magValX;
+	private TextView magValY;
+	private TextView magValZ;
+
+	private TextView linearAccX;
+	private TextView linearAccY;
+	private TextView linearAccZ;
+
+	private TextView pressureVal;
+	
+	private TextView proxiVal;
+	
+	private TextView relatHumidVal;
+	
+	private TextView rotVecValX;
+	private TextView rotVecValY;
+	private TextView rotVecValZ;
+
 	
 	private SensorService mBoundService;
 	private boolean isBind = false;
@@ -48,17 +73,39 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		accelerometerTextView = (TextView) findViewById(R.id.textAccelerometer);
-		ambTempTextView = (TextView) findViewById(R.id.textAmbientTemp);
-		gyroTextView = (TextView) findViewById(R.id.textGyroscope);
-		gravityTextView = (TextView) findViewById(R.id.textGravity);
-		lightTextView = (TextView) findViewById(R.id.textLight);
-		magneticTextView = (TextView) findViewById(R.id.textMagField);
-		linearAccTextView = (TextView) findViewById(R.id.textLinearAcc);
-		pressureTextView = (TextView) findViewById(R.id.textPressure);
-		proxiTextView = (TextView) findViewById(R.id.textProximity);
-		relatHumidTextView = (TextView) findViewById(R.id.textRelaHumid);
-		rotVecTextView = (TextView) findViewById(R.id.textRotVect);
+		accValX = (TextView) findViewById(R.id.accValX);
+		accValY = (TextView) findViewById(R.id.accValY);
+		accValZ = (TextView) findViewById(R.id.accValZ);
+		
+		ambTempVal = (TextView) findViewById(R.id.tempVal);
+		
+		gyroValX = (TextView) findViewById(R.id.gyroValX);
+		gyroValY = (TextView) findViewById(R.id.gyroValY);
+		gyroValZ = (TextView) findViewById(R.id.gyroValZ);
+		
+		gravityX = (TextView) findViewById(R.id.gravityValX);
+		gravityY = (TextView) findViewById(R.id.gravityValY);
+		gravityZ = (TextView) findViewById(R.id.gravityValZ);
+		
+		lightVal = (TextView) findViewById(R.id.lightVal);
+		
+		magValX = (TextView) findViewById(R.id.magValX);
+		magValY = (TextView) findViewById(R.id.magValY);
+		magValZ = (TextView) findViewById(R.id.magValZ);
+		
+		linearAccX = (TextView) findViewById(R.id.linAccValX);
+		linearAccY = (TextView) findViewById(R.id.linAccValY);
+		linearAccZ = (TextView) findViewById(R.id.linAccValZ);
+
+		pressureVal = (TextView) findViewById(R.id.pressureVal);
+		
+		proxiVal = (TextView) findViewById(R.id.proxiVal);
+		
+		relatHumidVal = (TextView) findViewById(R.id.relaHumidVal);
+		
+		rotVecValX = (TextView) findViewById(R.id.rotValX);
+		rotVecValY = (TextView) findViewById(R.id.rotValY);
+		rotVecValZ = (TextView) findViewById(R.id.rotValZ);
 		
 		mReceiver = new BroadcastReceiver() {
 			
@@ -67,70 +114,61 @@ public class MainActivity extends Activity {
 
 				if (intent.getFloatArrayExtra("accelerometer") != null) {
 					float[] accFloats = intent.getFloatArrayExtra("accelerometer");
-					accelerometerTextView.setText("Accelerometer: " + 
-							accFloats[0] + 
-							" " + accFloats[1] + 
-							" " + accFloats[2]);
+					accValX.setText(SensorDataUtility.roundData(accFloats[0])); 
+					accValY.setText(SensorDataUtility.roundData(accFloats[1])); 
+					accValZ.setText(SensorDataUtility.roundData(accFloats[2]));
 				}
 				if (intent.getFloatArrayExtra("magnetic_field") != null) {
 					float[] magFloats = intent.getFloatArrayExtra("magnetic_field");
-					magneticTextView.setText("Magnetic Field: " + 
-								magFloats[0] +
-							" " + magFloats[1] + 
-							" " + magFloats[2]);
+					magValX.setText(SensorDataUtility.roundData(magFloats[0])); 
+					magValY.setText(SensorDataUtility.roundData(magFloats[1])); 
+					magValZ.setText(SensorDataUtility.roundData(magFloats[2])); 
+
 				}
 				if (intent.getFloatArrayExtra("gyroscope") != null) {
 					float[] gyroFloats = intent.getFloatArrayExtra("gyroscope");
-					gyroTextView.setText("Gyroscope: " + 
-							gyroFloats[0] +
-							" " + gyroFloats[1] + 
-							" " + gyroFloats[2]);
+					gyroValX.setText(SensorDataUtility.roundData(gyroFloats[0]));
+					gyroValY.setText(SensorDataUtility.roundData(gyroFloats[1]));
+					gyroValZ.setText(SensorDataUtility.roundData(gyroFloats[2]));
+
 				}
 				if (intent.getFloatArrayExtra("light") != null) {
 					float[] lightFloats = intent.getFloatArrayExtra("light");
-					lightTextView.setText("Light: " + 
-							lightFloats[0]);
+					lightVal.setText(SensorDataUtility.roundData(lightFloats[0]));
 				}
 				if (intent.getFloatArrayExtra("pressure") != null) {
 					float[] pressureFloats = intent.getFloatArrayExtra("pressure");
-					pressureTextView.setText("Pressure: " + 
-							pressureFloats[0]);
+					pressureVal.setText(SensorDataUtility.roundData(pressureFloats[0]));
 				}
 				if (intent.getFloatArrayExtra("proximity") != null) {
 					float[] proxiFloats = intent.getFloatArrayExtra("proximity");
-					proxiTextView.setText("Proximity: " + 
-							proxiFloats[0]);
+					proxiVal.setText(SensorDataUtility.roundData(proxiFloats[0]));
 				}
 				if (intent.getFloatArrayExtra("gravity") != null) {
 					float[] gravityFloats = intent.getFloatArrayExtra("gravity");
-					gravityTextView.setText("Gravity: " + 
-							gravityFloats[0] +
-							" " + gravityFloats[1] + 
-							" " + gravityFloats[2]);
+					gravityX.setText(SensorDataUtility.roundData(gravityFloats[0]));
+					gravityY.setText(SensorDataUtility.roundData(gravityFloats[1]));
+					gravityZ.setText(SensorDataUtility.roundData(gravityFloats[2]));
 				}
 				if (intent.getFloatArrayExtra("linear_acceleration") != null) {
 					float[] linearAccFloats = intent.getFloatArrayExtra("linear_acceleration");
-					linearAccTextView.setText("Linear Acceleration: " + 
-							linearAccFloats[0] +
-							" " + linearAccFloats[1] + 
-							" " + linearAccFloats[2]);
+					linearAccX.setText(SensorDataUtility.roundData(linearAccFloats[0]));
+					linearAccY.setText(SensorDataUtility.roundData(linearAccFloats[1]));
+					linearAccZ.setText(SensorDataUtility.roundData(linearAccFloats[2]));
 				}
 				if (intent.getFloatArrayExtra("rotation_vector") != null) {
 					float[] rotVecFloats = intent.getFloatArrayExtra("rotation_vector");
-					rotVecTextView.setText("Rotation Vector: " + 
-							rotVecFloats[0] +
-							" " + rotVecFloats[1] + 
-							" " + rotVecFloats[2]);
+					rotVecValX.setText(SensorDataUtility.roundData(rotVecFloats[0]));
+					rotVecValY.setText(SensorDataUtility.roundData(rotVecFloats[1]));
+					rotVecValZ.setText(SensorDataUtility.roundData(rotVecFloats[2]));
 				}
 				if (intent.getFloatArrayExtra("relative_humidity") != null) {
 					float[] relatHumidFloats = intent.getFloatArrayExtra("relative_humidity");
-					relatHumidTextView.setText("Relative Humidity: " + 
-							relatHumidFloats[0]);
+					relatHumidVal.setText(SensorDataUtility.roundData(relatHumidFloats[0]));
 				}
 				if (intent.getFloatArrayExtra("ambient_temperature") != null) {
 					float[] ambTempFloats = intent.getFloatArrayExtra("ambient_temperature");
-					ambTempTextView.setText("Ambient Temperature: " + 
-							ambTempFloats[0]);
+					ambTempVal.setText(SensorDataUtility.roundData(ambTempFloats[0]));
 				}
 			}
 		};
@@ -206,48 +244,48 @@ public class MainActivity extends Activity {
 		
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
 //			Log.i(TAG, "Accelerometer");
-			accelerometerTextView.setVisibility(View.VISIBLE);
+			accValX.setVisibility(View.VISIBLE);
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
 		}
 		
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE) != null) {
 //			Log.i(TAG, "Ambient Temperature");
-			ambTempTextView.setVisibility(View.VISIBLE);
+			ambTempVal.setVisibility(View.VISIBLE);
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
 		
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY) != null) {
 //			Log.i(TAG, "Gravity");
-			gravityTextView.setVisibility(View.VISIBLE);
+			gravityX.setVisibility(View.VISIBLE);
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
 		
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE) != null) {
 //			Log.i(TAG, "Gyroscope");
-			gyroTextView.setVisibility(View.VISIBLE);
+			gyroValX.setVisibility(View.VISIBLE);
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
 		
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT) != null) {
 //			Log.i(TAG, "Light");
-			lightTextView.setVisibility(View.VISIBLE);
+			lightVal.setVisibility(View.VISIBLE);
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
 		
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION) != null) {
 //			Log.i(TAG, "Linear Acceleration");
-			linearAccTextView.setVisibility(View.VISIBLE);
+			linearAccX.setVisibility(View.VISIBLE);
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
 		
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null) {
 //			Log.i(TAG, "Magnetic Field");
-			magneticTextView.setVisibility(View.VISIBLE);
+			magValX.setVisibility(View.VISIBLE);
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
@@ -256,28 +294,28 @@ public class MainActivity extends Activity {
 //			Log.i(TAG, "Orientation");
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE) != null) {
 //			Log.i(TAG, "Pressure");
-			pressureTextView.setVisibility(View.VISIBLE);
+			pressureVal.setVisibility(View.VISIBLE);
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
 		
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY) != null) {
 //			Log.i(TAG, "Proximity");
-			proxiTextView.setVisibility(View.VISIBLE);
+			proxiVal.setVisibility(View.VISIBLE);
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
 		
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY) != null) {
 //			Log.i(TAG, "Relative Humidity");
-			relatHumidTextView.setVisibility(View.VISIBLE);
+			relatHumidVal.setVisibility(View.VISIBLE);
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
 		
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR) != null) {
 //			Log.i(TAG, "Rotation Vector");
-			rotVecTextView.setVisibility(View.VISIBLE);
+			rotVecValX.setVisibility(View.VISIBLE);
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}

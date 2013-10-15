@@ -401,7 +401,7 @@
                 android:visibility="visible" >
 
                 <TextView
-                    android:id="@+id/r8label"
+                    android:id="@+id/textMagField"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -445,7 +445,7 @@
                 android:visibility="visible" >
 
                 <TextView
-                    android:id="@+id/r9label"
+                    android:id="@+id/textRotVect"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -693,7 +693,7 @@
                     android:textColor="#000000" />
 
                 <TextView
-                    android:id="@+id/proxiVal"
+                    android:id="@+id/relaHumidVal"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
