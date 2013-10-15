@@ -16,7 +16,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="24dp"
         android:text="Accelerometer"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/textAmbientTemp"
@@ -25,7 +25,7 @@
         android:layout_below="@+id/textAccelerometer"
         android:layout_centerHorizontal="true"
         android:text="Ambient Temperature"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/textGravity"
@@ -34,7 +34,7 @@
         android:layout_below="@+id/textAmbientTemp"
         android:layout_centerHorizontal="true"
         android:text="Gravity"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/textGyroscope"
@@ -43,7 +43,7 @@
         android:layout_below="@+id/textGravity"
         android:layout_centerHorizontal="true"
         android:text="Gyroscope"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/textLight"
@@ -52,7 +52,7 @@
         android:layout_below="@+id/textGyroscope"
         android:layout_centerHorizontal="true"
         android:text="Light"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/textLinearAcc"
@@ -61,7 +61,7 @@
         android:layout_below="@+id/textLight"
         android:layout_centerHorizontal="true"
         android:text="Linear Acceleration"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/textMagField"
@@ -70,7 +70,7 @@
         android:layout_below="@+id/textLinearAcc"
         android:layout_centerHorizontal="true"
         android:text="Magnetic Field"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/textPressure"
@@ -79,7 +79,7 @@
         android:layout_below="@+id/textMagField"
         android:layout_centerHorizontal="true"
         android:text="Pressure"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/textProximity"
@@ -88,7 +88,7 @@
         android:layout_below="@+id/textPressure"
         android:layout_centerHorizontal="true"
         android:text="Proximity"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/textRelaHumid"
@@ -97,7 +97,7 @@
         android:layout_below="@+id/textProximity"
         android:layout_centerHorizontal="true"
         android:text="Relative Humidity"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/textRotVect"
@@ -106,6 +106,6 @@
         android:layout_below="@+id/textRelaHumid"
         android:layout_centerHorizontal="true"
         android:text="Rotation Vector"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
 </RelativeLayout>

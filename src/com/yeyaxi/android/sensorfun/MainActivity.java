@@ -135,6 +135,9 @@ public class MainActivity extends Activity {
 			}
 		};
 		
+		// bind the service
+		doBindService();
+
 	}
 
 	@Override
@@ -154,14 +157,18 @@ public class MainActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("SensorData"));
-		doBindService();
 	}
 	
 	@Override
 	protected void onPause() {
 	  super.onPause();
 	  LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
-	  doUnbindService();
+	}
+	
+	@Override
+	protected void onDestroy() {
+		doUnbindService();
+		super.onDestroy();
 	}
 	
 	
