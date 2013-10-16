@@ -19,6 +19,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
@@ -62,6 +63,18 @@ public class MainActivity extends Activity {
 	private TextView rotVecValY;
 	private TextView rotVecValZ;
 
+	// For table rows
+	private TableRow accelRow;
+	private TableRow gyroRow;
+	private TableRow gravityRow;
+	private TableRow linAccRow;
+	private TableRow magRow;
+	private TableRow rotVecRow;
+	private TableRow tempRow;
+	private TableRow lightRow;
+	private TableRow pressureRow;
+	private TableRow proxiRow;
+	private TableRow relaHumidRow;
 	
 	private SensorService mBoundService;
 	private boolean isBind = false;
@@ -106,6 +119,19 @@ public class MainActivity extends Activity {
 		rotVecValX = (TextView) findViewById(R.id.rotValX);
 		rotVecValY = (TextView) findViewById(R.id.rotValY);
 		rotVecValZ = (TextView) findViewById(R.id.rotValZ);
+		
+		// Init for table rows
+		accelRow = (TableRow) findViewById(R.id.tableRowAccel);
+		gyroRow = (TableRow) findViewById(R.id.tableRowGyro);
+		gravityRow = (TableRow) findViewById(R.id.tableRowGravity);
+		linAccRow = (TableRow) findViewById(R.id.tableRowLinearAcc);
+		magRow = (TableRow) findViewById(R.id.tableRowMagField);
+		rotVecRow = (TableRow) findViewById(R.id.tableRowRotVec);
+		tempRow = (TableRow) findViewById(R.id.tableRowAmbientTemp);
+		lightRow = (TableRow) findViewById(R.id.tableRowLight);
+		pressureRow = (TableRow) findViewById(R.id.tableRowPressure);
+		proxiRow = (TableRow) findViewById(R.id.tableRowProximity);
+		relaHumidRow = (TableRow) findViewById(R.id.tableRowRelaHumid);
 		
 		mReceiver = new BroadcastReceiver() {
 			
@@ -242,80 +268,80 @@ public class MainActivity extends Activity {
 		
 		Log.d(TAG, "" + deviceSensors);
 		
-		if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
+		if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) == null) {
 //			Log.i(TAG, "Accelerometer");
-			accValX.setVisibility(View.VISIBLE);
+			accelRow.setVisibility(View.GONE);
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
 		}
 		
-		if (mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE) != null) {
+		if (mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE) == null) {
 //			Log.i(TAG, "Ambient Temperature");
-			ambTempVal.setVisibility(View.VISIBLE);
+			tempRow.setVisibility(View.GONE);
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
 		
-		if (mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY) != null) {
+		if (mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY) == null) {
 //			Log.i(TAG, "Gravity");
-			gravityX.setVisibility(View.VISIBLE);
+			gravityRow.setVisibility(View.GONE);
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
 		
-		if (mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE) != null) {
+		if (mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE) == null) {
 //			Log.i(TAG, "Gyroscope");
-			gyroValX.setVisibility(View.VISIBLE);
+			gyroRow.setVisibility(View.GONE);
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
 		
-		if (mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT) != null) {
+		if (mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT) == null) {
 //			Log.i(TAG, "Light");
-			lightVal.setVisibility(View.VISIBLE);
+			lightRow.setVisibility(View.GONE);
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
 		
-		if (mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION) != null) {
+		if (mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION) == null) {
 //			Log.i(TAG, "Linear Acceleration");
-			linearAccX.setVisibility(View.VISIBLE);
+			linAccRow.setVisibility(View.GONE);
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
 		
-		if (mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null) {
+		if (mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) == null) {
 //			Log.i(TAG, "Magnetic Field");
-			magValX.setVisibility(View.VISIBLE);
+			magRow.setVisibility(View.GONE);
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
 		
-//		if (mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION) != null)
+//		if (mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION) == null)
 //			Log.i(TAG, "Orientation");
-		if (mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE) != null) {
+		if (mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE) == null) {
 //			Log.i(TAG, "Pressure");
-			pressureVal.setVisibility(View.VISIBLE);
+			pressureRow.setVisibility(View.GONE);
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
 		
-		if (mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY) != null) {
+		if (mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY) == null) {
 //			Log.i(TAG, "Proximity");
-			proxiVal.setVisibility(View.VISIBLE);
+			proxiRow.setVisibility(View.GONE);
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
 		
-		if (mSensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY) != null) {
+		if (mSensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY) == null) {
 //			Log.i(TAG, "Relative Humidity");
-			relatHumidVal.setVisibility(View.VISIBLE);
+			relaHumidRow.setVisibility(View.GONE);
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
 		
-		if (mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR) != null) {
+		if (mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR) == null) {
 //			Log.i(TAG, "Rotation Vector");
-			rotVecValX.setVisibility(View.VISIBLE);
+			rotVecRow.setVisibility(View.GONE);
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
