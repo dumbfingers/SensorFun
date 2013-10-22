@@ -1,7 +1,5 @@
 package com.yeyaxi.android.sensorfun;
 
-import java.util.List;
-
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -13,14 +11,18 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.view.View;
 
+/**
+ * 
+ * @author Yaxi Ye
+ * @since Oct.11.2013
+ */
 public class SensorService extends Service implements SensorEventListener{
 
-	private String msg = "Test Msg";
+//	private String msg = "Test Msg";
 	
 	private SensorManager mSensorManager;
-	private List<Sensor> deviceSensors;
+//	private List<Sensor> deviceSensors;
 	private static final String TAG = SensorService.class.getSimpleName();
 	private LocalBroadcastManager mLocalBroadcastManager;
 	
@@ -42,16 +44,22 @@ public class SensorService extends Service implements SensorEventListener{
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		
 		regSensorListeners();
-		
-		
+
 	}
 	
 	@Override
 	public IBinder onBind(Intent intent) {
 		// TODO Auto-generated method stub
+		Log.d(TAG, "onBind Service");
 		return mBinder;
 	}
 
+	@Override
+	public void onDestroy() {
+		Log.d(TAG, "Sensor Service Destroyed.");
+		super.onDestroy();
+	}
+	
 	public SensorManager getSensorManager() {
 		return mSensorManager;
 	}
