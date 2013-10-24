@@ -11,7 +11,7 @@ import java.text.DecimalFormat;
  */
 public class SensorDataUtility {
 	
-	float alpha = 0.1f;
+	private static float alpha = 0.1f;
 	
 	/**
 	 * 
@@ -30,9 +30,16 @@ public class SensorDataUtility {
 	 * @param last
 	 * @return
 	 */
-	float lowPass(float current, float last) {
+	public static float[] lowPass(float[] input, float[] output) {
 		
-		return last * (1.0f - alpha) + current * alpha; 
+		if (output == null)
+			return input;
+		
+		for (int i = 0; i < input.length; i++) {
+			output[i] = output[i] * (1.0f - alpha) + input[i] * alpha;
+		}
+		
+		return output; 
 	}
 	/**
 	 * Kalman Filter

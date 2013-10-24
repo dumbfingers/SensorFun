@@ -1,5 +1,7 @@
 package com.yeyaxi.android.sensorfun;
 
+import com.yeyaxi.android.sensorfun.util.SensorDataUtility;
+
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +27,20 @@ public class SensorService extends Service implements SensorEventListener{
 //	private List<Sensor> deviceSensors;
 	private static final String TAG = SensorService.class.getSimpleName();
 	private LocalBroadcastManager mLocalBroadcastManager;
+	
+	private float[] accVals = new float[3];
+	private float[] tempVal = new float[3];
+	private float[] gravVals = new float[3];
+	private float[] gyroVals = new float[3];
+	private float[] lightVal = new float[3];
+	private float[] lineAccVals = new float[3];
+	private float[] magVals = new float[3];
+	private float[] presVal = new float[3];
+	private float[] proxVal = new float[3];
+	private float[] rhVal = new float[3];
+	// Roatation Vector contains 5 elements
+	private float[] rotVals = new float[5];
+
 	
 	// This is the object that receives interactions from clients.  See
 	// RemoteService for a more complete example.
@@ -74,49 +90,70 @@ public class SensorService extends Service implements SensorEventListener{
 	public void onSensorChanged(SensorEvent event) {
 		// TODO Auto-generated method stub
 		Sensor mSensor = event.sensor;
+		
 		if (mSensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-//			Log.i(TAG, "Accelerometer");
-			sendMessage("accelerometer", event.values);
+			
+			accVals = SensorDataUtility.lowPass(event.values, accVals);
+			
+			sendMessage("accelerometer", accVals);
 			
 		} else if (mSensor.getType() == Sensor.TYPE_AMBIENT_TEMPERATURE) {
-//			Log.i(TAG, "Accelerometer");
-			sendMessage("ambient_temperature", event.values);
+
+			tempVal = SensorDataUtility.lowPass(event.values, tempVal);
+
+			sendMessage("ambient_temperature", tempVal);
 
 		} else if (mSensor.getType() == Sensor.TYPE_GRAVITY) {
-//			Log.i(TAG, "Accelerometer");
-			sendMessage("gravity", event.values);
+			
+			gravVals = SensorDataUtility.lowPass(event.values, gravVals);
+			
+			sendMessage("gravity", gravVals);
 
 		} else if (mSensor.getType() == Sensor.TYPE_GYROSCOPE) {
-//			Log.i(TAG, "Accelerometer");
-			sendMessage("gyroscope", event.values);
+			
+			gyroVals = SensorDataUtility.lowPass(event.values, gyroVals);
+			
+			sendMessage("gyroscope", gyroVals);
 
 		} else if (mSensor.getType() == Sensor.TYPE_LIGHT) {
-//			Log.i(TAG, "Accelerometer");
-			sendMessage("light", event.values);
+			
+			lightVal = SensorDataUtility.lowPass(event.values, lightVal);
+			
+			sendMessage("light", lightVal);
 
 		} else if (mSensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
-//			Log.i(TAG, "Accelerometer");
-			sendMessage("linear_acceleration", event.values);
+			
+			lineAccVals = SensorDataUtility.lowPass(event.values, lineAccVals);
+			
+			sendMessage("linear_acceleration", lineAccVals);
 
 		} else if (mSensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-//			Log.i(TAG, "Accelerometer");
-			sendMessage("magnetic_field", event.values);
+			
+			magVals = SensorDataUtility.lowPass(event.values, magVals);
+			
+			sendMessage("magnetic_field", magVals);
 
 		} else if (mSensor.getType() == Sensor.TYPE_PRESSURE) {
-//			Log.i(TAG, "Accelerometer");
-			sendMessage("pressure", event.values);
+			
+			presVal = SensorDataUtility.lowPass(event.values, presVal);
+			
+			sendMessage("pressure", presVal);
 
 		} else if (mSensor.getType() == Sensor.TYPE_PROXIMITY) {
-//			Log.i(TAG, "Accelerometer");
-			sendMessage("proximity", event.values);
+			
+			proxVal = SensorDataUtility.lowPass(event.values, proxVal);
+			
+			sendMessage("proximity", proxVal);
 
 		} else if (mSensor.getType() == Sensor.TYPE_RELATIVE_HUMIDITY) {
-//			Log.i(TAG, "Accelerometer");
-			sendMessage("relative_humidity", event.values);
+			
+			rhVal = SensorDataUtility.lowPass(event.values, rhVal);
+			
+			sendMessage("relative_humidity", rhVal);
 
 		} else if (mSensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
-//			Log.i(TAG, "Accelerometer");
-			sendMessage("rotation_vector", event.values);
+			rotVals = SensorDataUtility.lowPass(event.values, rotVals);
+			sendMessage("rotation_vector", rotVals);
 		}
 	}
 
