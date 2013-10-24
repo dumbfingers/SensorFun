@@ -2,8 +2,6 @@ package com.yeyaxi.android.sensorfun;
 
 import java.util.List;
 
-import com.yeyaxi.android.sensorfun.util.SensorDataUtility;
-
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -19,8 +17,11 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import com.yeyaxi.android.sensorfun.util.SensorDataUtility;
 
 public class MainActivity extends Activity {
 
@@ -64,6 +65,7 @@ public class MainActivity extends Activity {
 	private TextView rotVecValZ;
 
 	// For table rows
+	private TableRow gpsRow;
 	private TableRow accelRow;
 	private TableRow gyroRow;
 	private TableRow gravityRow;
@@ -121,6 +123,7 @@ public class MainActivity extends Activity {
 		rotVecValZ = (TextView) findViewById(R.id.rotValZ);
 		
 		// Init for table rows
+		gpsRow = (TableRow) findViewById(R.id.tableRowGPS);
 		accelRow = (TableRow) findViewById(R.id.tableRowAccel);
 		gyroRow = (TableRow) findViewById(R.id.tableRowGyro);
 		gravityRow = (TableRow) findViewById(R.id.tableRowGravity);
@@ -132,6 +135,10 @@ public class MainActivity extends Activity {
 		pressureRow = (TableRow) findViewById(R.id.tableRowPressure);
 		proxiRow = (TableRow) findViewById(R.id.tableRowProximity);
 		relaHumidRow = (TableRow) findViewById(R.id.tableRowRelaHumid);
+		
+		
+		// Register GPS row listener first
+		gpsRow.setOnClickListener(rowClickListener);
 		
 		mReceiver = new BroadcastReceiver() {
 			
@@ -235,6 +242,63 @@ public class MainActivity extends Activity {
 		super.onDestroy();
 	}
 	
+	OnClickListener rowClickListener = new OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			switch (v.getId()) {
+			
+			case R.id.tableRowGPS:
+				
+				break;
+				
+			case R.id.tableRowAccel:
+				
+				break;
+
+			case R.id.tableRowGyro:
+				
+				break;
+				
+			case R.id.tableRowGravity:
+				
+				break;
+				
+			case R.id.tableRowLinearAcc:
+				
+				break;
+				
+			case R.id.tableRowMagField:
+				
+				break;
+				
+			case R.id.tableRowRotVec:
+				
+				break;
+				
+			case R.id.tableRowAmbientTemp:
+				
+				break;
+				
+			case R.id.tableRowLight:
+				
+				break;
+				
+			case R.id.tableRowPressure:
+				
+				break;
+				
+			case R.id.tableRowProximity:
+				
+				break;
+				
+			case R.id.tableRowRelaHumid:
+				
+				break;
+				
+			}
+		}
+	};
 	
 	private ServiceConnection mConnection = new ServiceConnection() {
 		
