@@ -240,13 +240,11 @@ public class MainActivity extends Activity {
 		
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
-			// TODO Auto-generated method stub
 			isBind = false;
 		}
 		
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
-			// TODO Auto-generated method stub
 			mBoundService = ((SensorService.SensorBinder) service).getService();
 //			mBoundService.getMsg();
 			mSensorManager = mBoundService.getSensorManager();
@@ -278,7 +276,6 @@ public class MainActivity extends Activity {
 //			Log.i(TAG, "Ambient Temperature");
 			tempRow.setVisibility(View.GONE);
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE), SensorManager.SENSOR_DELAY_NORMAL);
-
 		}
 		
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY) == null) {

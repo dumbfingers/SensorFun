@@ -11,7 +11,6 @@ import java.text.DecimalFormat;
  */
 public class SensorDataUtility {
 	
-	private static float alpha = 0.1f;
 	
 	/**
 	 * 
@@ -24,22 +23,24 @@ public class SensorDataUtility {
 	}
 	
 	//TODO Low-pass filter to be implemented here
+
 	/**
 	 * Simple low-pass filter
 	 * @param current
 	 * @param last
-	 * @return
+	 * @param alpha If alpha is close to 1, the new value will be close to the current, and if a is close to 0 the new value will not change with the calculation 
+	 * @return the filtered result
 	 */
-	public static float[] lowPass(float[] input, float[] output) {
+	public static float[] lowPass(float[] current, float[] last, float alpha) {
 		
-		if (output == null)
-			return input;
+		if (last == null)
+			return current;
 		
-		for (int i = 0; i < input.length; i++) {
-			output[i] = output[i] * (1.0f - alpha) + input[i] * alpha;
+		for (int i = 0; i < current.length; i++) {
+			last[i] = last[i] * (1.0f - alpha) + current[i] * alpha;
 		}
 		
-		return output; 
+		return last; 
 	}
 	/**
 	 * Kalman Filter

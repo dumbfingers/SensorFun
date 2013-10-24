@@ -93,66 +93,68 @@ public class SensorService extends Service implements SensorEventListener{
 		
 		if (mSensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 			
-			accVals = SensorDataUtility.lowPass(event.values, accVals);
+			accVals = SensorDataUtility.lowPass(event.values, accVals, 0.2f);
 			
 			sendMessage("accelerometer", accVals);
 			
 		} else if (mSensor.getType() == Sensor.TYPE_AMBIENT_TEMPERATURE) {
 
-			tempVal = SensorDataUtility.lowPass(event.values, tempVal);
+			// By giving alpha as 1.0f, we're receiving the value without any filter
+			tempVal = SensorDataUtility.lowPass(event.values, tempVal, 1.0f);
 
 			sendMessage("ambient_temperature", tempVal);
 
 		} else if (mSensor.getType() == Sensor.TYPE_GRAVITY) {
 			
-			gravVals = SensorDataUtility.lowPass(event.values, gravVals);
+			gravVals = SensorDataUtility.lowPass(event.values, gravVals, 0.6f);
 			
 			sendMessage("gravity", gravVals);
 
 		} else if (mSensor.getType() == Sensor.TYPE_GYROSCOPE) {
 			
-			gyroVals = SensorDataUtility.lowPass(event.values, gyroVals);
+			gyroVals = SensorDataUtility.lowPass(event.values, gyroVals, 0.6f);
 			
 			sendMessage("gyroscope", gyroVals);
 
 		} else if (mSensor.getType() == Sensor.TYPE_LIGHT) {
 			
-			lightVal = SensorDataUtility.lowPass(event.values, lightVal);
+			// By giving alpha as 1.0f, we're receiving the value without any filter
+			lightVal = SensorDataUtility.lowPass(event.values, lightVal, 1.0f);
 			
 			sendMessage("light", lightVal);
 
 		} else if (mSensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
 			
-			lineAccVals = SensorDataUtility.lowPass(event.values, lineAccVals);
+			lineAccVals = SensorDataUtility.lowPass(event.values, lineAccVals, 0.6f);
 			
 			sendMessage("linear_acceleration", lineAccVals);
 
 		} else if (mSensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
 			
-			magVals = SensorDataUtility.lowPass(event.values, magVals);
+			magVals = SensorDataUtility.lowPass(event.values, magVals, 0.2f);
 			
 			sendMessage("magnetic_field", magVals);
 
 		} else if (mSensor.getType() == Sensor.TYPE_PRESSURE) {
 			
-			presVal = SensorDataUtility.lowPass(event.values, presVal);
+			presVal = SensorDataUtility.lowPass(event.values, presVal, 0.5f);
 			
 			sendMessage("pressure", presVal);
 
 		} else if (mSensor.getType() == Sensor.TYPE_PROXIMITY) {
 			
-			proxVal = SensorDataUtility.lowPass(event.values, proxVal);
+			proxVal = SensorDataUtility.lowPass(event.values, proxVal, 1.0f);
 			
 			sendMessage("proximity", proxVal);
 
 		} else if (mSensor.getType() == Sensor.TYPE_RELATIVE_HUMIDITY) {
 			
-			rhVal = SensorDataUtility.lowPass(event.values, rhVal);
+			rhVal = SensorDataUtility.lowPass(event.values, rhVal, 1.0f);
 			
 			sendMessage("relative_humidity", rhVal);
 
 		} else if (mSensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
-			rotVals = SensorDataUtility.lowPass(event.values, rotVals);
+			rotVals = SensorDataUtility.lowPass(event.values, rotVals, 0.6f);
 			sendMessage("rotation_vector", rotVals);
 		}
 	}

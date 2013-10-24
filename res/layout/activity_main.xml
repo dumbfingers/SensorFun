@@ -1,89 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView1"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="fill_parent"
+    android:layout_weight="1" >
 
-    <ScrollView
-        android:id="@+id/scrollView1"
+    <TableLayout
+        android:id="@+id/tableLayout1"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1" >
+        android:layout_height="match_parent" >
 
-        <TableLayout
-            android:id="@+id/tableLayout1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+        <TableRow
+            android:id="@+id/tablehead"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#ABABAB" >
 
-            <TableRow
-                android:id="@+id/tablehead"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/rheadlabel"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="#000000" >
+                android:layout_weight="1"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#000000" />
 
-                <TextView
-                    android:id="@+id/rheadlabel"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:id="@+id/rheadval1"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Lat"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#FFFFFF" />
-
-                <TextView
-                    android:id="@+id/rheadval2"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Lon"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#FFFFFF" />
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRowGPS"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/rheadval1"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="#33B5E5" >
+                android:layout_weight="1"
+                android:text="Lat"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#FFFFFF" />
 
-                <TextView
-                    android:id="@+id/textGPS"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="GPS"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#000000" />
+            <TextView
+                android:id="@+id/rheadval2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Lon"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#FFFFFF" />
+        </TableRow>
 
-                <TextView
-                    android:id="@+id/gpsLat"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="B"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000" />
+        <TableRow
+            android:id="@+id/tableRowGPS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#33B5E5"
+            android:gravity="center_vertical"
+            android:minHeight="48dp"
+            android:paddingLeft="8dp" >
 
-                <TextView
-                    android:id="@+id/gpsLong"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="C"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000" />
-            </TableRow>
+            <TextView
+                android:id="@+id/textGPS"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="GPS"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#000000" />
 
-            <!--
+            <TextView
+                android:id="@+id/gpsLat"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="B"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/gpsLong"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="C"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+        </TableRow>
+
+        <!--
             <TableRow
                 android:id="@+id/tableRow2"
                 android:layout_width="wrap_content"
@@ -126,10 +124,10 @@
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="#FFFFFF" />
             </TableRow>
-            -->
+        -->
 
 
-            <!--
+        <!--
             <TableRow
                 android:id="@+id/tableRow3"
                 android:layout_width="wrap_content"
@@ -172,331 +170,349 @@
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="#000000" />
             </TableRow>
-            -->
+        -->
 
-            <TableRow
-                android:id="@+id/tableRow4"
+        <TableRow
+            android:id="@+id/tableRow4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#ABABAB" >
+
+            <TextView
+                android:id="@+id/r4label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#000000" >
+                android:layout_weight="1"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#000000" />
 
-                <TextView
-                    android:id="@+id/r4label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:id="@+id/r4val1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="X"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#FFFFFF" />
-
-                <TextView
-                    android:id="@+id/r4val2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Y"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#FFFFFF" />
-
-                <TextView
-                    android:id="@+id/r4val3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Z"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#FFFFFF" />
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRowAccel"
+            <TextView
+                android:id="@+id/r4val1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#FFFFFF"
-                android:visibility="visible" >
+                android:layout_weight="1"
+                android:text="X"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#FFFFFF" />
 
-                <TextView
-                    android:id="@+id/textAccelerometer"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Accelerometer"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:id="@+id/accValX"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:id="@+id/accValY"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:id="@+id/accValZ"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000" />
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRowGyro"
+            <TextView
+                android:id="@+id/r4val2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#33B5E5"
-                android:visibility="visible" >
+                android:layout_weight="1"
+                android:text="Y"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#FFFFFF" />
 
-                <TextView
-                    android:id="@+id/textGyroscope"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Gyroscope"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:id="@+id/gyroValX"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:id="@+id/gyroValY"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:id="@+id/gyroValZ"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000" />
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRowGravity"
+            <TextView
+                android:id="@+id/r4val3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#FFFFFF"
-                android:visibility="visible" >
+                android:layout_weight="1"
+                android:text="Z"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#FFFFFF" />
+        </TableRow>
 
-                <TextView
-                    android:id="@+id/textGravity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Gravity"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#000000" />
+        <TableRow
+            android:id="@+id/tableRowAccel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:gravity="center_vertical"
+            android:minHeight="48dp"
+            android:paddingLeft="8dp"
+            android:visibility="visible" >
 
-                <TextView
-                    android:id="@+id/gravityValX"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000" />
+            <TextView
+                android:id="@+id/textAccelerometer"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Accelerometer"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#000000" />
 
-                <TextView
-                    android:id="@+id/gravityValY"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000" />
+            <TextView
+                android:id="@+id/accValX"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
 
-                <TextView
-                    android:id="@+id/gravityValZ"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000" />
-            </TableRow>
+            <TextView
+                android:id="@+id/accValY"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
 
-            <TableRow
-                android:id="@+id/tableRowLinearAcc"
+            <TextView
+                android:id="@+id/accValZ"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRowGyro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#33B5E5"
+            android:gravity="center_vertical"
+            android:minHeight="48dp"
+            android:paddingLeft="8dp"
+            android:visibility="visible" >
+
+            <TextView
+                android:id="@+id/textGyroscope"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Gyroscope"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/gyroValX"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/gyroValY"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/gyroValZ"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRowGravity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:gravity="center_vertical"
+            android:minHeight="48dp"
+            android:paddingLeft="8dp"
+            android:visibility="visible" >
+
+            <TextView
+                android:id="@+id/textGravity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#33B5E5"
-                android:visibility="visible" >
+                android:layout_weight="1"
+                android:text="Gravity"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#000000" />
 
-                <TextView
-                    android:id="@+id/textLinearAcc"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Linear Acceleration"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:id="@+id/linAccValX"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:id="@+id/linAccValY"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:id="@+id/linAccValZ"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000" />
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRowMagField"
+            <TextView
+                android:id="@+id/gravityValX"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#FFFFFF"
-                android:visibility="visible" >
+                android:layout_weight="1"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
 
-                <TextView
-                    android:id="@+id/textMagField"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Magnetic Field"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:id="@+id/magValX"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:id="@+id/magValY"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:id="@+id/magValZ"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000" />
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRowRotVec"
+            <TextView
+                android:id="@+id/gravityValY"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#33B5E5"
-                android:visibility="visible" >
+                android:layout_weight="1"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
 
-                <TextView
-                    android:id="@+id/textRotVect"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Rotation Vector"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:id="@+id/rotValX"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:id="@+id/rotValY"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:id="@+id/rotValZ"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000" />
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRow10"
+            <TextView
+                android:id="@+id/gravityValZ"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#000000" >
+                android:layout_weight="1"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+        </TableRow>
 
-                <TextView
-                    android:id="@+id/r10label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Other"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#FFFFFFFF" />
+        <TableRow
+            android:id="@+id/tableRowLinearAcc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#33B5E5"
+            android:gravity="center_vertical"
+            android:minHeight="48dp"
+            android:paddingLeft="8dp"
+            android:visibility="visible" >
 
-                <!--
+            <TextView
+                android:id="@+id/textLinearAcc"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Linear Acceleration"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/linAccValX"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/linAccValY"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/linAccValZ"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRowMagField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:gravity="center_vertical"
+            android:minHeight="48dp"
+            android:paddingLeft="8dp"
+            android:visibility="visible" >
+
+            <TextView
+                android:id="@+id/textMagField"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Magnetic Field"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/magValX"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/magValY"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/magValZ"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRowRotVec"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#33B5E5"
+            android:gravity="center_vertical"
+            android:minHeight="48dp"
+            android:paddingLeft="8dp"
+            android:visibility="visible" >
+
+            <TextView
+                android:id="@+id/textRotVect"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Rotation Vector"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/rotValX"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/rotValY"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/rotValZ"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#ABABAB" >
+
+            <TextView
+                android:id="@+id/r10label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Other"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#FFFFFFFF" />
+
+            <!--
                      <TextView
                     android:id="@+id/r10val1"
                     android:layout_width="wrap_content"
@@ -505,10 +521,10 @@
                     android:text="Light"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="#FFFFFF" />
-                -->
+            -->
 
 
-                <!--
+            <!--
                      <TextView
                     android:id="@+id/r11val2"
                     android:layout_width="wrap_content"
@@ -517,52 +533,55 @@
                     android:text="Prox"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="#FFFFFF" />
-                -->
+            -->
 
-                <TextView
-                    android:id="@+id/r12val3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#FFFFFF" />
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRowAmbientTemp"
+            <TextView
+                android:id="@+id/r12val3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#FFFFFF"
-                android:visibility="visible" >
+                android:layout_weight="1"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#FFFFFF" />
+        </TableRow>
 
-                <TextView
-                    android:id="@+id/textAmbientTemp"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Temperature"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#000000" />
+        <TableRow
+            android:id="@+id/tableRowAmbientTemp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:gravity="center_vertical"
+            android:minHeight="48dp"
+            android:paddingLeft="8dp"
+            android:visibility="visible" >
 
-                <TextView
-                    android:id="@+id/tempVal"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000" />
+            <TextView
+                android:id="@+id/textAmbientTemp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Temperature"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#000000" />
 
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="ºC"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000" />
+            <TextView
+                android:id="@+id/tempVal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
 
-                <!--
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="ºC"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+
+            <!--
                      <TextView
                     android:id="@+id/r11val3"
                     android:layout_width="fill_parent"
@@ -571,157 +590,169 @@
                     android:text=""
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="#000000" />
-                -->
-            </TableRow>
+            -->
+        </TableRow>
 
-            <TableRow
-                android:id="@+id/tableRowLight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#33B5E5"
-                android:visibility="visible" >
+        <TableRow
+            android:id="@+id/tableRowLight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#33B5E5"
+            android:gravity="center_vertical"
+            android:minHeight="48dp"
+            android:paddingLeft="8dp"
+            android:visibility="visible" >
 
-                <TextView
-                    android:id="@+id/textLight"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Light"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:id="@+id/lightVal"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="lux"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000" />
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRowPressure"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#FFFFFF"
-                android:visibility="visible" >
-
-                <TextView
-                    android:id="@+id/textPressure"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Pressure"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:id="@+id/pressureVal"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="hPa"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000" />
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRowProximity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#33B5E5"
-                android:visibility="visible" >
-
-                <TextView
-                    android:id="@+id/textProximity"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Proximity"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:id="@+id/proxiVal"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000"
-                    android:visibility="visible" />
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRowRelaHumid"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#FFFFFF" >
-
-                <TextView
-                    android:id="@+id/textRelaHumid"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Relative Humidity"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:id="@+id/relaHumidVal"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="%"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#000000" />
-            </TableRow>
-
-            <Button
-                android:id="@+id/btnRecord"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/textLight"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:onClick="BtnRecord"
-                android:text="Record Data" />
-        </TableLayout>
-    </ScrollView>
+                android:text="Light"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#000000" />
 
-</LinearLayout>
-<!-- <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            <TextView
+                android:id="@+id/lightVal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="lux"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRowPressure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:gravity="center_vertical"
+            android:minHeight="48dp"
+            android:paddingLeft="8dp"
+            android:visibility="visible" >
+
+            <TextView
+                android:id="@+id/textPressure"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Pressure"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/pressureVal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="hPa"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRowProximity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#33B5E5"
+            android:gravity="center_vertical"
+            android:minHeight="48dp"
+            android:paddingLeft="8dp"
+            android:visibility="visible" >
+
+            <TextView
+                android:id="@+id/textProximity"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Proximity"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/proxiVal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000"
+                android:visibility="visible" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRowRelaHumid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:gravity="center_vertical"
+            android:minHeight="48dp"
+            android:paddingLeft="8dp" >
+
+            <TextView
+                android:id="@+id/textRelaHumid"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Relative Humidity"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/relaHumidVal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="%"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+        </TableRow>
+
+        <Button
+            android:id="@+id/btnRecord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="BtnRecord"
+            android:text="Record Data" />
+    </TableLayout>
+
+</ScrollView>
+<!--
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -831,4 +862,5 @@
         android:text="Rotation Vector"
         android:visibility="visible" />
 
-</RelativeLayout> -->
+</RelativeLayout>
+-->
