@@ -1,7 +1,9 @@
 package com.yeyaxi.android.sensorfun;
 
+import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.GraphView.GraphViewData;
+import com.jjoe64.graphview.LineGraphView;
 import com.yeyaxi.android.sensorfun.util.SensorDataUtility;
 
 import android.app.Activity;
@@ -15,6 +17,8 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 public class PlotActivity extends Activity {
 	
@@ -27,14 +31,29 @@ public class PlotActivity extends Activity {
 	private String sensorType = "";
 	private float[] sensorVal;
 	
+	private GraphView mGraphView;
 	private GraphViewSeries xSeries;
 	private GraphViewSeries ySeries;
 	private GraphViewSeries zSeries;
+	
+	private GraphViewData xData;
+	private GraphViewData yData;
+	private GraphViewData zData;
+	
+	private int counter = 0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_plot);
+		
+		
+		Bundle b = getIntent().getExtras();
+		
+		if (b != null) {
+			sensorType = b.getString("sensorType");
+		}
+		
 		
 		if (findViewById(R.id.fragment_container) != null) {
 			
@@ -49,9 +68,21 @@ public class PlotActivity extends Activity {
 			public void onReceive(Context context, Intent intent) {
 				if (intent.getFloatArrayExtra(sensorType) != null) {
 					sensorVal = intent.getFloatArrayExtra(sensorType);
+					++counter;
+					
+					xData = new GraphViewData(counter, sensorVal[0]);
+					if (xSeries != null)
+						xSeries.appendData(xData, false, 500);
+					else {
+						GraphViewData[] data = {xData};
+						xSeries = new GraphViewSeries(data);
+					}
 				}
 			}
 		};
+		
+
+		
 	}
 	
 	@Override
@@ -61,8 +92,10 @@ public class PlotActivity extends Activity {
 		// bind the service
 		doBindService();
 		
-		// Draw plot
-		
+		if (isBind == true) {
+			// Draw plot
+			drawPlot();
+		}
 	}
 	
 	@Override
@@ -78,8 +111,15 @@ public class PlotActivity extends Activity {
 		super.onDestroy();
 	}
 	
-	private void drawPlot(float[] data) {
+	private void drawPlot() {
 		
+		mGraphView = new LineGraphView(this, sensorType);
+		mGraphView.addSeries(xSeries);
+		
+		LinearLayout layout = (LinearLayout) findViewById(R.id.fragment_container);
+		
+		layout.addView(mGraphView);
+
 	}
 	
 	private ServiceConnection mConnection = new ServiceConnection() {

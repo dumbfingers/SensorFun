@@ -139,6 +139,7 @@ public class MainActivity extends Activity {
 		
 		// Register GPS row listener first
 		gpsRow.setOnClickListener(rowClickListener);
+		accelRow.setOnClickListener(rowClickListener);
 		
 		mReceiver = new BroadcastReceiver() {
 			
@@ -233,12 +234,12 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onPause() {
 	  super.onPause();
+	  doUnbindService();
 	  LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
 	}
 	
 	@Override
 	protected void onDestroy() {
-		doUnbindService();
 		super.onDestroy();
 	}
 	
@@ -253,7 +254,7 @@ public class MainActivity extends Activity {
 				break;
 				
 			case R.id.tableRowAccel:
-				
+				startPlotActivity("accelerometer");
 				break;
 
 			case R.id.tableRowGyro:
@@ -299,6 +300,12 @@ public class MainActivity extends Activity {
 			}
 		}
 	};
+	
+	private void startPlotActivity(String sensorType) {
+		Intent i = new Intent(this, PlotActivity.class);
+		i.putExtra("sensorType", sensorType);
+		startActivity(i);
+	}
 	
 	private ServiceConnection mConnection = new ServiceConnection() {
 		
