@@ -23,6 +23,7 @@
             </intent-filter>
         </activity>
         <service android:name="SensorService"></service>
+        <activity android:name="PlotActivity"></activity>
     </application>
 
 </manifest>
