@@ -93,7 +93,7 @@ public class SensorService extends Service implements SensorEventListener{
 		
 		if (mSensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 			
-			accVals = SensorDataUtility.lowPass(event.values, accVals, 0.2f);
+			accVals = SensorDataUtility.lowPass(event.values, accVals, 0.1f);
 			
 			sendMessage("accelerometer", accVals);
 			

@@ -233,13 +233,13 @@ public class MainActivity extends Activity {
 	
 	@Override
 	protected void onPause() {
-	  super.onPause();
-	  doUnbindService();
-	  LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
+		super.onPause();
+		LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
 	}
 	
 	@Override
 	protected void onDestroy() {
+		doUnbindService();
 		super.onDestroy();
 	}
 	

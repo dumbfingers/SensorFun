@@ -22,7 +22,7 @@ import android.widget.LinearLayout;
 
 public class PlotActivity extends Activity {
 	
-	private SensorManager mSensorManager;
+//	private SensorManager mSensorManager;
 	private SensorService mBoundService;
 	private boolean isBind = false;
 	
@@ -39,6 +39,8 @@ public class PlotActivity extends Activity {
 	private GraphViewData xData;
 	private GraphViewData yData;
 	private GraphViewData zData;
+	
+	private static final int DATA_NUM = 150;
 	
 	private int counter = 0;
 	
@@ -68,20 +70,28 @@ public class PlotActivity extends Activity {
 			public void onReceive(Context context, Intent intent) {
 				if (intent.getFloatArrayExtra(sensorType) != null) {
 					sensorVal = intent.getFloatArrayExtra(sensorType);
+
 					++counter;
-					
-					xData = new GraphViewData(counter, sensorVal[0]);
-					if (xSeries != null)
-						xSeries.appendData(xData, false, 500);
-					else {
-						GraphViewData[] data = {xData};
-						xSeries = new GraphViewSeries(data);
-					}
+					xSeries.appendData(new GraphViewData(counter, sensorVal[0]), true, 500);
+					mGraphView.redrawAll();
 				}
 			}
 		};
 		
-
+		
+		mGraphView = new LineGraphView(this, sensorType);
+		mGraphView.setScrollable(true);
+		mGraphView.setScalable(true);
+		
+		xSeries = new GraphViewSeries(new GraphViewData[]{});
+		mGraphView.addSeries(xSeries);
+		
+		LinearLayout layout = (LinearLayout) findViewById(R.id.fragment_container);
+		
+		layout.addView(mGraphView);
+		
+		// bind the service
+		doBindService();
 		
 	}
 	
@@ -89,13 +99,12 @@ public class PlotActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("SensorData"));
-		// bind the service
-		doBindService();
+
 		
-		if (isBind == true) {
-			// Draw plot
-			drawPlot();
-		}
+//		if (isBind == true) {
+//			// Draw plot
+//			drawPlot();
+//		}
 	}
 	
 	@Override
@@ -110,17 +119,7 @@ public class PlotActivity extends Activity {
 		doUnbindService();
 		super.onDestroy();
 	}
-	
-	private void drawPlot() {
-		
-		mGraphView = new LineGraphView(this, sensorType);
-		mGraphView.addSeries(xSeries);
-		
-		LinearLayout layout = (LinearLayout) findViewById(R.id.fragment_container);
-		
-		layout.addView(mGraphView);
 
-	}
 	
 	private ServiceConnection mConnection = new ServiceConnection() {
 		
