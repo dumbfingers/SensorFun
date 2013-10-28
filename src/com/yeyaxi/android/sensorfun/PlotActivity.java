@@ -93,10 +93,8 @@ public class PlotActivity extends Activity {
 		mGraphView.setShowLegend(true);
 		 
 		// Init the series with empty data
-		xSeries = new GraphViewSeries("x", new GraphViewSeriesStyle(Color.CYAN, 3), new GraphViewData[]{});
-//		xSeries.getStyle().color = Color.CYAN;
-		
-		ySeries = new GraphViewSeries("y", new GraphViewSeriesStyle(Color.MAGENTA, 3), new GraphViewData[]{});
+		xSeries = new GraphViewSeries("x", new GraphViewSeriesStyle(Color.CYAN, 3), new GraphViewData[]{});		
+		ySeries = new GraphViewSeries("y", new GraphViewSeriesStyle(Color.GREEN, 3), new GraphViewData[]{});
 		zSeries = new GraphViewSeries("z", new GraphViewSeriesStyle(Color.RED, 3), new GraphViewData[]{});
 
 		mGraphView.addSeries(xSeries);
