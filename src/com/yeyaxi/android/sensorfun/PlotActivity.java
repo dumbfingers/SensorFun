@@ -1,11 +1,6 @@
 package com.yeyaxi.android.sensorfun;
 
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GraphViewSeries;
-import com.jjoe64.graphview.GraphView.GraphViewData;
-import com.jjoe64.graphview.LineGraphView;
-import com.yeyaxi.android.sensorfun.util.SensorDataUtility;
-
+import android.R.color;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -13,15 +8,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.hardware.SensorManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
-import android.widget.FrameLayout;
+import android.util.Log;
 import android.widget.LinearLayout;
+
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GraphView.GraphViewData;
+import com.jjoe64.graphview.GraphViewSeries;
+import com.jjoe64.graphview.LineGraphView;
 
 public class PlotActivity extends Activity {
 	
+	private static final String TAG = PlotActivity.class.getSimpleName();
 //	private SensorManager mSensorManager;
 	private SensorService mBoundService;
 	private boolean isBind = false;
@@ -36,9 +37,9 @@ public class PlotActivity extends Activity {
 	private GraphViewSeries ySeries;
 	private GraphViewSeries zSeries;
 	
-	private GraphViewData xData;
-	private GraphViewData yData;
-	private GraphViewData zData;
+//	private GraphViewData xData;
+//	private GraphViewData yData;
+//	private GraphViewData zData;
 	
 	private static final int DATA_NUM = 150;
 	
@@ -70,7 +71,7 @@ public class PlotActivity extends Activity {
 			public void onReceive(Context context, Intent intent) {
 				if (intent.getFloatArrayExtra(sensorType) != null) {
 					sensorVal = intent.getFloatArrayExtra(sensorType);
-
+//					Log.d(TAG, "" + sensorVal[0]);
 					++counter;
 					xSeries.appendData(new GraphViewData(counter, sensorVal[0]), true, 500);
 					mGraphView.redrawAll();
@@ -82,7 +83,9 @@ public class PlotActivity extends Activity {
 		mGraphView = new LineGraphView(this, sensorType);
 		mGraphView.setScrollable(true);
 		mGraphView.setScalable(true);
-		
+		mGraphView.setViewPort(0, 500);
+		mGraphView.getGraphViewStyle().setVerticalLabelsColor(Color.BLACK);
+		mGraphView.getGraphViewStyle().setVerticalLabelsWidth(100);
 		xSeries = new GraphViewSeries(new GraphViewData[]{});
 		mGraphView.addSeries(xSeries);
 		
@@ -100,11 +103,6 @@ public class PlotActivity extends Activity {
 		super.onResume();
 		LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("SensorData"));
 
-		
-//		if (isBind == true) {
-//			// Draw plot
-//			drawPlot();
-//		}
 	}
 	
 	@Override
