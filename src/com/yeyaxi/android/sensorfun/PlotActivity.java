@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphViewSeries;
+import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 import com.jjoe64.graphview.LineGraphView;
 
 public class PlotActivity extends Activity {
@@ -74,6 +75,9 @@ public class PlotActivity extends Activity {
 //					Log.d(TAG, "" + sensorVal[0]);
 					++counter;
 					xSeries.appendData(new GraphViewData(counter, sensorVal[0]), true, 500);
+					ySeries.appendData(new GraphViewData(counter, sensorVal[1]), true, 500);
+					zSeries.appendData(new GraphViewData(counter, sensorVal[2]), true, 500);
+
 					mGraphView.redrawAll();
 				}
 			}
@@ -86,8 +90,19 @@ public class PlotActivity extends Activity {
 		mGraphView.setViewPort(0, 500);
 		mGraphView.getGraphViewStyle().setVerticalLabelsColor(Color.BLACK);
 		mGraphView.getGraphViewStyle().setVerticalLabelsWidth(100);
-		xSeries = new GraphViewSeries(new GraphViewData[]{});
+		mGraphView.setShowLegend(true);
+		 
+		// Init the series with empty data
+		xSeries = new GraphViewSeries("x", new GraphViewSeriesStyle(Color.CYAN, 3), new GraphViewData[]{});
+//		xSeries.getStyle().color = Color.CYAN;
+		
+		ySeries = new GraphViewSeries("y", new GraphViewSeriesStyle(Color.MAGENTA, 3), new GraphViewData[]{});
+		zSeries = new GraphViewSeries("z", new GraphViewSeriesStyle(Color.RED, 3), new GraphViewData[]{});
+
 		mGraphView.addSeries(xSeries);
+		mGraphView.addSeries(ySeries);
+		mGraphView.addSeries(zSeries);
+
 		
 		LinearLayout layout = (LinearLayout) findViewById(R.id.fragment_container);
 		
