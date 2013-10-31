@@ -139,7 +139,18 @@ public class MainActivity extends Activity {
 		
 		// Register GPS row listener first
 		gpsRow.setOnClickListener(rowClickListener);
+		// Other sensors
 		accelRow.setOnClickListener(rowClickListener);
+		gyroRow.setOnClickListener(rowClickListener);
+		gravityRow.setOnClickListener(rowClickListener);
+		linAccRow.setOnClickListener(rowClickListener);
+		magRow.setOnClickListener(rowClickListener);
+		rotVecRow.setOnClickListener(rowClickListener);
+		tempRow.setOnClickListener(rowClickListener);
+		lightRow.setOnClickListener(rowClickListener);
+		pressureRow.setOnClickListener(rowClickListener);
+		proxiRow.setOnClickListener(rowClickListener);
+		relaHumidRow.setOnClickListener(rowClickListener);
 		
 		mReceiver = new BroadcastReceiver() {
 			
@@ -258,43 +269,43 @@ public class MainActivity extends Activity {
 				break;
 
 			case R.id.tableRowGyro:
-				
+				startPlotActivity("gyroscope");
 				break;
 				
 			case R.id.tableRowGravity:
-				
+				startPlotActivity("gravity");
 				break;
 				
 			case R.id.tableRowLinearAcc:
-				
+				startPlotActivity("linear_acceleration");
 				break;
 				
 			case R.id.tableRowMagField:
-				
+				startPlotActivity("magnetic_field");
 				break;
 				
 			case R.id.tableRowRotVec:
-				
+				startPlotActivity("rotation_vector");
 				break;
 				
 			case R.id.tableRowAmbientTemp:
-				
+				startPlotActivity("ambient_temperature");
 				break;
 				
 			case R.id.tableRowLight:
-				
+				startPlotActivity("light");
 				break;
 				
 			case R.id.tableRowPressure:
-				
+				startPlotActivity("pressure");
 				break;
 				
 			case R.id.tableRowProximity:
-				
+				startPlotActivity("proximity");
 				break;
 				
 			case R.id.tableRowRelaHumid:
-				
+				startPlotActivity("relative_humidity");
 				break;
 				
 			}

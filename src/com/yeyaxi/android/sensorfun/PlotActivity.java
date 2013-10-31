@@ -34,9 +34,9 @@ public class PlotActivity extends Activity {
 	private float[] sensorVal;
 	
 	private GraphView mGraphView;
-	private GraphViewSeries xSeries;
-	private GraphViewSeries ySeries;
-	private GraphViewSeries zSeries;
+	private GraphViewSeries xSeries = null;
+	private GraphViewSeries ySeries = null;
+	private GraphViewSeries zSeries = null;
 	
 //	private GraphViewData xData;
 //	private GraphViewData yData;
@@ -70,20 +70,27 @@ public class PlotActivity extends Activity {
 			
 			@Override
 			public void onReceive(Context context, Intent intent) {
-				if (intent.getFloatArrayExtra(sensorType) != null) {
+				if (intent.getFloatArrayExtra(sensorType) != null) {				
 					sensorVal = intent.getFloatArrayExtra(sensorType);
-//					Log.d(TAG, "" + sensorVal[0]);
 					++counter;
-					xSeries.appendData(new GraphViewData(counter, sensorVal[0]), true, 500);
-					ySeries.appendData(new GraphViewData(counter, sensorVal[1]), true, 500);
-					zSeries.appendData(new GraphViewData(counter, sensorVal[2]), true, 500);
-
+					// These sensors are only one dimensional
+					if (sensorType.equals("pressure") ||
+							sensorType.equals("proximity") ||
+							sensorType.equals("relative_humidity") ||
+							sensorType.equals("light") ||
+							sensorType.equals("ambient_temperature")) {
+						xSeries.appendData(new GraphViewData(counter, sensorVal[0]), true, 500);
+					} else {
+//						Log.d(TAG, "" + sensorVal[0]);
+						xSeries.appendData(new GraphViewData(counter, sensorVal[0]), true, 500);
+						ySeries.appendData(new GraphViewData(counter, sensorVal[1]), true, 500);
+						zSeries.appendData(new GraphViewData(counter, sensorVal[2]), true, 500);
+					}
 					mGraphView.redrawAll();
 				}
 			}
 		};
-		
-		
+				
 		mGraphView = new LineGraphView(this, sensorType);
 		mGraphView.setScrollable(true);
 		mGraphView.setScalable(true);
@@ -92,14 +99,39 @@ public class PlotActivity extends Activity {
 		mGraphView.getGraphViewStyle().setVerticalLabelsWidth(100);
 		mGraphView.setShowLegend(true);
 		 
-		// Init the series with empty data
-		xSeries = new GraphViewSeries("x", new GraphViewSeriesStyle(Color.CYAN, 3), new GraphViewData[]{});		
-		ySeries = new GraphViewSeries("y", new GraphViewSeriesStyle(Color.GREEN, 3), new GraphViewData[]{});
-		zSeries = new GraphViewSeries("z", new GraphViewSeriesStyle(Color.RED, 3), new GraphViewData[]{});
-
-		mGraphView.addSeries(xSeries);
-		mGraphView.addSeries(ySeries);
-		mGraphView.addSeries(zSeries);
+		// These sensors are only one dimensional
+		if (sensorType.equals("pressure") ||
+				sensorType.equals("proximity") ||
+				sensorType.equals("relative_humidity") ||
+				sensorType.equals("light") ||
+				sensorType.equals("ambient_temperature")) {
+			
+			if (sensorType.equals("pressure")) {
+				xSeries = new GraphViewSeries("mBar", new GraphViewSeriesStyle(Color.CYAN, 3), new GraphViewData[]{});
+			} else if (sensorType.equals("proximity")) {
+				xSeries = new GraphViewSeries("centimetres", new GraphViewSeriesStyle(Color.CYAN, 3), new GraphViewData[]{});
+				mGraphView.setVerticalLabels(new String[]{"Far", "Near"});
+			} else if (sensorType.equals("relative_humidity")) {
+				xSeries = new GraphViewSeries("RH%", new GraphViewSeriesStyle(Color.CYAN, 3), new GraphViewData[]{});
+			} else if (sensorType.equals("light")) {
+				xSeries = new GraphViewSeries("lux", new GraphViewSeriesStyle(Color.CYAN, 3), new GraphViewData[]{});
+			} else if (sensorType.equals("ambient_temperature")) {
+				xSeries = new GraphViewSeries("Celsius", new GraphViewSeriesStyle(Color.CYAN, 3), new GraphViewData[]{});
+			}
+				
+		} else {
+			// Init the series with empty data
+			xSeries = new GraphViewSeries("x", new GraphViewSeriesStyle(Color.CYAN, 3), new GraphViewData[]{});		
+			ySeries = new GraphViewSeries("y", new GraphViewSeriesStyle(Color.GREEN, 3), new GraphViewData[]{});
+			zSeries = new GraphViewSeries("z", new GraphViewSeriesStyle(Color.RED, 3), new GraphViewData[]{});
+		}
+		
+		if (xSeries != null)
+			mGraphView.addSeries(xSeries);
+		if (ySeries != null)
+			mGraphView.addSeries(ySeries);
+		if (zSeries != null)
+			mGraphView.addSeries(zSeries);
 
 		
 		LinearLayout layout = (LinearLayout) findViewById(R.id.fragment_container);
