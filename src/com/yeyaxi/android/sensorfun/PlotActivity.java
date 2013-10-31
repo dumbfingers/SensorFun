@@ -12,11 +12,11 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.widget.LinearLayout;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
+import com.jjoe64.graphview.GraphView.LegendAlign;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 import com.jjoe64.graphview.LineGraphView;
@@ -95,10 +95,15 @@ public class PlotActivity extends Activity {
 		mGraphView.setScrollable(true);
 		mGraphView.setScalable(true);
 		mGraphView.setViewPort(0, 500);
+		// Set style of vertical labels
 		mGraphView.getGraphViewStyle().setVerticalLabelsColor(Color.BLACK);
-		mGraphView.getGraphViewStyle().setVerticalLabelsWidth(100);
+		mGraphView.getGraphViewStyle().setVerticalLabelsWidth(200);
+		// Set style of horizontal labels
+		mGraphView.getGraphViewStyle().setHorizontalLabelsColor(Color.BLACK);
 		mGraphView.setShowLegend(true);
-		 
+		mGraphView.setLegendAlign(LegendAlign.BOTTOM);
+		mGraphView.setLegendWidth(200);
+		
 		// These sensors are only one dimensional
 		if (sensorType.equals("pressure") ||
 				sensorType.equals("proximity") ||
@@ -107,21 +112,21 @@ public class PlotActivity extends Activity {
 				sensorType.equals("ambient_temperature")) {
 			
 			if (sensorType.equals("pressure")) {
-				xSeries = new GraphViewSeries("mBar", new GraphViewSeriesStyle(Color.CYAN, 3), new GraphViewData[]{});
+				xSeries = new GraphViewSeries("mBar", new GraphViewSeriesStyle(Color.BLUE, 3), new GraphViewData[]{});
 			} else if (sensorType.equals("proximity")) {
-				xSeries = new GraphViewSeries("centimetres", new GraphViewSeriesStyle(Color.CYAN, 3), new GraphViewData[]{});
+				xSeries = new GraphViewSeries("centimetres", new GraphViewSeriesStyle(Color.BLUE, 3), new GraphViewData[]{});
 				mGraphView.setVerticalLabels(new String[]{"Far", "Near"});
 			} else if (sensorType.equals("relative_humidity")) {
-				xSeries = new GraphViewSeries("RH%", new GraphViewSeriesStyle(Color.CYAN, 3), new GraphViewData[]{});
+				xSeries = new GraphViewSeries("RH%", new GraphViewSeriesStyle(Color.BLUE, 3), new GraphViewData[]{});
 			} else if (sensorType.equals("light")) {
-				xSeries = new GraphViewSeries("lux", new GraphViewSeriesStyle(Color.CYAN, 3), new GraphViewData[]{});
+				xSeries = new GraphViewSeries("lux", new GraphViewSeriesStyle(Color.BLUE, 3), new GraphViewData[]{});
 			} else if (sensorType.equals("ambient_temperature")) {
-				xSeries = new GraphViewSeries("Celsius", new GraphViewSeriesStyle(Color.CYAN, 3), new GraphViewData[]{});
+				xSeries = new GraphViewSeries("Celsius", new GraphViewSeriesStyle(Color.BLUE, 3), new GraphViewData[]{});
 			}
 				
 		} else {
 			// Init the series with empty data
-			xSeries = new GraphViewSeries("x", new GraphViewSeriesStyle(Color.CYAN, 3), new GraphViewData[]{});		
+			xSeries = new GraphViewSeries("x", new GraphViewSeriesStyle(Color.BLUE, 3), new GraphViewData[]{});		
 			ySeries = new GraphViewSeries("y", new GraphViewSeriesStyle(Color.GREEN, 3), new GraphViewData[]{});
 			zSeries = new GraphViewSeries("z", new GraphViewSeriesStyle(Color.RED, 3), new GraphViewData[]{});
 		}
