@@ -18,8 +18,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.CompoundButton;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.yeyaxi.android.sensorfun.util.SensorDataUtility;
 
@@ -64,6 +66,7 @@ public class MainActivity extends Activity {
 	private TextView rotVecValY;
 	private TextView rotVecValZ;
 
+	private ToggleButton recordToggle;
 	// For table rows
 	private TableRow gpsRow;
 	private TableRow accelRow;
@@ -121,6 +124,8 @@ public class MainActivity extends Activity {
 		rotVecValX = (TextView) findViewById(R.id.rotValX);
 		rotVecValY = (TextView) findViewById(R.id.rotValY);
 		rotVecValZ = (TextView) findViewById(R.id.rotValZ);
+		
+		recordToggle = (ToggleButton) findViewById(R.id.toggleRecord);
 		
 		// Init for table rows
 		gpsRow = (TableRow) findViewById(R.id.tableRowGPS);
@@ -220,7 +225,12 @@ public class MainActivity extends Activity {
 		
 		// bind the service
 		doBindService();
-
+		
+		recordToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				mBoundService.toggleRecord(isChecked);
+			}
+		});
 	}
 
 	@Override

@@ -70,7 +70,7 @@ public class PlotActivity extends Activity {
 			
 			@Override
 			public void onReceive(Context context, Intent intent) {
-				if (intent.getFloatArrayExtra(sensorType) != null) {				
+				if (intent.getFloatArrayExtra(sensorType) != null) {
 					sensorVal = intent.getFloatArrayExtra(sensorType);
 					++counter;
 					// These sensors are only one dimensional
