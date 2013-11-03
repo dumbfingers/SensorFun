@@ -23,9 +23,10 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivity;
 import com.yeyaxi.android.sensorfun.util.SensorDataUtility;
 
-public class MainActivity extends Activity {
+public class MainActivity extends BaseActivity {
 
 	
 	private SensorManager mSensorManager;
@@ -87,8 +88,9 @@ public class MainActivity extends Activity {
 	private BroadcastReceiver mReceiver;
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		setContentView(R.layout.activity_main);
 		
 		accValX = (TextView) findViewById(R.id.accValX);
@@ -233,12 +235,12 @@ public class MainActivity extends Activity {
 		});
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		// Inflate the menu; this adds items to the action bar if it is present.
+//		getMenuInflater().inflate(R.menu.main, menu);
+//		return true;
+//	}
 
 	
 	@Override
