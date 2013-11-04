@@ -2,6 +2,8 @@ package com.yeyaxi.android.sensorfun;
 
 import java.util.List;
 
+import org.jraf.android.backport.switchwidget.Switch;
+
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -19,10 +21,12 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivity;
 import com.yeyaxi.android.sensorfun.util.SensorDataUtility;
 
@@ -82,10 +86,39 @@ public class MainActivity extends BaseActivity {
 	private TableRow proxiRow;
 	private TableRow relaHumidRow;
 	
+	// For menu
+//	private TableRow gpsMenuRow;
+	private TableRow accelMenuRow;
+	private TableRow gyroMenuRow;
+	private TableRow gravityMenuRow;
+	private TableRow linAccMenuRow;
+	private TableRow magMenuRow;
+	private TableRow rotVecMenuRow;
+	private TableRow tempMenuRow;
+	private TableRow lightMenuRow;
+	private TableRow pressureMenuRow;
+	private TableRow proxiMenuRow;
+	private TableRow relaHumidMenuRow;
+	
+	// Menu's Switch
+	private Switch accSwitch;
+	private Switch gyroSwitch;
+	private Switch gravitySwitch;
+	private Switch linAccSwitch;
+	private Switch magSwitch;
+	private Switch rotVecSwitch;
+	private Switch tempSwitch;
+	private Switch lightSwitch;
+	private Switch pressureSwitch;
+	private Switch proxiSwitch;
+	private Switch relaHumSwitch;
+	
 	private SensorService mBoundService;
 	private boolean isBind = false;
 	
 	private BroadcastReceiver mReceiver;
+	
+	private SlidingMenu menu;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -228,11 +261,62 @@ public class MainActivity extends BaseActivity {
 		// bind the service
 		doBindService();
 		
-		recordToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				mBoundService.toggleRecord(isChecked);
-			}
-		});
+
+		
+		
+		// Do something for the sliding menu
+		menu = getSlidingMenu();
+		setSlidingActionBarEnabled(false);
+
+		accelMenuRow = (TableRow) menu.findViewById(R.id.menuRowAccel);
+		gyroMenuRow = (TableRow) menu.findViewById(R.id.menuRowGyro);
+		gravityMenuRow = (TableRow) menu.findViewById(R.id.menuRowGravity);
+		linAccMenuRow = (TableRow) menu.findViewById(R.id.menuRowLinearAcc);
+		magMenuRow = (TableRow) menu.findViewById(R.id.menuRowMagField);
+		rotVecMenuRow = (TableRow) menu.findViewById(R.id.menuRowRotVec);
+		tempMenuRow = (TableRow) menu.findViewById(R.id.menuRowAmbientTemp);
+		lightMenuRow = (TableRow) menu.findViewById(R.id.menuRowLight);
+		pressureMenuRow = (TableRow) menu.findViewById(R.id.menuRowPressure);
+		proxiMenuRow = (TableRow) menu.findViewById(R.id.menuRowProximity);
+		relaHumidMenuRow = (TableRow) menu.findViewById(R.id.menuRowRelaHumid);
+
+		accSwitch = (Switch) menu.findViewById(R.id.accSwitch);
+		gyroSwitch = (Switch) menu.findViewById(R.id.gyroSwitch);
+		gravitySwitch = (Switch) menu.findViewById(R.id.gravitySwitch);
+		linAccSwitch = (Switch) menu.findViewById(R.id.lineAccSwitch);
+		magSwitch = (Switch) menu.findViewById(R.id.magFieldSwitch);
+		rotVecSwitch = (Switch) menu.findViewById(R.id.rotVecSwitch);
+		tempSwitch = (Switch) menu.findViewById(R.id.ambTempSwitch);
+		lightSwitch = (Switch) menu.findViewById(R.id.lightSwitch);
+		pressureSwitch = (Switch) menu.findViewById(R.id.pressureSwitch);
+		proxiSwitch = (Switch) menu.findViewById(R.id.proxSwitch);
+		relaHumSwitch = (Switch) menu.findViewById(R.id.relaHumidSwitch);
+		
+		accSwitch.setChecked(true);
+		gyroSwitch.setChecked(true);
+		gravitySwitch.setChecked(true);
+		linAccSwitch.setChecked(true);
+		magSwitch.setChecked(true);
+		rotVecSwitch.setChecked(true);
+		tempSwitch.setChecked(true);
+		lightSwitch.setChecked(true);
+		pressureSwitch.setChecked(true);
+		proxiSwitch.setChecked(true);
+		relaHumSwitch.setChecked(true);
+		
+		recordToggle.setOnCheckedChangeListener(checkedChangeListener);
+		
+		accSwitch.setOnCheckedChangeListener(checkedChangeListener);
+		gyroSwitch.setOnCheckedChangeListener(checkedChangeListener);
+		gravitySwitch.setOnCheckedChangeListener(checkedChangeListener);
+		linAccSwitch.setOnCheckedChangeListener(checkedChangeListener);
+		magSwitch.setOnCheckedChangeListener(checkedChangeListener);
+		rotVecSwitch.setOnCheckedChangeListener(checkedChangeListener);
+		tempSwitch.setOnCheckedChangeListener(checkedChangeListener);
+		lightSwitch.setOnCheckedChangeListener(checkedChangeListener);
+		pressureSwitch.setOnCheckedChangeListener(checkedChangeListener);
+		proxiSwitch.setOnCheckedChangeListener(checkedChangeListener);
+		relaHumSwitch.setOnCheckedChangeListener(checkedChangeListener);
 	}
 
 //	@Override
@@ -241,7 +325,58 @@ public class MainActivity extends BaseActivity {
 //		getMenuInflater().inflate(R.menu.main, menu);
 //		return true;
 //	}
+	
+	OnCheckedChangeListener checkedChangeListener = new OnCheckedChangeListener() {
 
+		@Override
+		public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+			if (buttonView.getId() == R.id.toggleRecord) {
+				
+				mBoundService.toggleRecord(isChecked);
+				
+			} else {
+				
+				mBoundService.singleToggle(buttonView.getId(), isChecked);
+				
+				switch (buttonView.getId()) {
+				case R.id.accSwitch:
+					accelRow.setEnabled(isChecked);
+					break;
+				case R.id.gyroSwitch:
+					gyroRow.setEnabled(isChecked);
+					break;
+				case R.id.gravitySwitch:
+					gravityRow.setEnabled(isChecked);
+					break;
+				case R.id.lineAccSwitch:
+					linAccRow.setEnabled(isChecked);
+					break;
+				case R.id.magFieldSwitch:
+					magRow.setEnabled(isChecked);
+					break;
+				case R.id.rotVecSwitch:
+					rotVecRow.setEnabled(isChecked);
+					break;
+				case R.id.ambTempSwitch:
+					tempRow.setEnabled(isChecked);
+					break;
+				case R.id.lightSwitch:
+					lightRow.setEnabled(isChecked);
+					break;
+				case R.id.pressureSwitch:
+					pressureRow.setEnabled(isChecked);
+					break;
+				case R.id.proxSwitch:
+					proxiRow.setEnabled(isChecked);
+					break;
+				case R.id.relaHumidSwitch:
+					relaHumidRow.setEnabled(isChecked);
+					break;
+				}
+				
+			}
+		}
+	};
 	
 	@Override
 	protected void onStart() {
@@ -363,18 +498,23 @@ public class MainActivity extends BaseActivity {
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) == null) {
 //			Log.i(TAG, "Accelerometer");
 			accelRow.setVisibility(View.GONE);
+			accelMenuRow.setVisibility(View.GONE);
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
 		}
 		
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE) == null) {
 //			Log.i(TAG, "Ambient Temperature");
 			tempRow.setVisibility(View.GONE);
+			tempMenuRow.setVisibility(View.GONE);
+
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE), SensorManager.SENSOR_DELAY_NORMAL);
 		}
 		
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY) == null) {
 //			Log.i(TAG, "Gravity");
 			gravityRow.setVisibility(View.GONE);
+			gravityMenuRow.setVisibility(View.GONE);
+
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
@@ -382,6 +522,8 @@ public class MainActivity extends BaseActivity {
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE) == null) {
 //			Log.i(TAG, "Gyroscope");
 			gyroRow.setVisibility(View.GONE);
+			gyroMenuRow.setVisibility(View.GONE);
+
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
@@ -389,6 +531,8 @@ public class MainActivity extends BaseActivity {
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT) == null) {
 //			Log.i(TAG, "Light");
 			lightRow.setVisibility(View.GONE);
+			lightMenuRow.setVisibility(View.GONE);
+			
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
@@ -396,6 +540,8 @@ public class MainActivity extends BaseActivity {
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION) == null) {
 //			Log.i(TAG, "Linear Acceleration");
 			linAccRow.setVisibility(View.GONE);
+			linAccMenuRow.setVisibility(View.GONE);
+
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
@@ -403,6 +549,8 @@ public class MainActivity extends BaseActivity {
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) == null) {
 //			Log.i(TAG, "Magnetic Field");
 			magRow.setVisibility(View.GONE);
+			magMenuRow.setVisibility(View.GONE);
+			
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
@@ -412,6 +560,8 @@ public class MainActivity extends BaseActivity {
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE) == null) {
 //			Log.i(TAG, "Pressure");
 			pressureRow.setVisibility(View.GONE);
+			pressureMenuRow.setVisibility(View.GONE);
+
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
@@ -419,6 +569,8 @@ public class MainActivity extends BaseActivity {
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY) == null) {
 //			Log.i(TAG, "Proximity");
 			proxiRow.setVisibility(View.GONE);
+			proxiMenuRow.setVisibility(View.GONE);
+
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
@@ -426,6 +578,8 @@ public class MainActivity extends BaseActivity {
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY) == null) {
 //			Log.i(TAG, "Relative Humidity");
 			relaHumidRow.setVisibility(View.GONE);
+			relaHumidMenuRow.setVisibility(View.GONE);
+
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
@@ -433,6 +587,8 @@ public class MainActivity extends BaseActivity {
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR) == null) {
 //			Log.i(TAG, "Rotation Vector");
 			rotVecRow.setVisibility(View.GONE);
+			rotVecMenuRow.setVisibility(View.GONE);
+
 //			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}

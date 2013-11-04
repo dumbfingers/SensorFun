@@ -5,6 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
 
+import org.jraf.android.backport.switchwidget.Switch;
+
 import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Context;
@@ -47,10 +49,22 @@ public class SensorService extends Service implements SensorEventListener{
 	private float[] presVal = new float[3];
 	private float[] proxVal = new float[3];
 	private float[] rhVal = new float[3];
-	// Roatation Vector contains 5 elements
+	// Rotation Vector contains 5 elements
 	private float[] rotVals = new float[5];
-
+	// This is the main switch
 	private boolean toggleRecord = false;
+	// These are the separate switches
+	private boolean accToggle = true;
+	private boolean gyroToggle = true;
+	private boolean gravityToggle = true;
+	private boolean linAccToggle = true;
+	private boolean magToggle = true;
+	private boolean rotVecToggle = true;
+	private boolean tempToggle = true;
+	private boolean lightToggle = true;
+	private boolean pressureToggle = true;
+	private boolean proxiToggle = true;
+	private boolean relaHumToggle = true;
 	
 	// This is the object that receives interactions from clients.  See
 	// RemoteService for a more complete example.
@@ -101,36 +115,37 @@ public class SensorService extends Service implements SensorEventListener{
 		// TODO Auto-generated method stub
 		Sensor mSensor = event.sensor;
 		
-		if (mSensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+		if (mSensor.getType() == Sensor.TYPE_ACCELEROMETER && accToggle) {
 			
 			accVals = SensorDataUtility.lowPass(event.values, accVals, 0.1f);
 			
 			sendMessage("accelerometer", accVals);
 			recordToFile("accelerometer", accVals);
 			
-		} else if (mSensor.getType() == Sensor.TYPE_AMBIENT_TEMPERATURE) {
+		} else if (mSensor.getType() == Sensor.TYPE_AMBIENT_TEMPERATURE && tempToggle) {
 
 			// By giving alpha as 1.0f, we're receiving the value without any filter
 			tempVal = SensorDataUtility.lowPass(event.values, tempVal, 1.0f);
 
 			sendMessage("ambient_temperature", tempVal);
+			
 			recordToFile("ambient_temperature", tempVal);
 
-		} else if (mSensor.getType() == Sensor.TYPE_GRAVITY) {
+		} else if (mSensor.getType() == Sensor.TYPE_GRAVITY && gravityToggle) {
 			
 			gravVals = SensorDataUtility.lowPass(event.values, gravVals, 0.6f);
 			
 			sendMessage("gravity", gravVals);
 			recordToFile("gravity", gravVals);
 			
-		} else if (mSensor.getType() == Sensor.TYPE_GYROSCOPE) {
+		} else if (mSensor.getType() == Sensor.TYPE_GYROSCOPE && gyroToggle) {
 			
 			gyroVals = SensorDataUtility.lowPass(event.values, gyroVals, 0.6f);
 			
 			sendMessage("gyroscope", gyroVals);
 			recordToFile("gyroscope", gyroVals);
 			
-		} else if (mSensor.getType() == Sensor.TYPE_LIGHT) {
+		} else if (mSensor.getType() == Sensor.TYPE_LIGHT && lightToggle) {
 			
 			// By giving alpha as 1.0f, we're receiving the value without any filter
 			lightVal = SensorDataUtility.lowPass(event.values, lightVal, 1.0f);
@@ -138,42 +153,42 @@ public class SensorService extends Service implements SensorEventListener{
 			sendMessage("light", lightVal);
 			recordToFile("light", lightVal);
 			
-		} else if (mSensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
+		} else if (mSensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION && linAccToggle) {
 			
 			lineAccVals = SensorDataUtility.lowPass(event.values, lineAccVals, 0.6f);
 			
 			sendMessage("linear_acceleration", lineAccVals);
 			recordToFile("linear_acceleration", lineAccVals);
 			
-		} else if (mSensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+		} else if (mSensor.getType() == Sensor.TYPE_MAGNETIC_FIELD && magToggle) {
 			
 			magVals = SensorDataUtility.lowPass(event.values, magVals, 0.2f);
 			
 			sendMessage("magnetic_field", magVals);
 			recordToFile("magnetic_field", magVals);
 			
-		} else if (mSensor.getType() == Sensor.TYPE_PRESSURE) {
+		} else if (mSensor.getType() == Sensor.TYPE_PRESSURE && pressureToggle) {
 			
 			presVal = SensorDataUtility.lowPass(event.values, presVal, 0.5f);
 			
 			sendMessage("pressure", presVal);
 			recordToFile("pressure", presVal);
 			
-		} else if (mSensor.getType() == Sensor.TYPE_PROXIMITY) {
+		} else if (mSensor.getType() == Sensor.TYPE_PROXIMITY && proxiToggle) {
 			
 			proxVal = SensorDataUtility.lowPass(event.values, proxVal, 1.0f);
 			
 			sendMessage("proximity", proxVal);
 			recordToFile("proximity", proxVal);
 			
-		} else if (mSensor.getType() == Sensor.TYPE_RELATIVE_HUMIDITY) {
+		} else if (mSensor.getType() == Sensor.TYPE_RELATIVE_HUMIDITY && relaHumToggle) {
 			
 			rhVal = SensorDataUtility.lowPass(event.values, rhVal, 1.0f);
 			
 			sendMessage("relative_humidity", rhVal);
 			recordToFile("relative_humidity", rhVal);
 			
-		} else if (mSensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
+		} else if (mSensor.getType() == Sensor.TYPE_ROTATION_VECTOR && rotVecToggle) {
 			rotVals = SensorDataUtility.lowPass(event.values, rotVals, 0.6f);
 			sendMessage("rotation_vector", rotVals);
 			recordToFile("rotation_vector", rotVals);
@@ -254,6 +269,44 @@ public class SensorService extends Service implements SensorEventListener{
 	
 	public void toggleRecord(boolean toggle) {
 		this.toggleRecord = toggle;
+	}
+	
+	public void singleToggle(int toggleID, boolean toggle) {
+		switch (toggleID) {
+		case R.id.accSwitch:
+			accToggle = toggle;
+			break;
+		case R.id.gyroSwitch:
+			gyroToggle = toggle;
+			break;
+		case R.id.gravitySwitch:
+			gravityToggle = toggle;
+			break;
+		case R.id.lineAccSwitch:
+			linAccToggle = toggle;
+			break;
+		case R.id.magFieldSwitch:
+			magToggle = toggle;
+			break;
+		case R.id.rotVecSwitch:
+			rotVecToggle = toggle;
+			break;
+		case R.id.ambTempSwitch:
+			tempToggle = toggle;
+			break;
+		case R.id.lightSwitch:
+			lightToggle = toggle;
+			break;
+		case R.id.pressureSwitch:
+			pressureToggle = toggle;
+			break;
+		case R.id.proxSwitch:
+			proxiToggle = toggle;
+			break;
+		case R.id.relaHumidSwitch:
+			relaHumToggle = toggle;
+			break;
+		}
 	}
 	
 	private void sendMessage(String sensorName, float[] values) {
