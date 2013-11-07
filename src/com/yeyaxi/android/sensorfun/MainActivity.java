@@ -390,7 +390,7 @@ public class MainActivity extends BaseActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		// TODO onPause invoked, set flag so that we can use alarm manager
+		// onPause invoked, set flag so that we can use alarm manager
 		// If record toggle is ON means we need to fire up the alarm manager to schedule the recordings
 		if (recordToggle.isChecked() == true) {
 			

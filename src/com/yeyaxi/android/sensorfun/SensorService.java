@@ -414,11 +414,13 @@ public class SensorService extends IntentService implements SensorEventListener{
 	}
 	
 	private File getStorageDirectory() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
-			return getExternalFilesDir(null);
-		} else {
-			return new File(Environment.getExternalStorageDirectory(), 
-					"/Android/data/" + this.getPackageName() + "/files/");
-		}
+//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
+//			return getExternalFilesDir(null);
+//		} else {
+//			return new File(Environment.getExternalStorageDirectory(), 
+//					"/Android/data/" + this.getPackageName() + "/files/");
+//		}
+		// This will create a public folder under the sdcard root
+		return new File(Environment.getExternalStorageDirectory(), "/SensorFun/");
 	}
 }
