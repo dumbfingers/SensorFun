@@ -17,7 +17,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Binder;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
@@ -52,7 +51,7 @@ public class SensorService extends Service implements SensorEventListener{
 	private float[] rhVal = new float[3];
 	// Rotation Vector contains 5 elements
 	private float[] rotVals = new float[5];
-	// This is the main switch of writing data to storage
+	// This is the main switch
 	private boolean toggleRecord = false;
 	// These are the separate switches
 	private boolean accToggle = true;
@@ -66,8 +65,6 @@ public class SensorService extends Service implements SensorEventListener{
 	private boolean pressureToggle = true;
 	private boolean proxiToggle = true;
 	private boolean relaHumToggle = true;
-	// Background state
-	private boolean isBackground = false;
 	
 	// This is the object that receives interactions from clients.  See
 	// RemoteService for a more complete example.
@@ -81,36 +78,18 @@ public class SensorService extends Service implements SensorEventListener{
 
 	@Override
 	public void onCreate() {
-		super.onCreate();
+		
 		mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
 		
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-
+		
 		regSensorListeners();
 
 	}
 	
 	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
-		Bundle bundle = intent.getExtras();
-		if (bundle != null) {
-			if (bundle.containsKey("Background")) {
-				isBackground = true;
-			}
-			
-			if (bundle.containsKey("Record")) {
-				toggleRecord = true;
-			}
-		}
-		
-		// We want this service to continue running until it is explicitly
-		// stopped, so return sticky.
-		Log.i(TAG, "Received start id " + startId + ": " + intent);
-		return START_STICKY;
-	}
-	
-	@Override
 	public IBinder onBind(Intent intent) {
+		// TODO Auto-generated method stub
 		Log.d(TAG, "onBind Service");
 		return mBinder;
 	}
@@ -127,12 +106,13 @@ public class SensorService extends Service implements SensorEventListener{
 
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-
+		// TODO Auto-generated method stub
 		Sensor mSensor = event.sensor;
 		
 		if (mSensor.getType() == Sensor.TYPE_ACCELEROMETER && accToggle) {
@@ -213,13 +193,6 @@ public class SensorService extends Service implements SensorEventListener{
 			sendMessage("rotation_vector", rotVals);
 			recordToFile("rotation_vector", rotVals);
 		}
-		
-		// If the record toggle is ON and in background, we'll need to self-kill the service
-		if (toggleRecord == true && isBackground == true) {
-			mSensorManager.unregisterListener(this);
-			Log.d(TAG, "Sensor Service self-killed.");
-			stopSelf();
-		}
 	}
 
 	@SuppressLint("InlinedApi")
@@ -296,10 +269,6 @@ public class SensorService extends Service implements SensorEventListener{
 	
 	public void toggleRecord(boolean toggle) {
 		this.toggleRecord = toggle;
-	}
-	
-	public void setBackground(boolean state) {
-		this.isBackground = state;
 	}
 	
 	public void singleToggle(int toggleID, boolean toggle) {

@@ -4,8 +4,7 @@ import java.util.List;
 
 import org.jraf.android.backport.switchwidget.Switch;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -18,6 +17,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CompoundButton;
@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivity;
 import com.yeyaxi.android.sensorfun.util.SensorDataUtility;
 
 public class MainActivity extends BaseActivity {
@@ -260,6 +261,9 @@ public class MainActivity extends BaseActivity {
 		// bind the service
 		doBindService();
 		
+
+		
+		
 		// Do something for the sliding menu
 		menu = getSlidingMenu();
 		setSlidingActionBarEnabled(false);
@@ -383,21 +387,11 @@ public class MainActivity extends BaseActivity {
 	protected void onResume() {
 		super.onResume();
 		LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("SensorData"));
-		// Cancel the alarm schedule
-		cancelAlarm();
 	}
 	
 	@Override
 	protected void onPause() {
 		super.onPause();
-		// TODO onPause invoked, set flag so that we can use alarm manager
-		// If record toggle is ON means we need to fire up the alarm manager to schedule the recordings
-		if (recordToggle.isChecked() == true) {
-			
-			mBoundService.setBackground(true);
-			
-			scheduleAlarm();
-		}
 		LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
 	}
 	
@@ -465,23 +459,6 @@ public class MainActivity extends BaseActivity {
 		}
 	};
 	
-	private void scheduleAlarm() {
-		AlarmManager scheduler = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		Intent intent = new Intent(this, SensorService.class );
-		intent.putExtra("Background", true);
-		intent.putExtra("Record", true);
-		PendingIntent scheduledIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-		// Alarm to be fired up in 1-minute's interval
-		scheduler.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1 * 60 * 1000, scheduledIntent);
-	}
-	
-	private void cancelAlarm() {
-		AlarmManager scheduler = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		Intent intent = new Intent(this,SensorService.class );
-		PendingIntent scheduledIntent = PendingIntent.getService(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-		scheduler.cancel(scheduledIntent);
-	}
-	
 	private void startPlotActivity(String sensorType) {
 		Intent i = new Intent(this, PlotActivity.class);
 		i.putExtra("sensorType", sensorType);
@@ -516,7 +493,7 @@ public class MainActivity extends BaseActivity {
 	private void detectSensors() {		
 		deviceSensors = mSensorManager.getSensorList(Sensor.TYPE_ALL);
 		
-//		Log.d(TAG, "" + deviceSensors);
+		Log.d(TAG, "" + deviceSensors);
 		
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) == null) {
 //			Log.i(TAG, "Accelerometer");

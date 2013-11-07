@@ -18,7 +18,7 @@ public class BaseActivity extends SlidingActivity{
 		sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
 		sm.setFadeDegree(0.35f);
 		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-		
+
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 	}
