@@ -471,8 +471,8 @@ public class MainActivity extends BaseActivity {
 		intent.putExtra("Background", true);
 		intent.putExtra("Record", true);
 		PendingIntent scheduledIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-		// Alarm to be fired up in 1-minute's interval
-		scheduler.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1 * 60 * 1000, scheduledIntent);
+		//TODO Alarm to be fired up in 1-minute's interval
+		scheduler.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 5 * 1000, scheduledIntent);
 	}
 	
 	private void cancelAlarm() {

@@ -26,7 +26,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name="SensorService" >
+        <service android:name="SensorService" android:enabled="true">
         </service>
 
         <activity android:name="PlotActivity" >

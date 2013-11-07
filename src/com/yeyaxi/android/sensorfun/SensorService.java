@@ -8,6 +8,7 @@ import java.util.Date;
 import org.jraf.android.backport.switchwidget.Switch;
 
 import android.annotation.SuppressLint;
+import android.app.IntentService;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -31,7 +32,7 @@ import com.yeyaxi.android.sensorfun.util.SensorDataUtility;
  * @author Yaxi Ye
  * @since Oct.11.2013
  */
-public class SensorService extends Service implements SensorEventListener{
+public class SensorService extends IntentService implements SensorEventListener{
 
 //	private String msg = "Test Msg";
 	
@@ -78,6 +79,10 @@ public class SensorService extends Service implements SensorEventListener{
 			return SensorService.this;
 		}
 	}
+	
+	public SensorService() {
+		super("SensorService");
+	}
 
 	@Override
 	public void onCreate() {
@@ -87,11 +92,11 @@ public class SensorService extends Service implements SensorEventListener{
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
 		regSensorListeners();
-
+		Log.d(TAG, "SensorService Created.");
 	}
 	
 	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
+	protected void onHandleIntent(Intent intent) {
 		Bundle bundle = intent.getExtras();
 		if (bundle != null) {
 			if (bundle.containsKey("Background")) {
@@ -103,11 +108,18 @@ public class SensorService extends Service implements SensorEventListener{
 			}
 		}
 		
-		// We want this service to continue running until it is explicitly
-		// stopped, so return sticky.
-		Log.i(TAG, "Received start id " + startId + ": " + intent);
-		return START_STICKY;
+		Log.i(TAG, "Received start: " + intent);
 	}
+	
+//	@Override
+//	public int onStartCommand(Intent intent, int flags, int startId) {
+//
+//		
+//		// We want this service to continue running until it is explicitly
+//		// stopped, so return sticky.
+//		Log.i(TAG, "Received start id " + startId + ": " + intent);
+//		return START_STICKY;
+//	}
 	
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -367,7 +379,7 @@ public class SensorService extends Service implements SensorEventListener{
 											Float.toString(values[2])});
 			csvWriter.close();
 			
-//			Log.d(TAG, "Record: " + date);
+			Log.d(TAG, "Record: " + date);
 			
 			} catch (IOException e) {
 				e.printStackTrace();
