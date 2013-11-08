@@ -6,4 +6,6 @@
     <string name="hello_world">Hello world!</string>
 	<string name="off">OFF</string>
 	<string name="on">ON</string>
+	<string name="drawer_open">Options</string>
+	<string name="drawer_close">Close</string>
 </resources>

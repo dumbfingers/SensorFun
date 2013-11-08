@@ -421,6 +421,16 @@ public class SensorService extends IntentService implements SensorEventListener{
 //					"/Android/data/" + this.getPackageName() + "/files/");
 //		}
 		// This will create a public folder under the sdcard root
-		return new File(Environment.getExternalStorageDirectory(), "/SensorFun/");
+		File f = new File(Environment.getExternalStorageDirectory(), "/SensorFun/");
+		if (f.exists() == false) {
+			if (f.mkdirs() == true) {
+				return f;
+			} else {
+				return null;
+			}
+		} else {
+			return f;
+		}
+		 
 	}
 }

@@ -12,12 +12,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.res.Configuration;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
+import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CompoundButton;
@@ -26,7 +28,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.actionbarsherlock.view.MenuItem;
 import com.yeyaxi.android.sensorfun.util.SensorDataUtility;
 
 public class MainActivity extends BaseActivity {
@@ -117,63 +119,72 @@ public class MainActivity extends BaseActivity {
 	
 	private BroadcastReceiver mReceiver;
 	
-	private SlidingMenu menu;
+	private DrawerLayout mDrawerLayout;
+//	private SlidingMenu menu;
+	private View mSwitchView;
+	private View mainView;
+	
+	private ActionBarDrawerToggle mDrawerToggle;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		setContentView(R.layout.activity_main);
+//		setContentView(R.layout.activity_main);
+		setContentView(R.layout.drawer_main);
 		
-		accValX = (TextView) findViewById(R.id.accValX);
-		accValY = (TextView) findViewById(R.id.accValY);
-		accValZ = (TextView) findViewById(R.id.accValZ);
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		mainView = (View) findViewById(R.id.content_frame);
 		
-		ambTempVal = (TextView) findViewById(R.id.tempVal);
+		accValX = (TextView) mainView.findViewById(R.id.accValX);
+		accValY = (TextView) mainView.findViewById(R.id.accValY);
+		accValZ = (TextView) mainView.findViewById(R.id.accValZ);
 		
-		gyroValX = (TextView) findViewById(R.id.gyroValX);
-		gyroValY = (TextView) findViewById(R.id.gyroValY);
-		gyroValZ = (TextView) findViewById(R.id.gyroValZ);
+		ambTempVal = (TextView) mainView.findViewById(R.id.tempVal);
 		
-		gravityX = (TextView) findViewById(R.id.gravityValX);
-		gravityY = (TextView) findViewById(R.id.gravityValY);
-		gravityZ = (TextView) findViewById(R.id.gravityValZ);
+		gyroValX = (TextView) mainView.findViewById(R.id.gyroValX);
+		gyroValY = (TextView) mainView.findViewById(R.id.gyroValY);
+		gyroValZ = (TextView) mainView.findViewById(R.id.gyroValZ);
 		
-		lightVal = (TextView) findViewById(R.id.lightVal);
+		gravityX = (TextView) mainView.findViewById(R.id.gravityValX);
+		gravityY = (TextView) mainView.findViewById(R.id.gravityValY);
+		gravityZ = (TextView) mainView.findViewById(R.id.gravityValZ);
 		
-		magValX = (TextView) findViewById(R.id.magValX);
-		magValY = (TextView) findViewById(R.id.magValY);
-		magValZ = (TextView) findViewById(R.id.magValZ);
+		lightVal = (TextView) mainView.findViewById(R.id.lightVal);
 		
-		linearAccX = (TextView) findViewById(R.id.linAccValX);
-		linearAccY = (TextView) findViewById(R.id.linAccValY);
-		linearAccZ = (TextView) findViewById(R.id.linAccValZ);
+		magValX = (TextView) mainView.findViewById(R.id.magValX);
+		magValY = (TextView) mainView.findViewById(R.id.magValY);
+		magValZ = (TextView) mainView.findViewById(R.id.magValZ);
+		
+		linearAccX = (TextView) mainView.findViewById(R.id.linAccValX);
+		linearAccY = (TextView) mainView.findViewById(R.id.linAccValY);
+		linearAccZ = (TextView) mainView.findViewById(R.id.linAccValZ);
 
-		pressureVal = (TextView) findViewById(R.id.pressureVal);
+		pressureVal = (TextView) mainView.findViewById(R.id.pressureVal);
 		
-		proxiVal = (TextView) findViewById(R.id.proxiVal);
+		proxiVal = (TextView) mainView.findViewById(R.id.proxiVal);
 		
-		relatHumidVal = (TextView) findViewById(R.id.relaHumidVal);
+		relatHumidVal = (TextView) mainView.findViewById(R.id.relaHumidVal);
 		
-		rotVecValX = (TextView) findViewById(R.id.rotValX);
-		rotVecValY = (TextView) findViewById(R.id.rotValY);
-		rotVecValZ = (TextView) findViewById(R.id.rotValZ);
+		rotVecValX = (TextView) mainView.findViewById(R.id.rotValX);
+		rotVecValY = (TextView) mainView.findViewById(R.id.rotValY);
+		rotVecValZ = (TextView) mainView.findViewById(R.id.rotValZ);
 		
-		recordToggle = (ToggleButton) findViewById(R.id.toggleRecord);
+		recordToggle = (ToggleButton) mainView.findViewById(R.id.toggleRecord);
 		
 		// Init for table rows
-		gpsRow = (TableRow) findViewById(R.id.tableRowGPS);
-		accelRow = (TableRow) findViewById(R.id.tableRowAccel);
-		gyroRow = (TableRow) findViewById(R.id.tableRowGyro);
-		gravityRow = (TableRow) findViewById(R.id.tableRowGravity);
-		linAccRow = (TableRow) findViewById(R.id.tableRowLinearAcc);
-		magRow = (TableRow) findViewById(R.id.tableRowMagField);
-		rotVecRow = (TableRow) findViewById(R.id.tableRowRotVec);
-		tempRow = (TableRow) findViewById(R.id.tableRowAmbientTemp);
-		lightRow = (TableRow) findViewById(R.id.tableRowLight);
-		pressureRow = (TableRow) findViewById(R.id.tableRowPressure);
-		proxiRow = (TableRow) findViewById(R.id.tableRowProximity);
-		relaHumidRow = (TableRow) findViewById(R.id.tableRowRelaHumid);
+		gpsRow = (TableRow) mainView.findViewById(R.id.tableRowGPS);
+		accelRow = (TableRow) mainView.findViewById(R.id.tableRowAccel);
+		gyroRow = (TableRow) mainView.findViewById(R.id.tableRowGyro);
+		gravityRow = (TableRow) mainView.findViewById(R.id.tableRowGravity);
+		linAccRow = (TableRow) mainView.findViewById(R.id.tableRowLinearAcc);
+		magRow = (TableRow) mainView.findViewById(R.id.tableRowMagField);
+		rotVecRow = (TableRow) mainView.findViewById(R.id.tableRowRotVec);
+		tempRow = (TableRow) mainView.findViewById(R.id.tableRowAmbientTemp);
+		lightRow = (TableRow) mainView.findViewById(R.id.tableRowLight);
+		pressureRow = (TableRow) mainView.findViewById(R.id.tableRowPressure);
+		proxiRow = (TableRow) mainView.findViewById(R.id.tableRowProximity);
+		relaHumidRow = (TableRow) mainView.findViewById(R.id.tableRowRelaHumid);
 		
 		
 		// Register GPS row listener first
@@ -256,37 +267,35 @@ public class MainActivity extends BaseActivity {
 				}
 			}
 		};
-		
-		// bind the service
-		doBindService();
-		
+			
 		// Do something for the sliding menu
-		menu = getSlidingMenu();
-		setSlidingActionBarEnabled(false);
+//		menu = getSlidingMenu();
+//		setSlidingActionBarEnabled(false);
+		mSwitchView = (View) findViewById(R.id.left_drawer);
 
-		accelMenuRow = (TableRow) menu.findViewById(R.id.menuRowAccel);
-		gyroMenuRow = (TableRow) menu.findViewById(R.id.menuRowGyro);
-		gravityMenuRow = (TableRow) menu.findViewById(R.id.menuRowGravity);
-		linAccMenuRow = (TableRow) menu.findViewById(R.id.menuRowLinearAcc);
-		magMenuRow = (TableRow) menu.findViewById(R.id.menuRowMagField);
-		rotVecMenuRow = (TableRow) menu.findViewById(R.id.menuRowRotVec);
-		tempMenuRow = (TableRow) menu.findViewById(R.id.menuRowAmbientTemp);
-		lightMenuRow = (TableRow) menu.findViewById(R.id.menuRowLight);
-		pressureMenuRow = (TableRow) menu.findViewById(R.id.menuRowPressure);
-		proxiMenuRow = (TableRow) menu.findViewById(R.id.menuRowProximity);
-		relaHumidMenuRow = (TableRow) menu.findViewById(R.id.menuRowRelaHumid);
+		accelMenuRow = (TableRow) mSwitchView.findViewById(R.id.menuRowAccel);
+		gyroMenuRow = (TableRow) mSwitchView.findViewById(R.id.menuRowGyro);
+		gravityMenuRow = (TableRow) mSwitchView.findViewById(R.id.menuRowGravity);
+		linAccMenuRow = (TableRow) mSwitchView.findViewById(R.id.menuRowLinearAcc);
+		magMenuRow = (TableRow) mSwitchView.findViewById(R.id.menuRowMagField);
+		rotVecMenuRow = (TableRow) mSwitchView.findViewById(R.id.menuRowRotVec);
+		tempMenuRow = (TableRow) mSwitchView.findViewById(R.id.menuRowAmbientTemp);
+		lightMenuRow = (TableRow) mSwitchView.findViewById(R.id.menuRowLight);
+		pressureMenuRow = (TableRow) mSwitchView.findViewById(R.id.menuRowPressure);
+		proxiMenuRow = (TableRow) mSwitchView.findViewById(R.id.menuRowProximity);
+		relaHumidMenuRow = (TableRow) mSwitchView.findViewById(R.id.menuRowRelaHumid);
 
-		accSwitch = (Switch) menu.findViewById(R.id.accSwitch);
-		gyroSwitch = (Switch) menu.findViewById(R.id.gyroSwitch);
-		gravitySwitch = (Switch) menu.findViewById(R.id.gravitySwitch);
-		linAccSwitch = (Switch) menu.findViewById(R.id.lineAccSwitch);
-		magSwitch = (Switch) menu.findViewById(R.id.magFieldSwitch);
-		rotVecSwitch = (Switch) menu.findViewById(R.id.rotVecSwitch);
-		tempSwitch = (Switch) menu.findViewById(R.id.ambTempSwitch);
-		lightSwitch = (Switch) menu.findViewById(R.id.lightSwitch);
-		pressureSwitch = (Switch) menu.findViewById(R.id.pressureSwitch);
-		proxiSwitch = (Switch) menu.findViewById(R.id.proxSwitch);
-		relaHumSwitch = (Switch) menu.findViewById(R.id.relaHumidSwitch);
+		accSwitch = (Switch) mSwitchView.findViewById(R.id.accSwitch);
+		gyroSwitch = (Switch) mSwitchView.findViewById(R.id.gyroSwitch);
+		gravitySwitch = (Switch) mSwitchView.findViewById(R.id.gravitySwitch);
+		linAccSwitch = (Switch) mSwitchView.findViewById(R.id.lineAccSwitch);
+		magSwitch = (Switch) mSwitchView.findViewById(R.id.magFieldSwitch);
+		rotVecSwitch = (Switch) mSwitchView.findViewById(R.id.rotVecSwitch);
+		tempSwitch = (Switch) mSwitchView.findViewById(R.id.ambTempSwitch);
+		lightSwitch = (Switch) mSwitchView.findViewById(R.id.lightSwitch);
+		pressureSwitch = (Switch) mSwitchView.findViewById(R.id.pressureSwitch);
+		proxiSwitch = (Switch) mSwitchView.findViewById(R.id.proxSwitch);
+		relaHumSwitch = (Switch) mSwitchView.findViewById(R.id.relaHumidSwitch);
 		
 		accSwitch.setChecked(true);
 		gyroSwitch.setChecked(true);
@@ -313,6 +322,27 @@ public class MainActivity extends BaseActivity {
 		pressureSwitch.setOnCheckedChangeListener(checkedChangeListener);
 		proxiSwitch.setOnCheckedChangeListener(checkedChangeListener);
 		relaHumSwitch.setOnCheckedChangeListener(checkedChangeListener);
+		
+		// ActionBarDrawerToggle ties together the the proper interactions
+		// between the sliding drawer and the action bar app icon
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+				R.drawable.ic_drawer, R.string.drawer_open,
+				R.string.drawer_close) {
+
+			public void onDrawerClosed(View view) {
+				// TODO Auto-generated method stub
+				getSupportActionBar().setTitle(getTitle());
+				super.onDrawerClosed(view);
+			}
+
+			public void onDrawerOpened(View drawerView) {
+				// Set the title on the action when drawer open
+				getSupportActionBar().setTitle("Options");
+				super.onDrawerOpened(drawerView);
+			}
+		};
+
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
 	}
 
 //	@Override
@@ -321,6 +351,36 @@ public class MainActivity extends BaseActivity {
 //		getMenuInflater().inflate(R.menu.main, menu);
 //		return true;
 //	}
+	
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		// Sync the toggle state after onRestoreInstanceState has occurred.
+		mDrawerToggle.syncState();
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		mDrawerToggle.onConfigurationChanged(newConfig);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Pass the event to ActionBarDrawerToggle, if it returns
+		// true, then it has handled the app icon touch event
+        if (item.getItemId() == android.R.id.home) {
+        	 
+            if (mDrawerLayout.isDrawerOpen(mSwitchView)) {
+                mDrawerLayout.closeDrawer(mSwitchView);
+            } else {
+                mDrawerLayout.openDrawer(mSwitchView);
+            }
+        }
+		// Handle your other action bar items...
+
+		return super.onOptionsItemSelected(item);
+	}
 	
 	OnCheckedChangeListener checkedChangeListener = new OnCheckedChangeListener() {
 
@@ -382,9 +442,13 @@ public class MainActivity extends BaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("SensorData"));
 		// Cancel the alarm schedule
 		cancelAlarm();
+		// bind the service
+		doBindService();
+		// Register the receiver
+		LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("SensorData"));
+
 	}
 	
 	@Override
