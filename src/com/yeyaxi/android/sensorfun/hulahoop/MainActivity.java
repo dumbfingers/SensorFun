@@ -1,4 +1,4 @@
-package com.yeyaxi.android.sensorfun;
+package com.yeyaxi.android.sensorfun.hulahoop;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.actionbarsherlock.view.MenuItem;
-import com.yeyaxi.android.sensorfun.util.SensorDataUtility;
+import com.yeyaxi.android.sensorfun.hulahoop.util.SensorDataUtility;
 
 public class MainActivity extends BaseActivity {
 
@@ -187,20 +187,23 @@ public class MainActivity extends BaseActivity {
 		relaHumidRow = (TableRow) mainView.findViewById(R.id.tableRowRelaHumid);
 		
 		
-		// Register GPS row listener first
-		gpsRow.setOnClickListener(rowClickListener);
-		// Other sensors
-		accelRow.setOnClickListener(rowClickListener);
-		gyroRow.setOnClickListener(rowClickListener);
-		gravityRow.setOnClickListener(rowClickListener);
-		linAccRow.setOnClickListener(rowClickListener);
-		magRow.setOnClickListener(rowClickListener);
-		rotVecRow.setOnClickListener(rowClickListener);
-		tempRow.setOnClickListener(rowClickListener);
-		lightRow.setOnClickListener(rowClickListener);
-		pressureRow.setOnClickListener(rowClickListener);
-		proxiRow.setOnClickListener(rowClickListener);
-		relaHumidRow.setOnClickListener(rowClickListener);
+		/**
+		 * In Hula Hoop branch, there's no need to plotting the sensor data
+		 */
+//		// Register GPS row listener first
+//		gpsRow.setOnClickListener(rowClickListener);
+//		// Other sensors
+//		accelRow.setOnClickListener(rowClickListener);
+//		gyroRow.setOnClickListener(rowClickListener);
+//		gravityRow.setOnClickListener(rowClickListener);
+//		linAccRow.setOnClickListener(rowClickListener);
+//		magRow.setOnClickListener(rowClickListener);
+//		rotVecRow.setOnClickListener(rowClickListener);
+//		tempRow.setOnClickListener(rowClickListener);
+//		lightRow.setOnClickListener(rowClickListener);
+//		pressureRow.setOnClickListener(rowClickListener);
+//		proxiRow.setOnClickListener(rowClickListener);
+//		relaHumidRow.setOnClickListener(rowClickListener);
 		
 		mReceiver = new BroadcastReceiver() {
 			

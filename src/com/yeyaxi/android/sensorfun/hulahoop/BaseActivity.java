@@ -1,4 +1,4 @@
-package com.yeyaxi.android.sensorfun;
+package com.yeyaxi.android.sensorfun.hulahoop;
 
 import android.os.Bundle;
 

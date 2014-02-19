@@ -1,6 +1,5 @@
-package com.yeyaxi.android.sensorfun;
+package com.yeyaxi.android.sensorfun.hulahoop;
 
-import android.R.color;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;

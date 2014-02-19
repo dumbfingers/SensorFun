@@ -1,15 +1,12 @@
-package com.yeyaxi.android.sensorfun;
+package com.yeyaxi.android.sensorfun.hulahoop;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
 
-import org.jraf.android.backport.switchwidget.Switch;
-
 import android.annotation.SuppressLint;
 import android.app.IntentService;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -25,7 +22,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import au.com.bytecode.opencsv.CSVWriter;
 
-import com.yeyaxi.android.sensorfun.util.SensorDataUtility;
+import com.yeyaxi.android.sensorfun.hulahoop.util.SensorDataUtility;
 
 /**
  * 
@@ -369,6 +366,7 @@ public class SensorService extends IntentService implements SensorEventListener{
 		if (checkStorageState() == true && toggleRecord == true) {
 			try {
 			File f = new File(getStorageDirectory(), sensorName + ".csv");
+			Log.d(TAG, "File saved at " + f.getAbsolutePath());
 			CSVWriter csvWriter = new CSVWriter(new FileWriter(f, true));
 //			String[] header = "Time#x#y#z".split("#");
 //			csvWriter.writeNext(header);

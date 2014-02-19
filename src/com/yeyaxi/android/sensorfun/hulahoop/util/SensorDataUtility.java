@@ -1,4 +1,4 @@
-package com.yeyaxi.android.sensorfun.util;
+package com.yeyaxi.android.sensorfun.hulahoop.util;
 
 import java.text.DecimalFormat;
 
