@@ -26,12 +26,14 @@
             </intent-filter>
         </activity>
 
-        <service android:name="SensorService" android:enabled="true">
+        <service
+            android:name="com.yeyaxi.android.sensorfun.SensorService"
+            android:enabled="true" >
         </service>
 
-        <activity android:name="PlotActivity" >
+        <activity android:name="com.yeyaxi.android.sensorfun.PlotActivity" >
         </activity>
-        <activity android:name="BaseActivity" >
+        <activity android:name="com.yeyaxi.android.sensorfun.BaseActivity" >
         </activity>
     </application>
 

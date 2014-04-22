@@ -1,9 +1,5 @@
 package com.yeyaxi.android.sensorfun;
 
-import java.util.List;
-
-import org.jraf.android.backport.switchwidget.Switch;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -31,6 +27,10 @@ import android.widget.ToggleButton;
 import com.actionbarsherlock.view.MenuItem;
 import com.yeyaxi.android.sensorfun.util.SensorDataUtility;
 
+import org.jraf.android.backport.switchwidget.Switch;
+
+import java.util.List;
+
 public class MainActivity extends BaseActivity {
 
 	
@@ -38,69 +38,23 @@ public class MainActivity extends BaseActivity {
 	private List<Sensor> deviceSensors;
 	private static final String TAG = MainActivity.class.getSimpleName();
 	
-	private TextView accValX;
-	private TextView accValY;
-	private TextView accValZ;
-	
-	private TextView ambTempVal;
-	
-	private TextView gyroValX;
-	private TextView gyroValY;
-	private TextView gyroValZ;
 
-	private TextView gravityX;
-	private TextView gravityY;
-	private TextView gravityZ;
-
-	private TextView lightVal;
-	
-	private TextView magValX;
-	private TextView magValY;
-	private TextView magValZ;
-
-	private TextView linearAccX;
-	private TextView linearAccY;
-	private TextView linearAccZ;
-
-	private TextView pressureVal;
-	
-	private TextView proxiVal;
-	
-	private TextView relatHumidVal;
-	
-	private TextView rotVecValX;
-	private TextView rotVecValY;
-	private TextView rotVecValZ;
 
 	private ToggleButton recordToggle;
-	// For table rows
-	private TableRow gpsRow;
-	private TableRow accelRow;
-	private TableRow gyroRow;
-	private TableRow gravityRow;
-	private TableRow linAccRow;
-	private TableRow magRow;
-	private TableRow rotVecRow;
-	private TableRow tempRow;
-	private TableRow lightRow;
-	private TableRow pressureRow;
-	private TableRow proxiRow;
-	private TableRow relaHumidRow;
-	
-	// For menu
+
+    // For menu
 //	private TableRow gpsMenuRow;
-	private TableRow accelMenuRow;
-	private TableRow gyroMenuRow;
-	private TableRow gravityMenuRow;
-	private TableRow linAccMenuRow;
-	private TableRow magMenuRow;
-	private TableRow rotVecMenuRow;
-	private TableRow tempMenuRow;
-	private TableRow lightMenuRow;
-	private TableRow pressureMenuRow;
-	private TableRow proxiMenuRow;
-	private TableRow relaHumidMenuRow;
-	
+    private TableRow accelMenuRow;
+    private TableRow gyroMenuRow;
+    private TableRow gravityMenuRow;
+    private TableRow linAccMenuRow;
+    private TableRow magMenuRow;
+    private TableRow rotVecMenuRow;
+    private TableRow tempMenuRow;
+    private TableRow lightMenuRow;
+    private TableRow pressureMenuRow;
+    private TableRow proxiMenuRow;
+    private TableRow relaHumidMenuRow;
 	// Menu's Switch
 	private Switch accSwitch;
 	private Switch gyroSwitch;
@@ -136,137 +90,7 @@ public class MainActivity extends BaseActivity {
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mainView = (View) findViewById(R.id.content_frame);
 		
-		accValX = (TextView) mainView.findViewById(R.id.accValX);
-		accValY = (TextView) mainView.findViewById(R.id.accValY);
-		accValZ = (TextView) mainView.findViewById(R.id.accValZ);
-		
-		ambTempVal = (TextView) mainView.findViewById(R.id.tempVal);
-		
-		gyroValX = (TextView) mainView.findViewById(R.id.gyroValX);
-		gyroValY = (TextView) mainView.findViewById(R.id.gyroValY);
-		gyroValZ = (TextView) mainView.findViewById(R.id.gyroValZ);
-		
-		gravityX = (TextView) mainView.findViewById(R.id.gravityValX);
-		gravityY = (TextView) mainView.findViewById(R.id.gravityValY);
-		gravityZ = (TextView) mainView.findViewById(R.id.gravityValZ);
-		
-		lightVal = (TextView) mainView.findViewById(R.id.lightVal);
-		
-		magValX = (TextView) mainView.findViewById(R.id.magValX);
-		magValY = (TextView) mainView.findViewById(R.id.magValY);
-		magValZ = (TextView) mainView.findViewById(R.id.magValZ);
-		
-		linearAccX = (TextView) mainView.findViewById(R.id.linAccValX);
-		linearAccY = (TextView) mainView.findViewById(R.id.linAccValY);
-		linearAccZ = (TextView) mainView.findViewById(R.id.linAccValZ);
 
-		pressureVal = (TextView) mainView.findViewById(R.id.pressureVal);
-		
-		proxiVal = (TextView) mainView.findViewById(R.id.proxiVal);
-		
-		relatHumidVal = (TextView) mainView.findViewById(R.id.relaHumidVal);
-		
-		rotVecValX = (TextView) mainView.findViewById(R.id.rotValX);
-		rotVecValY = (TextView) mainView.findViewById(R.id.rotValY);
-		rotVecValZ = (TextView) mainView.findViewById(R.id.rotValZ);
-		
-		recordToggle = (ToggleButton) mainView.findViewById(R.id.toggleRecord);
-		
-		// Init for table rows
-		gpsRow = (TableRow) mainView.findViewById(R.id.tableRowGPS);
-		accelRow = (TableRow) mainView.findViewById(R.id.tableRowAccel);
-		gyroRow = (TableRow) mainView.findViewById(R.id.tableRowGyro);
-		gravityRow = (TableRow) mainView.findViewById(R.id.tableRowGravity);
-		linAccRow = (TableRow) mainView.findViewById(R.id.tableRowLinearAcc);
-		magRow = (TableRow) mainView.findViewById(R.id.tableRowMagField);
-		rotVecRow = (TableRow) mainView.findViewById(R.id.tableRowRotVec);
-		tempRow = (TableRow) mainView.findViewById(R.id.tableRowAmbientTemp);
-		lightRow = (TableRow) mainView.findViewById(R.id.tableRowLight);
-		pressureRow = (TableRow) mainView.findViewById(R.id.tableRowPressure);
-		proxiRow = (TableRow) mainView.findViewById(R.id.tableRowProximity);
-		relaHumidRow = (TableRow) mainView.findViewById(R.id.tableRowRelaHumid);
-		
-		
-		// Register GPS row listener first
-		gpsRow.setOnClickListener(rowClickListener);
-		// Other sensors
-		accelRow.setOnClickListener(rowClickListener);
-		gyroRow.setOnClickListener(rowClickListener);
-		gravityRow.setOnClickListener(rowClickListener);
-		linAccRow.setOnClickListener(rowClickListener);
-		magRow.setOnClickListener(rowClickListener);
-		rotVecRow.setOnClickListener(rowClickListener);
-		tempRow.setOnClickListener(rowClickListener);
-		lightRow.setOnClickListener(rowClickListener);
-		pressureRow.setOnClickListener(rowClickListener);
-		proxiRow.setOnClickListener(rowClickListener);
-		relaHumidRow.setOnClickListener(rowClickListener);
-		
-		mReceiver = new BroadcastReceiver() {
-			
-			@Override
-			public void onReceive(Context context, Intent intent) {
-
-				if (intent.getFloatArrayExtra("accelerometer") != null) {
-					float[] accFloats = intent.getFloatArrayExtra("accelerometer");
-					accValX.setText(SensorDataUtility.roundData(accFloats[0])); 
-					accValY.setText(SensorDataUtility.roundData(accFloats[1])); 
-					accValZ.setText(SensorDataUtility.roundData(accFloats[2]));
-				}
-				if (intent.getFloatArrayExtra("magnetic_field") != null) {
-					float[] magFloats = intent.getFloatArrayExtra("magnetic_field");
-					magValX.setText(SensorDataUtility.roundData(magFloats[0])); 
-					magValY.setText(SensorDataUtility.roundData(magFloats[1])); 
-					magValZ.setText(SensorDataUtility.roundData(magFloats[2])); 
-
-				}
-				if (intent.getFloatArrayExtra("gyroscope") != null) {
-					float[] gyroFloats = intent.getFloatArrayExtra("gyroscope");
-					gyroValX.setText(SensorDataUtility.roundData(gyroFloats[0]));
-					gyroValY.setText(SensorDataUtility.roundData(gyroFloats[1]));
-					gyroValZ.setText(SensorDataUtility.roundData(gyroFloats[2]));
-
-				}
-				if (intent.getFloatArrayExtra("light") != null) {
-					float[] lightFloats = intent.getFloatArrayExtra("light");
-					lightVal.setText(SensorDataUtility.roundData(lightFloats[0]));
-				}
-				if (intent.getFloatArrayExtra("pressure") != null) {
-					float[] pressureFloats = intent.getFloatArrayExtra("pressure");
-					pressureVal.setText(SensorDataUtility.roundData(pressureFloats[0]));
-				}
-				if (intent.getFloatArrayExtra("proximity") != null) {
-					float[] proxiFloats = intent.getFloatArrayExtra("proximity");
-					proxiVal.setText(SensorDataUtility.roundData(proxiFloats[0]));
-				}
-				if (intent.getFloatArrayExtra("gravity") != null) {
-					float[] gravityFloats = intent.getFloatArrayExtra("gravity");
-					gravityX.setText(SensorDataUtility.roundData(gravityFloats[0]));
-					gravityY.setText(SensorDataUtility.roundData(gravityFloats[1]));
-					gravityZ.setText(SensorDataUtility.roundData(gravityFloats[2]));
-				}
-				if (intent.getFloatArrayExtra("linear_acceleration") != null) {
-					float[] linearAccFloats = intent.getFloatArrayExtra("linear_acceleration");
-					linearAccX.setText(SensorDataUtility.roundData(linearAccFloats[0]));
-					linearAccY.setText(SensorDataUtility.roundData(linearAccFloats[1]));
-					linearAccZ.setText(SensorDataUtility.roundData(linearAccFloats[2]));
-				}
-				if (intent.getFloatArrayExtra("rotation_vector") != null) {
-					float[] rotVecFloats = intent.getFloatArrayExtra("rotation_vector");
-					rotVecValX.setText(SensorDataUtility.roundData(rotVecFloats[0]));
-					rotVecValY.setText(SensorDataUtility.roundData(rotVecFloats[1]));
-					rotVecValZ.setText(SensorDataUtility.roundData(rotVecFloats[2]));
-				}
-				if (intent.getFloatArrayExtra("relative_humidity") != null) {
-					float[] relatHumidFloats = intent.getFloatArrayExtra("relative_humidity");
-					relatHumidVal.setText(SensorDataUtility.roundData(relatHumidFloats[0]));
-				}
-				if (intent.getFloatArrayExtra("ambient_temperature") != null) {
-					float[] ambTempFloats = intent.getFloatArrayExtra("ambient_temperature");
-					ambTempVal.setText(SensorDataUtility.roundData(ambTempFloats[0]));
-				}
-			}
-		};
 			
 		// Do something for the sliding menu
 //		menu = getSlidingMenu();
@@ -429,7 +253,6 @@ public class MainActivity extends BaseActivity {
 					relaHumidRow.setEnabled(isChecked);
 					break;
 				}
-				
 			}
 		}
 	};

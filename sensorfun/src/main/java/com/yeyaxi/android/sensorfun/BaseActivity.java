@@ -18,7 +18,7 @@ public class BaseActivity extends SherlockFragmentActivity{
 //		sm.setFadeDegree(0.35f);
 //		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
 		
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 		getSupportActionBar().setHomeButtonEnabled(true);
 	}
 }
