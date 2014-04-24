@@ -2,6 +2,7 @@ package com.yeyaxi.android.sensorfun;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
@@ -74,6 +75,12 @@ public class SensorFragment extends SherlockListFragment {
             // fragment is attached to one) that an item has been selected.
             mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).id);
         }
+
+        Sensor s = (Sensor) l.getItemAtPosition(position);
+        Intent intent = new Intent((MainActivity)getSherlockActivity(), PlotActivity.class);
+        intent.putExtra("sensorType", s.getType());
+        startActivity(intent);
+
     }
 
     /**

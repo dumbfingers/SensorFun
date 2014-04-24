@@ -149,30 +149,27 @@ public class SensorService extends IntentService implements SensorEventListener{
 			
 			accVals = SensorDataUtility.lowPass(event.values, accVals, 0.1f);
 			
-			sendMessage("accelerometer", accVals);
+			sendMessage(String.valueOf(Sensor.TYPE_ACCELEROMETER), accVals);
 			recordToFile("accelerometer", accVals);
 			
 		} else if (mSensor.getType() == Sensor.TYPE_AMBIENT_TEMPERATURE && tempToggle) {
 
 			// By giving alpha as 1.0f, we're receiving the value without any filter
 			tempVal = SensorDataUtility.lowPass(event.values, tempVal, 1.0f);
-
-			sendMessage("ambient_temperature", tempVal);
-			
+			sendMessage(String.valueOf(Sensor.TYPE_AMBIENT_TEMPERATURE), tempVal);
 			recordToFile("ambient_temperature", tempVal);
 
 		} else if (mSensor.getType() == Sensor.TYPE_GRAVITY && gravityToggle) {
 			
 			gravVals = SensorDataUtility.lowPass(event.values, gravVals, 0.6f);
-			
-			sendMessage("gravity", gravVals);
+			sendMessage(String.valueOf(Sensor.TYPE_GRAVITY), gravVals);
 			recordToFile("gravity", gravVals);
 			
 		} else if (mSensor.getType() == Sensor.TYPE_GYROSCOPE && gyroToggle) {
 			
 			gyroVals = SensorDataUtility.lowPass(event.values, gyroVals, 0.6f);
 			
-			sendMessage("gyroscope", gyroVals);
+			sendMessage(String.valueOf(Sensor.TYPE_GYROSCOPE), gyroVals);
 			recordToFile("gyroscope", gyroVals);
 			
 		} else if (mSensor.getType() == Sensor.TYPE_LIGHT && lightToggle) {
@@ -180,47 +177,42 @@ public class SensorService extends IntentService implements SensorEventListener{
 			// By giving alpha as 1.0f, we're receiving the value without any filter
 			lightVal = SensorDataUtility.lowPass(event.values, lightVal, 1.0f);
 			
-			sendMessage("light", lightVal);
+			sendMessage(String.valueOf(Sensor.TYPE_LIGHT), lightVal);
 			recordToFile("light", lightVal);
 			
 		} else if (mSensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION && linAccToggle) {
 			
 			lineAccVals = SensorDataUtility.lowPass(event.values, lineAccVals, 0.6f);
-			
-			sendMessage("linear_acceleration", lineAccVals);
+			sendMessage(String.valueOf(Sensor.TYPE_LINEAR_ACCELERATION), lineAccVals);
 			recordToFile("linear_acceleration", lineAccVals);
 			
 		} else if (mSensor.getType() == Sensor.TYPE_MAGNETIC_FIELD && magToggle) {
 			
 			magVals = SensorDataUtility.lowPass(event.values, magVals, 0.2f);
-			
-			sendMessage("magnetic_field", magVals);
+			sendMessage(String.valueOf(Sensor.TYPE_MAGNETIC_FIELD), magVals);
 			recordToFile("magnetic_field", magVals);
 			
 		} else if (mSensor.getType() == Sensor.TYPE_PRESSURE && pressureToggle) {
 			
 			presVal = SensorDataUtility.lowPass(event.values, presVal, 0.5f);
-			
-			sendMessage("pressure", presVal);
+			sendMessage(String.valueOf(Sensor.TYPE_PRESSURE), presVal);
 			recordToFile("pressure", presVal);
 			
 		} else if (mSensor.getType() == Sensor.TYPE_PROXIMITY && proxiToggle) {
 			
 			proxVal = SensorDataUtility.lowPass(event.values, proxVal, 1.0f);
-			
-			sendMessage("proximity", proxVal);
+			sendMessage(String.valueOf(Sensor.TYPE_PROXIMITY), proxVal);
 			recordToFile("proximity", proxVal);
 			
 		} else if (mSensor.getType() == Sensor.TYPE_RELATIVE_HUMIDITY && relaHumToggle) {
 			
 			rhVal = SensorDataUtility.lowPass(event.values, rhVal, 1.0f);
-			
-			sendMessage("relative_humidity", rhVal);
+			sendMessage(String.valueOf(Sensor.TYPE_RELATIVE_HUMIDITY), rhVal);
 			recordToFile("relative_humidity", rhVal);
 			
 		} else if (mSensor.getType() == Sensor.TYPE_ROTATION_VECTOR && rotVecToggle) {
 			rotVals = SensorDataUtility.lowPass(event.values, rotVals, 0.6f);
-			sendMessage("rotation_vector", rotVals);
+			sendMessage(String.valueOf(Sensor.TYPE_ROTATION_VECTOR), rotVals);
 			recordToFile("rotation_vector", rotVals);
 		}
 		
@@ -245,7 +237,12 @@ public class SensorService extends IntentService implements SensorEventListener{
 				mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE), SensorManager.SENSOR_DELAY_NORMAL);
 			}
 		}
-		
+
+        if (mSensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR) != null) {
+            mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR), SensorManager.SENSOR_DELAY_NORMAL);
+
+        }
+
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY) != null) {
 //			Log.i(TAG, "Gravity");
 			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY), SensorManager.SENSOR_DELAY_NORMAL);
@@ -257,7 +254,17 @@ public class SensorService extends IntentService implements SensorEventListener{
 			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
-		
+
+        if (mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED) != null) {
+            mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED), SensorManager.SENSOR_DELAY_NORMAL);
+
+        }
+
+        if (mSensorManager.getDefaultSensor(Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR) != null) {
+            mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR), SensorManager.SENSOR_DELAY_NORMAL);
+
+        }
+
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT) != null) {
 //			Log.i(TAG, "Light");
 			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT), SensorManager.SENSOR_DELAY_NORMAL);
@@ -275,6 +282,11 @@ public class SensorService extends IntentService implements SensorEventListener{
 			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
+
+        if (mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED) != null) {
+            mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED), SensorManager.SENSOR_DELAY_NORMAL);
+
+        }
 		
 //		if (mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION) != null)
 //			Log.i(TAG, "Orientation");
@@ -292,7 +304,7 @@ public class SensorService extends IntentService implements SensorEventListener{
 		
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 			if (mSensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY) != null) {
-				//			Log.i(TAG, "Relative Humidity");
+//			Log.i(TAG, "Relative Humidity");
 				mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY), SensorManager.SENSOR_DELAY_NORMAL);
 			}
 		}
@@ -302,6 +314,21 @@ public class SensorService extends IntentService implements SensorEventListener{
 			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
+
+        if (mSensorManager.getDefaultSensor(Sensor.TYPE_SIGNIFICANT_MOTION) != null) {
+            mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_SIGNIFICANT_MOTION), SensorManager.SENSOR_DELAY_NORMAL);
+
+        }
+
+        if (mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
+            mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER), SensorManager.SENSOR_DELAY_NORMAL);
+
+        }
+
+        if (mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
+            mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR), SensorManager.SENSOR_DELAY_NORMAL);
+
+        }
 	}
 	
 	public void toggleRecord(boolean toggle) {

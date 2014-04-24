@@ -50,6 +50,22 @@ public class MainActivity extends BaseActivity implements
                         .setText("Record List")
                         .setTabListener(this));
 
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                // When swiping between pages, select the corresponding tab
+                getSupportActionBar().setSelectedNavigationItem(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 	}
 
 //	@Override
