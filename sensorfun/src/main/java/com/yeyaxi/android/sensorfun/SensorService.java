@@ -1,15 +1,7 @@
 package com.yeyaxi.android.sensorfun;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Date;
-
-import org.jraf.android.backport.switchwidget.Switch;
-
 import android.annotation.SuppressLint;
 import android.app.IntentService;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -23,9 +15,15 @@ import android.os.Environment;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import au.com.bytecode.opencsv.CSVWriter;
 
 import com.yeyaxi.android.sensorfun.util.SensorDataUtility;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Date;
+
+import au.com.bytecode.opencsv.CSVWriter;
 
 /**
  * 
@@ -314,43 +312,43 @@ public class SensorService extends IntentService implements SensorEventListener{
 		this.isBackground = state;
 	}
 	
-	public void singleToggle(int toggleID, boolean toggle) {
-		switch (toggleID) {
-		case R.id.accSwitch:
-			accToggle = toggle;
-			break;
-		case R.id.gyroSwitch:
-			gyroToggle = toggle;
-			break;
-		case R.id.gravitySwitch:
-			gravityToggle = toggle;
-			break;
-		case R.id.lineAccSwitch:
-			linAccToggle = toggle;
-			break;
-		case R.id.magFieldSwitch:
-			magToggle = toggle;
-			break;
-		case R.id.rotVecSwitch:
-			rotVecToggle = toggle;
-			break;
-		case R.id.ambTempSwitch:
-			tempToggle = toggle;
-			break;
-		case R.id.lightSwitch:
-			lightToggle = toggle;
-			break;
-		case R.id.pressureSwitch:
-			pressureToggle = toggle;
-			break;
-		case R.id.proxSwitch:
-			proxiToggle = toggle;
-			break;
-		case R.id.relaHumidSwitch:
-			relaHumToggle = toggle;
-			break;
-		}
-	}
+//	public void singleToggle(int toggleID, boolean toggle) {
+//		switch (toggleID) {
+//		case R.id.accSwitch:
+//			accToggle = toggle;
+//			break;
+//		case R.id.gyroSwitch:
+//			gyroToggle = toggle;
+//			break;
+//		case R.id.gravitySwitch:
+//			gravityToggle = toggle;
+//			break;
+//		case R.id.lineAccSwitch:
+//			linAccToggle = toggle;
+//			break;
+//		case R.id.magFieldSwitch:
+//			magToggle = toggle;
+//			break;
+//		case R.id.rotVecSwitch:
+//			rotVecToggle = toggle;
+//			break;
+//		case R.id.ambTempSwitch:
+//			tempToggle = toggle;
+//			break;
+//		case R.id.lightSwitch:
+//			lightToggle = toggle;
+//			break;
+//		case R.id.pressureSwitch:
+//			pressureToggle = toggle;
+//			break;
+//		case R.id.proxSwitch:
+//			proxiToggle = toggle;
+//			break;
+//		case R.id.relaHumidSwitch:
+//			relaHumToggle = toggle;
+//			break;
+//		}
+//	}
 	
 	private void sendMessage(String sensorName, float[] values) {
 		Intent intent = new Intent("SensorData");
