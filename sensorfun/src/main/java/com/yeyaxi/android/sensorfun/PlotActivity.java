@@ -227,9 +227,15 @@ public class PlotActivity extends SherlockActivity {
         dataRenderer.addSeriesRenderer(ySeriesRenderer);
         dataRenderer.addSeriesRenderer(zSeriesRenderer);
 
-        dataRenderer.setBackgroundColor(XYMultipleSeriesRenderer.NO_COLOR);
+        dataRenderer.setBackgroundColor(Color.parseColor("#000000"));
+        dataRenderer.setApplyBackgroundColor(true);
+//        dataRenderer.setAxesColor(Color.parseColor("#0099cc"));
+        dataRenderer.setXLabelsColor(Color.parseColor("#33b5e5"));
+        dataRenderer.setLabelsTextSize(20.0f);
         dataRenderer.setLabelsColor(Color.parseColor("#0099cc"));
         dataRenderer.setChartTitle(chartTitle);
+        dataRenderer.setChartTitleTextSize(20.0f);
+        dataRenderer.setLegendTextSize(36.0f);
         isChartReady = true;
     }
 
