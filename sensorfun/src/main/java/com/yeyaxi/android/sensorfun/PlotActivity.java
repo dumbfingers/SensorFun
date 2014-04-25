@@ -1,41 +1,47 @@
 package com.yeyaxi.android.sensorfun;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
+import android.widget.LinearLayout;
 
+import com.actionbarsherlock.app.SherlockActivity;
+
+import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
+import org.achartengine.model.TimeSeries;
 import org.achartengine.model.XYMultipleSeriesDataset;
-import org.achartengine.model.XYSeries;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 
+import java.util.Date;
 
-public class PlotActivity extends Activity {
-	
-	private static final String TAG = PlotActivity.class.getSimpleName();
-//	private SensorManager mSensorManager;
-	private SensorService mBoundService;
-	private boolean isBind = false;
-	
-	private BroadcastReceiver mReceiver;
-	
-	private int sensorType;
-	private float[] sensorVal;
-	
+
+public class PlotActivity extends SherlockActivity {
+
+    private static final String TAG = PlotActivity.class.getSimpleName();
+    //	private SensorManager mSensorManager;
+    private SensorService mBoundService;
+    private boolean isBind = false;
+
+    private BroadcastReceiver mReceiver;
+
+    private int sensorType;
+    private float[] sensorVal;
+
 //	private GraphView mGraphView;
 //	private GraphViewSeries xSeries = null;
 //	private GraphViewSeries ySeries = null;
 //	private GraphViewSeries zSeries = null;
-	
+
 //	private GraphViewData xData;
 //	private GraphViewData yData;
 //	private GraphViewData zData;
@@ -43,25 +49,32 @@ public class PlotActivity extends Activity {
     private GraphicalView graphicalView;
     private XYMultipleSeriesDataset dataSet = new XYMultipleSeriesDataset();
     private XYMultipleSeriesRenderer dataRenderer = new XYMultipleSeriesRenderer();
-    private XYSeries chartSeries;
-    private XYSeriesRenderer seriesRenderer;
+    private TimeSeries xChartSeries; // x axis
+    private TimeSeries yChartSeries; // y axis
+    private TimeSeries zChartSeries; // z axis
+    private XYSeriesRenderer xSeriesRenderer;
+    private XYSeriesRenderer ySeriesRenderer;
+    private XYSeriesRenderer zSeriesRenderer;
 
-	private static final int DATA_NUM = 150;
-	
-	private int counter = 0;
+    private static final int DATA_NUM = 150;
+
+    private int counter = 0;
 
     private String chartTitle;
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_plot);
 
-		Bundle b = getIntent().getExtras();
-		
-		if (b != null) {
+    private boolean isChartReady = false;
+
+    private LinearLayout layout;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_plot);
+
+        Bundle b = getIntent().getExtras();
+
+        if (b != null) {
             // get the sensor type
-			sensorType = b.getInt("sensorType");
+            sensorType = b.getInt("sensorType");
             // set the chart title
             switch (sensorType) {
                 case Sensor.TYPE_ACCELEROMETER:
@@ -119,159 +132,128 @@ public class PlotActivity extends Activity {
                     chartTitle = "Step Detector";
                     break;
             }
-		}
-
-
-
-		
-//		if (findViewById(R.id.fragment_container) != null) {
-//
-//			if (savedInstanceState != null) {
-//				return;
-//			}
-//		}
-		
-		mReceiver = new BroadcastReceiver() {
-
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				if (intent.getFloatArrayExtra(String.valueOf(sensorType)) != null) {
-					sensorVal = intent.getFloatArrayExtra(String.valueOf(sensorType));
-//					++counter;
-//					// These sensors are only one dimensional
-					if (sensorType == Sensor.TYPE_PRESSURE ||
-							sensorType == Sensor.TYPE_PROXIMITY ||
-							sensorType == Sensor.TYPE_RELATIVE_HUMIDITY ||
-							sensorType == Sensor.TYPE_LIGHT ||
-							sensorType == Sensor.TYPE_AMBIENT_TEMPERATURE) {
-//						xSeries.appendData(new GraphViewData(counter, sensorVal[0]), true, 500);
-					} else {
-////						Log.d(TAG, "" + sensorVal[0]);
-//						xSeries.appendData(new GraphViewData(counter, sensorVal[0]), true, 500);
-//						ySeries.appendData(new GraphViewData(counter, sensorVal[1]), true, 500);
-//						zSeries.appendData(new GraphViewData(counter, sensorVal[2]), true, 500);
-					}
-//					mGraphView.redrawAll();
-				}
-			}
-		};
-				
-//		mGraphView = new LineGraphView(this, sensorType);
-//		mGraphView.setScrollable(true);
-//		mGraphView.setScalable(true);
-//		mGraphView.setViewPort(0, 500);
-//		// Set style of vertical labels
-//		mGraphView.getGraphViewStyle().setVerticalLabelsColor(Color.BLACK);
-//		mGraphView.getGraphViewStyle().setVerticalLabelsWidth(200);
-//		// Set style of horizontal labels
-//		mGraphView.getGraphViewStyle().setHorizontalLabelsColor(Color.BLACK);
-//		mGraphView.setShowLegend(true);
-//		mGraphView.setLegendAlign(LegendAlign.BOTTOM);
-//		mGraphView.setLegendWidth(200);
-//
-//		// These sensors are only one dimensional
-//		if (sensorType.equals("pressure") ||
-//				sensorType.equals("proximity") ||
-//				sensorType.equals("relative_humidity") ||
-//				sensorType.equals("light") ||
-//				sensorType.equals("ambient_temperature")) {
-//
-//			if (sensorType.equals("pressure")) {
-//				xSeries = new GraphViewSeries("mBar", new GraphViewSeriesStyle(Color.BLUE, 3), new GraphViewData[]{});
-//			} else if (sensorType.equals("proximity")) {
-//				xSeries = new GraphViewSeries("centimetres", new GraphViewSeriesStyle(Color.BLUE, 3), new GraphViewData[]{});
-//				mGraphView.setVerticalLabels(new String[]{"Far", "Near"});
-//			} else if (sensorType.equals("relative_humidity")) {
-//				xSeries = new GraphViewSeries("RH%", new GraphViewSeriesStyle(Color.BLUE, 3), new GraphViewData[]{});
-//			} else if (sensorType.equals("light")) {
-//				xSeries = new GraphViewSeries("lux", new GraphViewSeriesStyle(Color.BLUE, 3), new GraphViewData[]{});
-//			} else if (sensorType.equals("ambient_temperature")) {
-//				xSeries = new GraphViewSeries("Celsius", new GraphViewSeriesStyle(Color.BLUE, 3), new GraphViewData[]{});
-//			}
-//
-//		} else {
-//			// Init the series with empty data
-//			xSeries = new GraphViewSeries("x", new GraphViewSeriesStyle(Color.BLUE, 3), new GraphViewData[]{});
-//			ySeries = new GraphViewSeries("y", new GraphViewSeriesStyle(Color.GREEN, 3), new GraphViewData[]{});
-//			zSeries = new GraphViewSeries("z", new GraphViewSeriesStyle(Color.RED, 3), new GraphViewData[]{});
-//		}
-//
-//		if (xSeries != null)
-//			mGraphView.addSeries(xSeries);
-//		if (ySeries != null)
-//			mGraphView.addSeries(ySeries);
-//		if (zSeries != null)
-//			mGraphView.addSeries(zSeries);
-//
-//
-//		LinearLayout layout = (LinearLayout) findViewById(R.id.fragment_container);
-//
-//		layout.addView(mGraphView);
-//
-		// bind the service
-		doBindService();
-		
-	}
-	
-	@Override
-	protected void onResume() {
-		super.onResume();
-		LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("SensorData"));
-        if (graphicalView == null) {
-            initChart();
         }
 
-	}
-	
-	@Override
-	protected void onPause() {
-		super.onPause();
-		LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
 
-	}
-	
-	@Override
-	protected void onDestroy() {
-		doUnbindService();
-		super.onDestroy();
-	}
+        mReceiver = new BroadcastReceiver() {
 
-	
-	private ServiceConnection mConnection = new ServiceConnection() {
-		
-		@Override
-		public void onServiceDisconnected(ComponentName name) {
-			isBind = false;
-		}
-		
-		@Override
-		public void onServiceConnected(ComponentName name, IBinder service) {
-			mBoundService = ((SensorService.SensorBinder) service).getService();
-//			mBoundService.getMsg();
-//			mSensorManager = mBoundService.getSensorManager();
-			isBind = true;
-		}
-	};
-	
-	private void doBindService() {
-		bindService(new Intent(this, SensorService.class), mConnection, Context.BIND_AUTO_CREATE);
-	}
-	
-	private void doUnbindService() {
-		unbindService(mConnection);
-	}
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getFloatArrayExtra(String.valueOf(sensorType)) != null) {
+                    // sensor value array
+                    sensorVal = intent.getFloatArrayExtra(String.valueOf(sensorType));
+                    long timestamp = intent.getLongExtra("timestamp", 0);
+                    if (isChartReady == true && layout.getChildCount() > 0) {
+                        addChartData(sensorVal, timestamp);
+                        graphicalView.repaint();
+                    }
+                }
+            }
+        };
+
+        // bind the service
+        doBindService();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        layout = (LinearLayout) findViewById(R.id.chart);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("SensorData"));
+        if (graphicalView == null) {
+            initChart();
+            graphicalView = ChartFactory.getTimeChartView(PlotActivity.this, dataSet, dataRenderer, "HH:mm:ss.SSS");
+            layout.addView(graphicalView);
+        }
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isChartReady = false;
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        doUnbindService();
+        super.onDestroy();
+    }
+
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            isBind = false;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mBoundService = ((SensorService.SensorBinder) service).getService();
+            isBind = true;
+        }
+    };
+
+    private void doBindService() {
+        bindService(new Intent(this, SensorService.class), mConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    private void doUnbindService() {
+        unbindService(mConnection);
+    }
 
     private void initChart() {
-        chartSeries = new XYSeries(chartTitle);
-        dataSet.addSeries(chartSeries);
-        seriesRenderer = new XYSeriesRenderer();
-        dataRenderer.addSeriesRenderer(seriesRenderer);
+        xChartSeries = new TimeSeries("x");
+        yChartSeries = new TimeSeries("y");
+        zChartSeries = new TimeSeries("z");
+        dataSet.addSeries(xChartSeries);
+        dataSet.addSeries(yChartSeries);
+        dataSet.addSeries(zChartSeries);
 
+        xSeriesRenderer = new XYSeriesRenderer();
+        xSeriesRenderer.setColor(Color.parseColor("#99cc00"));
+
+        ySeriesRenderer = new XYSeriesRenderer();
+        ySeriesRenderer.setColor(Color.parseColor("#ffbb33"));
+
+        zSeriesRenderer = new XYSeriesRenderer();
+        zSeriesRenderer.setColor(Color.parseColor("#ff4444"));
+
+        dataRenderer.addSeriesRenderer(xSeriesRenderer);
+        dataRenderer.addSeriesRenderer(ySeriesRenderer);
+        dataRenderer.addSeriesRenderer(zSeriesRenderer);
+
+        dataRenderer.setBackgroundColor(XYMultipleSeriesRenderer.NO_COLOR);
+        dataRenderer.setLabelsColor(Color.parseColor("#0099cc"));
+        dataRenderer.setChartTitle(chartTitle);
+        isChartReady = true;
     }
 
-    private void addChartData(float[] dataArray) {
-        // TODO add chart data
-//        chartSeries.add();
-    }
+    private void addChartData(float[] dataArray, long timestamp) {
+        if (timestamp != 0) {
+//            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss.SSS");
+            Date date = new Date(timestamp);
 
+            // TODO add chart data
+            if (sensorType == Sensor.TYPE_PRESSURE ||
+                    sensorType == Sensor.TYPE_PROXIMITY ||
+                    sensorType == Sensor.TYPE_RELATIVE_HUMIDITY ||
+                    sensorType == Sensor.TYPE_LIGHT ||
+                    sensorType == Sensor.TYPE_AMBIENT_TEMPERATURE) {
+                // 1-d array
+                xChartSeries.add(date, dataArray[0]);
+
+            } else {
+
+                xChartSeries.add(date, dataArray[0]);
+                yChartSeries.add(date, dataArray[1]);
+                zChartSeries.add(date, dataArray[2]);
+            }
+        }
+
+    }
 }

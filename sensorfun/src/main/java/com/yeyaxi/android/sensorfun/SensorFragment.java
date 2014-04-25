@@ -77,7 +77,7 @@ public class SensorFragment extends SherlockListFragment {
         }
 
         Sensor s = (Sensor) l.getItemAtPosition(position);
-        Intent intent = new Intent((MainActivity)getSherlockActivity(), PlotActivity.class);
+        Intent intent = new Intent(getSherlockActivity(), PlotActivity.class);
         intent.putExtra("sensorType", s.getType());
         startActivity(intent);
 

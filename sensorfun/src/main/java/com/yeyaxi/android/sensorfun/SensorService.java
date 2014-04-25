@@ -380,6 +380,7 @@ public class SensorService extends IntentService implements SensorEventListener{
 	private void sendMessage(String sensorName, float[] values) {
 		Intent intent = new Intent("SensorData");
 		intent.putExtra(sensorName, values);
+        intent.putExtra("timestamp", new Date().getTime());
 		mLocalBroadcastManager.sendBroadcast(intent);
 	}
 	
