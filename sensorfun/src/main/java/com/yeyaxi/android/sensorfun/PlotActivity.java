@@ -13,7 +13,11 @@ import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.LinearLayout;
 
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockDialogFragment;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
@@ -25,7 +29,8 @@ import org.achartengine.renderer.XYSeriesRenderer;
 import java.util.Date;
 
 
-public class PlotActivity extends SherlockActivity {
+public class PlotActivity extends SherlockFragmentActivity implements
+        RecordOptionDialogFragment.OnRecordOptionDialogFragmentInteractionListener {
 
     private static final String TAG = PlotActivity.class.getSimpleName();
     //	private SensorManager mSensorManager;
@@ -36,15 +41,6 @@ public class PlotActivity extends SherlockActivity {
 
     private int sensorType;
     private float[] sensorVal;
-
-//	private GraphView mGraphView;
-//	private GraphViewSeries xSeries = null;
-//	private GraphViewSeries ySeries = null;
-//	private GraphViewSeries zSeries = null;
-
-//	private GraphViewData xData;
-//	private GraphViewData yData;
-//	private GraphViewData zData;
 
     private GraphicalView graphicalView;
     private XYMultipleSeriesDataset dataSet = new XYMultipleSeriesDataset();
@@ -154,6 +150,10 @@ public class PlotActivity extends SherlockActivity {
         // bind the service
         doBindService();
 
+        // start the service
+//        Intent intent = new Intent(this, SensorService.class);
+//        intent.putExtra("sensorType", sensorType);
+//        startService(intent);
     }
 
     @Override
@@ -183,6 +183,30 @@ public class PlotActivity extends SherlockActivity {
         super.onDestroy();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getSupportMenuInflater();
+        inflater.inflate(R.menu.plot, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.record:
+                // record the data
+                SherlockDialogFragment dialog = new RecordOptionDialogFragment(chartTitle);
+                dialog.show(getSupportFragmentManager(), "RecordOptionDialogFragment");
+                return true;
+            case R.id.about:
+                // about
+                return true;
+            default:
+                return false;
+        }
+    }
+
+
 
     private ServiceConnection mConnection = new ServiceConnection() {
 
@@ -199,7 +223,9 @@ public class PlotActivity extends SherlockActivity {
     };
 
     private void doBindService() {
-        bindService(new Intent(this, SensorService.class), mConnection, Context.BIND_AUTO_CREATE);
+        Intent intent = new Intent(this, SensorService.class);
+        intent.putExtra("sensorType", sensorType);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
     private void doUnbindService() {
@@ -261,5 +287,14 @@ public class PlotActivity extends SherlockActivity {
             }
         }
 
+    }
+
+    @Override
+    public void onDialogFragmentInteraction(boolean startRecord) {
+//        Log.d(TAG, "" + startRecord);
+        mBoundService.toggleRecord(startRecord);
+        if (startRecord == true) {
+            mBoundService.showNotification();
+        }
     }
 }

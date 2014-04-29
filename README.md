@@ -7,4 +7,4 @@ In this project, I have used several third-party libraries, which are listed bel
 * [ActionBarSherlock](https://github.com/JakeWharton/ActionBarSherlock)
 * [android-switch-backport](https://github.com/BoD/android-switch-backport)
 * [OpenCSV](http://opencsv.sourceforge.net)
-* [GraphView](http://android-graphview.org)
+* [AChartEngine](http://www.achartengine.org/)

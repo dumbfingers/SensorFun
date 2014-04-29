@@ -2,6 +2,9 @@ package com.yeyaxi.android.sensorfun;
 
 import android.annotation.SuppressLint;
 import android.app.IntentService;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -13,8 +16,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.yeyaxi.android.sensorfun.util.SensorDataUtility;
 
@@ -33,7 +38,7 @@ import au.com.bytecode.opencsv.CSVWriter;
 public class SensorService extends IntentService implements SensorEventListener{
 
 //	private String msg = "Test Msg";
-	
+
 	private SensorManager mSensorManager;
 //	private List<Sensor> deviceSensors;
 	private static final String TAG = SensorService.class.getSimpleName();
@@ -54,20 +59,33 @@ public class SensorService extends IntentService implements SensorEventListener{
 	// This is the main switch of writing data to storage
 	private boolean toggleRecord = false;
 	// These are the separate switches
-	private boolean accToggle = true;
-	private boolean gyroToggle = true;
-	private boolean gravityToggle = true;
-	private boolean linAccToggle = true;
-	private boolean magToggle = true;
-	private boolean rotVecToggle = true;
-	private boolean tempToggle = true;
-	private boolean lightToggle = true;
-	private boolean pressureToggle = true;
-	private boolean proxiToggle = true;
-	private boolean relaHumToggle = true;
+	private boolean accToggle = false;
+	private boolean gyroToggle = false;
+	private boolean gravityToggle = false;
+	private boolean linAccToggle = false;
+	private boolean magToggle = false;
+	private boolean rotVecToggle = false;
+	private boolean tempToggle = false;
+	private boolean lightToggle = false;
+	private boolean pressureToggle = false;
+	private boolean proxiToggle = false;
+	private boolean relaHumToggle = false;
+    private boolean stepDetectorToggle = false;
+    private boolean stepCounterToggle = false;
+    private boolean sigMotionToggle = false;
+    private boolean gameRotToggle = false;
+    private boolean geoMagRotToggle = false;
+    private boolean allToogle = false;
 	// Background state
 	private boolean isBackground = false;
-	
+
+    // sensor to be monitored
+    private int sensorType;
+
+    private NotificationManager notificationManager;
+
+    private int NOTIFICATION_SENSOR = 1271000;
+
 	// This is the object that receives interactions from clients.  See
 	// RemoteService for a more complete example.
 	private final IBinder mBinder = new SensorBinder();
@@ -90,8 +108,11 @@ public class SensorService extends IntentService implements SensorEventListener{
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
 		regSensorListeners();
+
+        notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 		Log.d(TAG, "SensorService Created.");
-	}
+
+    }
 	
 	@Override
 	protected void onHandleIntent(Intent intent) {
@@ -109,25 +130,95 @@ public class SensorService extends IntentService implements SensorEventListener{
 		Log.i(TAG, "Received start: " + intent);
 	}
 	
-//	@Override
-//	public int onStartCommand(Intent intent, int flags, int startId) {
-//
-//		
-//		// We want this service to continue running until it is explicitly
-//		// stopped, so return sticky.
-//		Log.i(TAG, "Received start id " + startId + ": " + intent);
-//		return START_STICKY;
-//	}
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+
+
+		// We want this service to continue running until it is explicitly
+		// stopped, so return sticky.
+		Log.i(TAG, "Received start id " + startId + ": " + intent);
+
+        return START_STICKY;
+	}
 	
 	@Override
 	public IBinder onBind(Intent intent) {
 		Log.d(TAG, "onBind Service");
-		return mBinder;
+
+        sensorType = intent.getIntExtra("sensorType", 0);
+
+        switch (sensorType) {
+            case Sensor.TYPE_LIGHT:
+                lightToggle = true;
+                break;
+            case Sensor.TYPE_RELATIVE_HUMIDITY:
+                relaHumToggle = true;
+                break;
+            case Sensor.TYPE_GYROSCOPE_UNCALIBRATED:
+                gyroToggle = true;
+                break;
+            case Sensor.TYPE_GYROSCOPE:
+                gyroToggle = true;
+                break;
+            case Sensor.TYPE_STEP_DETECTOR:
+                stepDetectorToggle = true;
+                break;
+            case Sensor.TYPE_GRAVITY:
+                gravityToggle = true;
+                break;
+            case Sensor.TYPE_STEP_COUNTER:
+                stepCounterToggle = true;
+                break;
+            case Sensor.TYPE_SIGNIFICANT_MOTION:
+                sigMotionToggle = true;
+                break;
+            case Sensor.TYPE_PROXIMITY:
+                proxiToggle = true;
+                break;
+            case Sensor.TYPE_MAGNETIC_FIELD:
+                magToggle = true;
+                break;
+            case Sensor.TYPE_ROTATION_VECTOR:
+                rotVecToggle = true;
+                break;
+            case Sensor.TYPE_PRESSURE:
+                pressureToggle = true;
+                break;
+            case Sensor.TYPE_ACCELEROMETER:
+                accToggle = true;
+                break;
+            case Sensor.TYPE_AMBIENT_TEMPERATURE:
+                tempToggle = true;
+                break;
+            case Sensor.TYPE_GAME_ROTATION_VECTOR:
+                gameRotToggle = true;
+                break;
+            case Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR:
+                geoMagRotToggle = true;
+                break;
+            case Sensor.TYPE_LINEAR_ACCELERATION:
+                linAccToggle = true;
+                break;
+            case Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED:
+                magToggle = true;
+                break;
+            case Sensor.TYPE_ALL:
+                allToogle = true;
+                break;
+        }
+
+        return mBinder;
 	}
 
 	@Override
 	public void onDestroy() {
 		Log.d(TAG, "Sensor Service Destroyed.");
+
+        // cancel notification
+        notificationManager.cancel(NOTIFICATION_SENSOR);
+        // Tell the user we stopped.
+        Toast.makeText(this, "Recording Service Stopped.", Toast.LENGTH_SHORT).show();
+
 		super.onDestroy();
 	}
 	
@@ -223,6 +314,34 @@ public class SensorService extends IntentService implements SensorEventListener{
 			stopSelf();
 		}
 	}
+
+    /**
+     * Show a notification while this service is running.
+     */
+    public void showNotification() {
+        // In this sample, we'll use the same text for the ticker and the expanded notification
+//        CharSequence text = getText(R.string.local_service_started);
+
+        // Set the icon, scrolling text and timestamp
+        NotificationCompat.Builder notiBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_action_phone)
+                .setContentTitle("Recording Sensor Data")
+                .setProgress(0, 0, true); // set progress to be indeterminate
+
+        // The PendingIntent to launch our activity if the user selects this notification
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+                new Intent(this, PlotActivity.class), 0);
+
+        // Set the info for the views that show in the notification panel.
+//        notification.setLatestEventInfo(this, getText(R.string.local_service_label),
+//                text, contentIntent);
+
+        Notification notification = notiBuilder.build();
+        notification.flags |= Notification.FLAG_ONGOING_EVENT;
+        // Send the notification.
+        notificationManager.notify(NOTIFICATION_SENSOR, notification);
+    }
+
 
 	@SuppressLint("InlinedApi")
 	private void regSensorListeners() {
@@ -393,23 +512,23 @@ public class SensorService extends IntentService implements SensorEventListener{
 	private void recordToFile(String sensorName, float[] values){
 		// First check the storage state
 		if (checkStorageState() == true && toggleRecord == true) {
-			try {
-			File f = new File(getStorageDirectory(), sensorName + ".csv");
-			CSVWriter csvWriter = new CSVWriter(new FileWriter(f, true));
-//			String[] header = "Time#x#y#z".split("#");
-//			csvWriter.writeNext(header);
-			long date = new Date().getTime();
-			csvWriter.writeNext(new String[]{Long.toString(date), 
-											Float.toString(values[0]), 
-											Float.toString(values[1]), 
-											Float.toString(values[2])});
-			csvWriter.close();
-			
-			Log.d(TAG, "Record: " + date);
-			
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+            try {
+                File f = new File(getStorageDirectory(), sensorName + ".csv");
+                CSVWriter csvWriter = new CSVWriter(new FileWriter(f, true));
+//			    String[] header = "Time#x#y#z".split("#");
+//			    csvWriter.writeNext(header);
+                long date = new Date().getTime();
+                csvWriter.writeNext(new String[]{Long.toString(date),
+                        Float.toString(values[0]),
+                        Float.toString(values[1]),
+                        Float.toString(values[2])});
+                csvWriter.close();
+
+                Log.d(TAG, "Record: " + date);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 		}
 	}
 	
