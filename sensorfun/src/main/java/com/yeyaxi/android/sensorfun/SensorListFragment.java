@@ -21,7 +21,7 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {Callbacks}
  * interface.
  */
-public class SensorFragment extends SherlockListFragment {
+public class SensorListFragment extends SherlockListFragment {
 
     private OnSensorFragmentInteractionListener mListener;
 
@@ -32,7 +32,7 @@ public class SensorFragment extends SherlockListFragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public SensorFragment() {
+    public SensorListFragment() {
     }
 
     @Override

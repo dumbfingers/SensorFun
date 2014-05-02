@@ -57,7 +57,7 @@ public class SensorService extends IntentService implements SensorEventListener{
 	// Rotation Vector contains 5 elements
 	private float[] rotVals = new float[5];
 	// This is the main switch of writing data to storage
-	private boolean toggleRecord = false;
+	private boolean isRecord = false;
 	// These are the separate switches
 	private boolean accToggle = false;
 	private boolean gyroToggle = false;
@@ -123,7 +123,7 @@ public class SensorService extends IntentService implements SensorEventListener{
 			}
 			
 			if (bundle.containsKey("Record")) {
-				toggleRecord = true;
+				isRecord = true;
 			}
 		}
 		
@@ -212,12 +212,14 @@ public class SensorService extends IntentService implements SensorEventListener{
 
 	@Override
 	public void onDestroy() {
-		Log.d(TAG, "Sensor Service Destroyed.");
+		Log.d(TAG, "Sensor Service onDestroy");
 
         // cancel notification
         notificationManager.cancel(NOTIFICATION_SENSOR);
         // Tell the user we stopped.
-        Toast.makeText(this, "Recording Service Stopped.", Toast.LENGTH_SHORT).show();
+        if (isBackground || isRecord) {
+            Toast.makeText(this, "Recording Service Stopped.", Toast.LENGTH_SHORT).show();
+        }
 
 		super.onDestroy();
 	}
@@ -308,7 +310,7 @@ public class SensorService extends IntentService implements SensorEventListener{
 		}
 		
 		// If the record toggle is ON and in background, we'll need to self-kill the service
-		if (toggleRecord == true && isBackground == true) {
+		if (isRecord == true && isBackground == true) {
 			mSensorManager.unregisterListener(this);
 			Log.d(TAG, "Sensor Service self-killed.");
 			stopSelf();
@@ -335,10 +337,10 @@ public class SensorService extends IntentService implements SensorEventListener{
         // Set the info for the views that show in the notification panel.
 //        notification.setLatestEventInfo(this, getText(R.string.local_service_label),
 //                text, contentIntent);
-
+        notiBuilder.setContentIntent(contentIntent);
         Notification notification = notiBuilder.build();
         notification.flags |= Notification.FLAG_ONGOING_EVENT;
-        // Send the notification.
+        // Send the notification
         notificationManager.notify(NOTIFICATION_SENSOR, notification);
     }
 
@@ -451,7 +453,7 @@ public class SensorService extends IntentService implements SensorEventListener{
 	}
 	
 	public void toggleRecord(boolean toggle) {
-		this.toggleRecord = toggle;
+		this.isRecord = toggle;
 	}
 	
 	public void setBackground(boolean state) {
@@ -511,7 +513,7 @@ public class SensorService extends IntentService implements SensorEventListener{
 	 */
 	private void recordToFile(String sensorName, float[] values){
 		// First check the storage state
-		if (checkStorageState() == true && toggleRecord == true) {
+		if (checkStorageState() == true && isRecord == true) {
             try {
                 File f = new File(getStorageDirectory(), sensorName + ".csv");
                 CSVWriter csvWriter = new CSVWriter(new FileWriter(f, true));

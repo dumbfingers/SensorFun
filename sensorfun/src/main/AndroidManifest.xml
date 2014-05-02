@@ -31,7 +31,9 @@
             android:enabled="true" >
         </service>
 
-        <activity android:name="com.yeyaxi.android.sensorfun.PlotActivity" >
+        <activity
+            android:name="com.yeyaxi.android.sensorfun.PlotActivity">
+
         </activity>
         <activity android:name="com.yeyaxi.android.sensorfun.BaseActivity" >
         </activity>

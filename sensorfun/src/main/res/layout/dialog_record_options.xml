@@ -2,7 +2,9 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin">
 
     <!--<TextView-->
         <!--android:layout_width="fill_parent"-->
@@ -24,7 +26,9 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_margin="8dp"
-        android:id="@+id/textViewSensorSelected" />
+        android:id="@+id/textViewSensorSelected"
+        android:text="test"
+        android:gravity="center_vertical" />
 
     <TextView
         android:layout_width="match_parent"

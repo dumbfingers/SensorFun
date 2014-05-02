@@ -16,7 +16,7 @@ import com.yeyaxi.android.sensorfun.util.TabsPagerAdapter;
 
 public class MainActivity extends BaseActivity implements
         ActionBar.TabListener,
-        SensorFragment.OnSensorFragmentInteractionListener,
+        SensorListFragment.OnSensorFragmentInteractionListener,
         RecordListFragment.OnRecordListFragmentInteractionListener {
 
 	private static final String TAG = MainActivity.class.getSimpleName();
@@ -128,22 +128,7 @@ public class MainActivity extends BaseActivity implements
 	
 
 	
-	private void scheduleAlarm() {
-		AlarmManager scheduler = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		Intent intent = new Intent(this, SensorService.class );
-		intent.putExtra("Background", true);
-		intent.putExtra("Record", true);
-		PendingIntent scheduledIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-		//TODO Alarm to be fired up in 1-minute's interval
-		scheduler.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 5 * 1000, scheduledIntent);
-	}
-	
-	private void cancelAlarm() {
-		AlarmManager scheduler = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		Intent intent = new Intent(this,SensorService.class );
-		PendingIntent scheduledIntent = PendingIntent.getService(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-		scheduler.cancel(scheduledIntent);
-	}
+
 	
 	private void startPlotActivity(String sensorType) {
 		Intent i = new Intent(this, PlotActivity.class);
@@ -194,6 +179,11 @@ public class MainActivity extends BaseActivity implements
 
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+
+    }
+
+    @Override
+    public void onRecordListFragmentInteraction() {
 
     }
 }

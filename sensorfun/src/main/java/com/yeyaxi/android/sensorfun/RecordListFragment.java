@@ -2,13 +2,16 @@ package com.yeyaxi.android.sensorfun;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.os.Environment;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.actionbarsherlock.app.SherlockListFragment;
+import com.yeyaxi.android.sensorfun.util.RecordListAdapter;
 
-import com.yeyaxi.android.sensorfun.dummy.DummyContent;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.ArrayList;
 
 /**
  * A fragment representing a list of Items.
@@ -17,29 +20,30 @@ import com.yeyaxi.android.sensorfun.dummy.DummyContent;
  * Activities containing this fragment MUST implement the {Callbacks}
  * interface.
  */
-public class RecordListFragment extends ListFragment {
+public class RecordListFragment extends SherlockListFragment {
 
-    // TODO: Rename parameter arguments, choose names that match
+    //  Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+//    private static final String ARG_PARAM1 = "param1";
+//    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    //  Rename and change types of parameters
+//    private String mParam1;
+//    private String mParam2;
 
     private OnRecordListFragmentInteractionListener mListener;
 
-    // TODO: Rename and change types of parameters
-    public static RecordListFragment newInstance(String param1, String param2) {
-        RecordListFragment fragment = new RecordListFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    //  Rename and change types of parameters
+//    public static RecordListFragment newInstance(String param1, String param2) {
+//        RecordListFragment fragment = new RecordListFragment();
+//        Bundle args = new Bundle();
+//
+//        fragment.setArguments(args);
+//        return fragment;
+//    }
 
+    private ArrayList<File> fileArrayList = new ArrayList<File>();
+    private RecordListAdapter adapter;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -51,16 +55,39 @@ public class RecordListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        adapter = new RecordListAdapter(getSherlockActivity(), R.layout.item_record, fileArrayList);
 
-        // TODO: Change Adapter to display your content
-        setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS));
+        setListAdapter(adapter);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        File f = getStorageDirectory();
+        if (f != null)  {
+            FilenameFilter filter = new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String filename) {
+                    if (filename.lastIndexOf('.') > 0) {
+                        int lastIndex = filename.lastIndexOf('.');
+                        String str = filename.substring(lastIndex);
+                        if (str.equals(".csv"))
+                            return true;
+                    }
+                    return false;
+                }
+            };
+
+            File[] files = f.listFiles(filter);
+
+            for (File file : files) {
+                fileArrayList.add(file);
+            }
+
+            adapter.notifyDataSetChanged();
+        }
+    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -87,7 +114,7 @@ public class RecordListFragment extends ListFragment {
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).id);
+            mListener.onRecordListFragmentInteraction();
         }
     }
 
@@ -102,8 +129,24 @@ public class RecordListFragment extends ListFragment {
     * >Communicating with Other Fragments</a> for more information.
     */
     public interface OnRecordListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(String id);
+        // Update argument type and name
+        public void onRecordListFragmentInteraction();
+    }
+
+    private File getStorageDirectory() {
+
+        // This will create a public folder under the sdcard root
+        File f = new File(Environment.getExternalStorageDirectory(), "/SensorFun/");
+        if (f.exists() == false) {
+            if (f.mkdirs() == true) {
+                return f;
+            } else {
+                return null;
+            }
+        } else {
+            return f;
+        }
+
     }
 
 }
