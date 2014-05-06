@@ -5,15 +5,16 @@ import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Binder;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
@@ -86,7 +87,8 @@ public class SensorService extends IntentService implements SensorEventListener{
 
     private int NOTIFICATION_SENSOR = 1271000;
 
-    private int SERVICE_STOP_FROM_NOTIFICATION = 8000;
+    private String SERVICE_STOP_FROM_NOTIFICATION = "stop";
+
 
 	// This is the object that receives interactions from clients.  See
 	// RemoteService for a more complete example.
@@ -97,7 +99,23 @@ public class SensorService extends IntentService implements SensorEventListener{
 			return SensorService.this;
 		}
 	}
-	
+
+    final BroadcastReceiver broadcastReceiver = new BroadcastReceiver()
+    {
+        @Override
+        public void onReceive(Context context, Intent intent)
+        {
+            String action = intent.getAction();
+
+            if (action.equals(SERVICE_STOP_FROM_NOTIFICATION)) {
+                Log.d(TAG, "Sensor Service stopped via notification.");
+                AlarmScheduler.cancelAlarm(SensorService.this);
+                stopSelf();
+            }
+
+        }
+    };
+
 	public SensorService() {
 		super("SensorService");
 	}
@@ -114,22 +132,25 @@ public class SensorService extends IntentService implements SensorEventListener{
         notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 		Log.d(TAG, "SensorService Created.");
 
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(SERVICE_STOP_FROM_NOTIFICATION);
+        registerReceiver(broadcastReceiver, intentFilter);
     }
 	
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		Bundle bundle = intent.getExtras();
-		if (bundle != null) {
-			if (bundle.containsKey("Background")) {
-				isBackground = true;
-			}
-			
-			if (bundle.containsKey("Record")) {
-				isRecord = true;
-			}
-		}
+//		Bundle bundle = intent.getExtras();
+//		if (bundle != null) {
+//			if (bundle.containsKey("Background")) {
+//				isBackground = true;
+//			}
+//
+//			if (bundle.containsKey("Record")) {
+//				isRecord = true;
+//			}
+//		}
 		
-		Log.i(TAG, "Received start: " + intent);
+		Log.i(TAG, "Received onHandleIntent start: " + intent);
 	}
 	
 	@Override
@@ -138,13 +159,25 @@ public class SensorService extends IntentService implements SensorEventListener{
 
 		// We want this service to continue running until it is explicitly
 		// stopped, so return sticky.
-		Log.i(TAG, "Received start id " + startId + ": " + intent);
+//		Log.i(TAG, "Received onStartCommand id " + startId + ": " + intent);
 
-        if (intent.getIntExtra("action", 0) == SERVICE_STOP_FROM_NOTIFICATION) {
-            Log.d(TAG, "Sensor Service stopped via notification.");
-            AlarmScheduler.cancelAlarm(this);
-            stopSelf();
+        if (intent.getBooleanExtra("Background", false) == true) {
+            isBackground = true;
         }
+
+        if (intent.getBooleanExtra("Record", false) == true) {
+            isRecord = true;
+        }
+
+        // TODO check if alarm is working properly
+//        if (isRecord == true && isBackground == true) {
+//          // If the record toggle is ON and in background, we'll need to self-kill the service
+//			mSensorManager.unregisterListener(this);
+//			Log.d(TAG, "Sensor Service self-killed.");
+//			stopSelf();
+
+
+//        }
 
         return START_STICKY;
 	}
@@ -228,7 +261,7 @@ public class SensorService extends IntentService implements SensorEventListener{
         if (isBackground || isRecord) {
             Toast.makeText(this, "Recording Service Stopped.", Toast.LENGTH_SHORT).show();
         }
-
+        unregisterReceiver(broadcastReceiver);
 		super.onDestroy();
 	}
 	
@@ -316,17 +349,7 @@ public class SensorService extends IntentService implements SensorEventListener{
 			sendMessage(String.valueOf(Sensor.TYPE_ROTATION_VECTOR), rotVals);
 			recordToFile("rotation_vector", rotVals);
 		}
-		
-        // TODO check if alarm is working properly
-		if (isRecord == true && isBackground == true) {
-//          // If the record toggle is ON and in background, we'll need to self-kill the service
-//			mSensorManager.unregisterListener(this);
-//			Log.d(TAG, "Sensor Service self-killed.");
-//			stopSelf();
 
-            // Launch the alarm
-            AlarmScheduler.scheduleAlarm(this, 3);
-		}
 	}
 
     /**
@@ -335,16 +358,17 @@ public class SensorService extends IntentService implements SensorEventListener{
     public void showNotification() {
         // In this sample, we'll use the same text for the ticker and the expanded notification
 //        CharSequence text = getText(R.string.local_service_started);
-        Intent intentStop = new Intent();
-        intentStop.putExtra("action", SERVICE_STOP_FROM_NOTIFICATION);
-        PendingIntent piStop = PendingIntent.getService(this, 0, intentStop, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent intentStop = new Intent(SERVICE_STOP_FROM_NOTIFICATION);
+//        intentStop.putExtra("action", SERVICE_STOP_FROM_NOTIFICATION);
+        PendingIntent piStop = PendingIntent.getBroadcast(this, 0, intentStop, 0);
 
         // Set the icon, scrolling text and timestamp
         NotificationCompat.Builder notiBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_action_phone)
                 .setContentTitle("Recording Sensor Data")
+                // set progress to be indeterminate
                 .setProgress(0, 0, true)
-                .addAction(R.drawable.ic_action_stop, "Stop", piStop); // set progress to be indeterminate
+                .addAction(R.drawable.ic_action_stop, "Stop", piStop);
 
         // The PendingIntent to launch our activity if the user selects this notification
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,

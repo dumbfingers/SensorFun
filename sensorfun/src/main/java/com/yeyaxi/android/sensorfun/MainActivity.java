@@ -1,8 +1,5 @@
 package com.yeyaxi.android.sensorfun;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -119,6 +116,7 @@ public class MainActivity extends BaseActivity implements
 	protected void onPause() {
 		super.onPause();
 		// onPause invoked, set flag so that we can use alarm manager
+
 	}
 	
 	@Override

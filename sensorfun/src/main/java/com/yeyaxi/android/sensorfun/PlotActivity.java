@@ -59,6 +59,7 @@ public class PlotActivity extends SherlockFragmentActivity implements
     private String chartTitle;
 
     private boolean isChartReady = false;
+    private boolean isRecording = false;
 
     private LinearLayout layout;
     @Override
@@ -173,13 +174,22 @@ public class PlotActivity extends SherlockFragmentActivity implements
     protected void onPause() {
         super.onPause();
         isChartReady = false;
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
+        // send background service request
+//        Intent notifyIntent = new Intent(this, SensorService.class);
+//        notifyIntent.putExtra("Background", true);
+//        startService(notifyIntent);
 
+        if (isRecording == true) {
+            // Launch the alarm
+            AlarmScheduler.scheduleAlarm(this, 3);
+        }
+
+        doUnbindService();
     }
 
     @Override
     protected void onDestroy() {
-        doUnbindService();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
         super.onDestroy();
     }
 
@@ -226,6 +236,7 @@ public class PlotActivity extends SherlockFragmentActivity implements
         Intent intent = new Intent(this, SensorService.class);
         intent.putExtra("sensorType", sensorType);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+//        bindService(intent, mConnection, 0);
     }
 
     private void doUnbindService() {
@@ -270,7 +281,7 @@ public class PlotActivity extends SherlockFragmentActivity implements
 //            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss.SSS");
             Date date = new Date(timestamp);
 
-            // TODO add chart data
+            // add chart data
             if (sensorType == Sensor.TYPE_PRESSURE ||
                     sensorType == Sensor.TYPE_PROXIMITY ||
                     sensorType == Sensor.TYPE_RELATIVE_HUMIDITY ||
@@ -294,7 +305,9 @@ public class PlotActivity extends SherlockFragmentActivity implements
 //        Log.d(TAG, "" + startRecord);
         mBoundService.toggleRecord(startRecord);
         if (startRecord == true) {
+            isRecording = true;
             mBoundService.showNotification();
+
         }
     }
 }
