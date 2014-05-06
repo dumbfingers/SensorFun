@@ -86,6 +86,8 @@ public class SensorService extends IntentService implements SensorEventListener{
 
     private int NOTIFICATION_SENSOR = 1271000;
 
+    private int SERVICE_STOP_FROM_NOTIFICATION = 8000;
+
 	// This is the object that receives interactions from clients.  See
 	// RemoteService for a more complete example.
 	private final IBinder mBinder = new SensorBinder();
@@ -137,6 +139,12 @@ public class SensorService extends IntentService implements SensorEventListener{
 		// We want this service to continue running until it is explicitly
 		// stopped, so return sticky.
 		Log.i(TAG, "Received start id " + startId + ": " + intent);
+
+        if (intent.getIntExtra("action", 0) == SERVICE_STOP_FROM_NOTIFICATION) {
+            Log.d(TAG, "Sensor Service stopped via notification.");
+            AlarmScheduler.cancelAlarm(this);
+            stopSelf();
+        }
 
         return START_STICKY;
 	}
@@ -309,11 +317,15 @@ public class SensorService extends IntentService implements SensorEventListener{
 			recordToFile("rotation_vector", rotVals);
 		}
 		
-		// If the record toggle is ON and in background, we'll need to self-kill the service
+        // TODO check if alarm is working properly
 		if (isRecord == true && isBackground == true) {
-			mSensorManager.unregisterListener(this);
-			Log.d(TAG, "Sensor Service self-killed.");
-			stopSelf();
+//          // If the record toggle is ON and in background, we'll need to self-kill the service
+//			mSensorManager.unregisterListener(this);
+//			Log.d(TAG, "Sensor Service self-killed.");
+//			stopSelf();
+
+            // Launch the alarm
+            AlarmScheduler.scheduleAlarm(this, 3);
 		}
 	}
 
@@ -323,12 +335,16 @@ public class SensorService extends IntentService implements SensorEventListener{
     public void showNotification() {
         // In this sample, we'll use the same text for the ticker and the expanded notification
 //        CharSequence text = getText(R.string.local_service_started);
+        Intent intentStop = new Intent();
+        intentStop.putExtra("action", SERVICE_STOP_FROM_NOTIFICATION);
+        PendingIntent piStop = PendingIntent.getService(this, 0, intentStop, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Set the icon, scrolling text and timestamp
         NotificationCompat.Builder notiBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_action_phone)
                 .setContentTitle("Recording Sensor Data")
-                .setProgress(0, 0, true); // set progress to be indeterminate
+                .setProgress(0, 0, true)
+                .addAction(R.drawable.ic_action_stop, "Stop", piStop); // set progress to be indeterminate
 
         // The PendingIntent to launch our activity if the user selects this notification
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
@@ -349,63 +365,74 @@ public class SensorService extends IntentService implements SensorEventListener{
 	private void regSensorListeners() {
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
 //			Log.i(TAG, "Accelerometer");
-			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(
+                    Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
 		}
 		
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 			if (mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE) != null) {
 				//			Log.i(TAG, "Ambient Temperature");
-				mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE), SensorManager.SENSOR_DELAY_NORMAL);
+				mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(
+                        Sensor.TYPE_AMBIENT_TEMPERATURE), SensorManager.SENSOR_DELAY_NORMAL);
 			}
 		}
 
         if (mSensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR) != null) {
-            mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR), SensorManager.SENSOR_DELAY_NORMAL);
+            mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(
+                    Sensor.TYPE_GAME_ROTATION_VECTOR), SensorManager.SENSOR_DELAY_NORMAL);
 
         }
 
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY) != null) {
 //			Log.i(TAG, "Gravity");
-			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY), SensorManager.SENSOR_DELAY_NORMAL);
+			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(
+                    Sensor.TYPE_GRAVITY), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
 		
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE) != null) {
 //			Log.i(TAG, "Gyroscope");
-			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_NORMAL);
+			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(
+                    Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
 
         if (mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED) != null) {
-            mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED), SensorManager.SENSOR_DELAY_NORMAL);
+            mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(
+                    Sensor.TYPE_GYROSCOPE_UNCALIBRATED), SensorManager.SENSOR_DELAY_NORMAL);
 
         }
 
         if (mSensorManager.getDefaultSensor(Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR) != null) {
-            mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR), SensorManager.SENSOR_DELAY_NORMAL);
+            mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(
+                    Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR), SensorManager.SENSOR_DELAY_NORMAL);
 
         }
 
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT) != null) {
 //			Log.i(TAG, "Light");
-			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT), SensorManager.SENSOR_DELAY_NORMAL);
+			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(
+                    Sensor.TYPE_LIGHT), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
 		
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION) != null) {
 //			Log.i(TAG, "Linear Acceleration");
-			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION), SensorManager.SENSOR_DELAY_NORMAL);
+			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(
+                    Sensor.TYPE_LINEAR_ACCELERATION), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
 		
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null) {
 //			Log.i(TAG, "Magnetic Field");
-			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_NORMAL);
+			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(
+                    Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
 
         if (mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED) != null) {
-            mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED), SensorManager.SENSOR_DELAY_NORMAL);
+            mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(
+                    Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED), SensorManager.SENSOR_DELAY_NORMAL);
 
         }
 		
@@ -413,41 +440,48 @@ public class SensorService extends IntentService implements SensorEventListener{
 //			Log.i(TAG, "Orientation");
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE) != null) {
 //			Log.i(TAG, "Pressure");
-			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE), SensorManager.SENSOR_DELAY_NORMAL);
+			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(
+                    Sensor.TYPE_PRESSURE), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
 		
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY) != null) {
 //			Log.i(TAG, "Proximity");
-			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY), SensorManager.SENSOR_DELAY_NORMAL);
+			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(
+                    Sensor.TYPE_PROXIMITY), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
 		
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 			if (mSensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY) != null) {
 //			Log.i(TAG, "Relative Humidity");
-				mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY), SensorManager.SENSOR_DELAY_NORMAL);
+				mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(
+                        Sensor.TYPE_RELATIVE_HUMIDITY), SensorManager.SENSOR_DELAY_NORMAL);
 			}
 		}
 		
 		if (mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR) != null) {
 //			Log.i(TAG, "Rotation Vector");
-			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR), SensorManager.SENSOR_DELAY_NORMAL);
+			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(
+                    Sensor.TYPE_ROTATION_VECTOR), SensorManager.SENSOR_DELAY_NORMAL);
 
 		}
 
         if (mSensorManager.getDefaultSensor(Sensor.TYPE_SIGNIFICANT_MOTION) != null) {
-            mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_SIGNIFICANT_MOTION), SensorManager.SENSOR_DELAY_NORMAL);
+            mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(
+                    Sensor.TYPE_SIGNIFICANT_MOTION), SensorManager.SENSOR_DELAY_NORMAL);
 
         }
 
         if (mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
-            mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER), SensorManager.SENSOR_DELAY_NORMAL);
+            mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(
+                    Sensor.TYPE_STEP_COUNTER), SensorManager.SENSOR_DELAY_NORMAL);
 
         }
 
         if (mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
-            mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR), SensorManager.SENSOR_DELAY_NORMAL);
+            mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(
+                    Sensor.TYPE_STEP_DETECTOR), SensorManager.SENSOR_DELAY_NORMAL);
 
         }
 	}
