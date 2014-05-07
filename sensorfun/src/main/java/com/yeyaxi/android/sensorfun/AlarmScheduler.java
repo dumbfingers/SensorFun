@@ -18,10 +18,13 @@ public class AlarmScheduler {
 
     public static void scheduleAlarm(Context context, int intervalInSeconds) {
         AlarmManager scheduler = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, SensorService.class );
-        intent.putExtra("Background", true);
-        intent.putExtra("Record", true);
-        PendingIntent scheduledIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//        Intent intent = new Intent(context, SensorService.class);
+//        intent.putExtra("Background", true);
+//        intent.putExtra("Record", true);
+//        intent.putExtra("alarm", true);
+//        PendingIntent scheduledIntent = PendingIntent.getService(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent intent = new Intent("alarm");
+        PendingIntent scheduledIntent = PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         //TODO Alarm to be fired up in 1-minute's interval
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
@@ -36,7 +39,7 @@ public class AlarmScheduler {
     public static void cancelAlarm(Context context) {
         AlarmManager scheduler = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, SensorService.class);
-        PendingIntent scheduledIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent scheduledIntent = PendingIntent.getService(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         scheduler.cancel(scheduledIntent);
         Log.d(TAG, "Alarm cancelled.");
     }

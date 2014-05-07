@@ -77,8 +77,9 @@ public class SensorService extends Service implements SensorEventListener{
     private boolean geoMagRotToggle = false;
     private boolean allToogle = false;
 	// Background state
-	private boolean isBackground = false;
-
+//	private boolean isBackground = false;
+    // if it is plotting
+    private boolean isPlotting = false;
     // sensor to be monitored
     private int sensorType;
 
@@ -88,7 +89,7 @@ public class SensorService extends Service implements SensorEventListener{
 
     private String SERVICE_STOP_FROM_NOTIFICATION = "stop";
     private String SERVICE_RECORDING = "record";
-
+    private String SERVICE_WAKE_BY_ALARM = "alarm";
 	// This is the object that receives interactions from clients.  See
 	// RemoteService for a more complete example.
 	private final IBinder mBinder = new SensorBinder();
@@ -99,8 +100,8 @@ public class SensorService extends Service implements SensorEventListener{
 		}
 	}
 
-    final BroadcastReceiver broadcastReceiver = new BroadcastReceiver()
-    {
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+
         @Override
         public void onReceive(Context context, Intent intent)
         {
@@ -119,6 +120,19 @@ public class SensorService extends Service implements SensorEventListener{
                 showNotification();
             }
 
+            if (action.equals(SERVICE_WAKE_BY_ALARM)) {
+//                isPlotting = false;
+                Log.d(TAG, "Alarm received." + " Type: " + sensorType);
+
+                if (isRecord) {
+                    regSensorListeners();
+                    isRecord = false;
+                } else {
+                    mSensorManager.unregisterListener(SensorService.this);
+                    isRecord = true;
+                }
+            }
+
         }
     };
 
@@ -133,7 +147,7 @@ public class SensorService extends Service implements SensorEventListener{
 		
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
-		regSensorListeners();
+        regSensorListeners();
 
         notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 		Log.d(TAG, "SensorService Created.");
@@ -141,7 +155,10 @@ public class SensorService extends Service implements SensorEventListener{
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(SERVICE_STOP_FROM_NOTIFICATION);
         intentFilter.addAction(SERVICE_RECORDING);
-        registerReceiver(broadcastReceiver, intentFilter);
+        intentFilter.addAction(SERVICE_WAKE_BY_ALARM);
+//        registerReceiver(broadcastReceiver, intentFilter);
+
+        mLocalBroadcastManager.registerReceiver(broadcastReceiver, intentFilter);
     }
 	
 	@Override
@@ -150,12 +167,24 @@ public class SensorService extends Service implements SensorEventListener{
 		// We want this service to continue running until it is explicitly
 		// stopped, so return sticky.
 
-        isBackground = intent.getBooleanExtra("Background", false);
-        isRecord = intent.getBooleanExtra("Record", false);
+//        isRecord = intent.getBooleanExtra("Record", false);
 
-        Log.i(TAG, "Received onStartCommand id " + startId + ": " + " Background: " + isBackground + " Record: " + isRecord);
+//        if (intent.getBooleanExtra(SERVICE_WAKE_BY_ALARM, false) == true) {
+//            if (isRecord) {
+//                regSensorListeners();
+//                isRecord = false;
+//            } else {
+//                mSensorManager.unregisterListener(SensorService.this);
+//                isRecord = true;
+//            }
+//        }
+
+//        isBackground = intent.getBooleanExtra("Background", false);
+//        isPlotting = intent.getBooleanExtra("Plot", false);
 
         sensorType = intent.getIntExtra("sensorType", 0);
+
+        Log.i(TAG, "Received onStartCommand id " + startId + ": " + " Type: " + sensorType);
 
         switch (sensorType) {
             case Sensor.TYPE_LIGHT:
@@ -236,14 +265,14 @@ public class SensorService extends Service implements SensorEventListener{
 //            Toast.makeText(this, "Recording Service Stopped.", Toast.LENGTH_SHORT).show();
 //        }
         mSensorManager.unregisterListener(this);
-        unregisterReceiver(broadcastReceiver);
+        mLocalBroadcastManager.unregisterReceiver(broadcastReceiver);
         stopSelf();
 
 	}
 	
-	public SensorManager getSensorManager() {
-		return mSensorManager;
-	}
+//	public SensorManager getSensorManager() {
+//		return mSensorManager;
+//	}
 
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -327,10 +356,12 @@ public class SensorService extends Service implements SensorEventListener{
 		}
 
         // stop the service immediately after collecting the sensor data
-        if (isRecord && isBackground) {
-            mSensorManager.unregisterListener(this);
-            stopSelf();
-        }
+//        if (isRecord && isBackground) {
+//            //  wait for enough time
+//
+//            mSensorManager.unregisterListener(this);
+//            stopSelf();
+//        }
 
 	}
 
@@ -342,7 +373,7 @@ public class SensorService extends Service implements SensorEventListener{
 //        CharSequence text = getText(R.string.local_service_started);
         Intent intentStop = new Intent(SERVICE_STOP_FROM_NOTIFICATION);
 //        intentStop.putExtra("action", SERVICE_STOP_FROM_NOTIFICATION);
-        PendingIntent piStop = PendingIntent.getBroadcast(this, 0, intentStop, 0);
+        PendingIntent piStop = PendingIntent.getBroadcast(this, 0, intentStop, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Set the icon, scrolling text and timestamp
         NotificationCompat.Builder notiBuilder = new NotificationCompat.Builder(this)
@@ -496,9 +527,9 @@ public class SensorService extends Service implements SensorEventListener{
 		this.isRecord = toggle;
 	}
 	
-	public void setBackground(boolean state) {
-		this.isBackground = state;
-	}
+//	public void setBackground(boolean state) {
+//		this.isBackground = state;
+//	}
 	
 	private void sendMessage(String sensorName, float[] values) {
 		Intent intent = new Intent("SensorData");
@@ -534,6 +565,7 @@ public class SensorService extends Service implements SensorEventListener{
                 e.printStackTrace();
             }
 		}
+
 	}
 	
 	/**

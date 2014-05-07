@@ -34,8 +34,6 @@ public class PlotActivity extends SherlockFragmentActivity implements
 //    private SensorService mBoundService;
 //    private boolean isBind = false;
 
-    private BroadcastReceiver mReceiver;
-
     private int sensorType;
     private float[] sensorVal;
 
@@ -128,32 +126,33 @@ public class PlotActivity extends SherlockFragmentActivity implements
             }
         }
 
-
-        mReceiver = new BroadcastReceiver() {
-
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (intent.getFloatArrayExtra(String.valueOf(sensorType)) != null) {
-                    // sensor value array
-                    sensorVal = intent.getFloatArrayExtra(String.valueOf(sensorType));
-                    long timestamp = intent.getLongExtra("timestamp", 0);
-                    if (isChartReady == true && layout.getChildCount() > 0) {
-                        addChartData(sensorVal, timestamp);
-                        graphicalView.repaint();
-                    }
-                }
-            }
-        };
+        // start the service
+        Intent intent = new Intent(this, SensorService.class);
+        intent.putExtra("sensorType", sensorType);
+//        intent.putExtra("plot", true);
+        startService(intent);
 
     }
+
+    BroadcastReceiver mReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getFloatArrayExtra(String.valueOf(sensorType)) != null) {
+                // sensor value array
+                sensorVal = intent.getFloatArrayExtra(String.valueOf(sensorType));
+                long timestamp = intent.getLongExtra("timestamp", 0);
+                if (isChartReady == true && layout.getChildCount() > 0) {
+                    addChartData(sensorVal, timestamp);
+                    graphicalView.repaint();
+                }
+            }
+        }
+    };
 
     @Override
     protected void onResume() {
         super.onResume();
-        // start the service
-        Intent intent = new Intent(this, SensorService.class);
-        intent.putExtra("sensorType", sensorType);
-        startService(intent);
 
         layout = (LinearLayout) findViewById(R.id.chart);
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("SensorData"));
@@ -171,11 +170,10 @@ public class PlotActivity extends SherlockFragmentActivity implements
         isChartReady = false;
         // send background service request
 
-
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
 
 //        doUnbindService();
-        stopService(new Intent(this, SensorService.class));
+//        stopService(new Intent(this, SensorService.class));
 
         if (isRecording == true) {
             // Launch the alarm
@@ -277,7 +275,7 @@ public class PlotActivity extends SherlockFragmentActivity implements
 //        mBoundService.toggleRecord(startRecord);
         if (startRecord == true) {
             isRecording = true;
-            sendBroadcast(new Intent("record"));
+            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent("record"));
 //            mBoundService.showNotification();
 
         }
