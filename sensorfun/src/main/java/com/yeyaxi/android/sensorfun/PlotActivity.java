@@ -1,15 +1,12 @@
 package com.yeyaxi.android.sensorfun;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.LinearLayout;
 
@@ -34,8 +31,8 @@ public class PlotActivity extends SherlockFragmentActivity implements
 
     private static final String TAG = PlotActivity.class.getSimpleName();
     //	private SensorManager mSensorManager;
-    private SensorService mBoundService;
-    private boolean isBind = false;
+//    private SensorService mBoundService;
+//    private boolean isBind = false;
 
     private BroadcastReceiver mReceiver;
 
@@ -52,9 +49,9 @@ public class PlotActivity extends SherlockFragmentActivity implements
     private XYSeriesRenderer ySeriesRenderer;
     private XYSeriesRenderer zSeriesRenderer;
 
-    private static final int DATA_NUM = 150;
+//    private static final int DATA_NUM = 150;
 
-    private int counter = 0;
+//    private int counter = 0;
 
     private String chartTitle;
 
@@ -148,18 +145,16 @@ public class PlotActivity extends SherlockFragmentActivity implements
             }
         };
 
-        // bind the service
-        doBindService();
-
-        // start the service
-//        Intent intent = new Intent(this, SensorService.class);
-//        intent.putExtra("sensorType", sensorType);
-//        startService(intent);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        // start the service
+        Intent intent = new Intent(this, SensorService.class);
+        intent.putExtra("sensorType", sensorType);
+        startService(intent);
+
         layout = (LinearLayout) findViewById(R.id.chart);
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("SensorData"));
         if (graphicalView == null) {
@@ -175,21 +170,23 @@ public class PlotActivity extends SherlockFragmentActivity implements
         super.onPause();
         isChartReady = false;
         // send background service request
-//        Intent notifyIntent = new Intent(this, SensorService.class);
-//        notifyIntent.putExtra("Background", true);
-//        startService(notifyIntent);
+
+
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
+
+//        doUnbindService();
+        stopService(new Intent(this, SensorService.class));
 
         if (isRecording == true) {
             // Launch the alarm
             AlarmScheduler.scheduleAlarm(this, 3);
         }
 
-        doUnbindService();
+
     }
 
     @Override
     protected void onDestroy() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
         super.onDestroy();
     }
 
@@ -216,32 +213,6 @@ public class PlotActivity extends SherlockFragmentActivity implements
         }
     }
 
-
-
-    private ServiceConnection mConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            isBind = false;
-        }
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mBoundService = ((SensorService.SensorBinder) service).getService();
-            isBind = true;
-        }
-    };
-
-    private void doBindService() {
-        Intent intent = new Intent(this, SensorService.class);
-        intent.putExtra("sensorType", sensorType);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-//        bindService(intent, mConnection, 0);
-    }
-
-    private void doUnbindService() {
-        unbindService(mConnection);
-    }
 
     private void initChart() {
         xChartSeries = new TimeSeries("x");
@@ -303,10 +274,11 @@ public class PlotActivity extends SherlockFragmentActivity implements
     @Override
     public void onDialogFragmentInteraction(boolean startRecord) {
 //        Log.d(TAG, "" + startRecord);
-        mBoundService.toggleRecord(startRecord);
+//        mBoundService.toggleRecord(startRecord);
         if (startRecord == true) {
             isRecording = true;
-            mBoundService.showNotification();
+            sendBroadcast(new Intent("record"));
+//            mBoundService.showNotification();
 
         }
     }

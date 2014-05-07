@@ -1,10 +1,10 @@
 package com.yeyaxi.android.sensorfun;
 
 import android.annotation.SuppressLint;
-import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -20,7 +20,6 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.yeyaxi.android.sensorfun.util.SensorDataUtility;
 
@@ -36,7 +35,7 @@ import au.com.bytecode.opencsv.CSVWriter;
  * @author Yaxi Ye
  * @since Oct.11.2013
  */
-public class SensorService extends IntentService implements SensorEventListener{
+public class SensorService extends Service implements SensorEventListener{
 
 //	private String msg = "Test Msg";
 
@@ -88,7 +87,7 @@ public class SensorService extends IntentService implements SensorEventListener{
     private int NOTIFICATION_SENSOR = 1271000;
 
     private String SERVICE_STOP_FROM_NOTIFICATION = "stop";
-
+    private String SERVICE_RECORDING = "record";
 
 	// This is the object that receives interactions from clients.  See
 	// RemoteService for a more complete example.
@@ -110,15 +109,22 @@ public class SensorService extends IntentService implements SensorEventListener{
             if (action.equals(SERVICE_STOP_FROM_NOTIFICATION)) {
                 Log.d(TAG, "Sensor Service stopped via notification.");
                 AlarmScheduler.cancelAlarm(SensorService.this);
+                // cancel notification
+                notificationManager.cancel(NOTIFICATION_SENSOR);
                 stopSelf();
+            }
+
+            if (action.equals(SERVICE_RECORDING)) {
+                toggleRecord(true);
+                showNotification();
             }
 
         }
     };
 
-	public SensorService() {
-		super("SensorService");
-	}
+//	public SensorService() {
+//		super("SensorService");
+//	}
 
 	@Override
 	public void onCreate() {
@@ -134,57 +140,20 @@ public class SensorService extends IntentService implements SensorEventListener{
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(SERVICE_STOP_FROM_NOTIFICATION);
+        intentFilter.addAction(SERVICE_RECORDING);
         registerReceiver(broadcastReceiver, intentFilter);
     }
 	
 	@Override
-	protected void onHandleIntent(Intent intent) {
-//		Bundle bundle = intent.getExtras();
-//		if (bundle != null) {
-//			if (bundle.containsKey("Background")) {
-//				isBackground = true;
-//			}
-//
-//			if (bundle.containsKey("Record")) {
-//				isRecord = true;
-//			}
-//		}
-		
-		Log.i(TAG, "Received onHandleIntent start: " + intent);
-	}
-	
-	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-
 
 		// We want this service to continue running until it is explicitly
 		// stopped, so return sticky.
-//		Log.i(TAG, "Received onStartCommand id " + startId + ": " + intent);
 
-        if (intent.getBooleanExtra("Background", false) == true) {
-            isBackground = true;
-        }
+        isBackground = intent.getBooleanExtra("Background", false);
+        isRecord = intent.getBooleanExtra("Record", false);
 
-        if (intent.getBooleanExtra("Record", false) == true) {
-            isRecord = true;
-        }
-
-        // TODO check if alarm is working properly
-//        if (isRecord == true && isBackground == true) {
-//          // If the record toggle is ON and in background, we'll need to self-kill the service
-//			mSensorManager.unregisterListener(this);
-//			Log.d(TAG, "Sensor Service self-killed.");
-//			stopSelf();
-
-
-//        }
-
-        return START_STICKY;
-	}
-	
-	@Override
-	public IBinder onBind(Intent intent) {
-		Log.d(TAG, "onBind Service");
+        Log.i(TAG, "Received onStartCommand id " + startId + ": " + " Background: " + isBackground + " Record: " + isRecord);
 
         sensorType = intent.getIntExtra("sensorType", 0);
 
@@ -248,21 +217,28 @@ public class SensorService extends IntentService implements SensorEventListener{
                 break;
         }
 
+        return START_STICKY;
+	}
+	
+	@Override
+	public IBinder onBind(Intent intent) {
+		Log.d(TAG, "onBind Service");
         return mBinder;
 	}
 
 	@Override
 	public void onDestroy() {
 		Log.d(TAG, "Sensor Service onDestroy");
+        super.onDestroy();
 
-        // cancel notification
-        notificationManager.cancel(NOTIFICATION_SENSOR);
         // Tell the user we stopped.
-        if (isBackground || isRecord) {
-            Toast.makeText(this, "Recording Service Stopped.", Toast.LENGTH_SHORT).show();
-        }
+//        if (isBackground || isRecord) {
+//            Toast.makeText(this, "Recording Service Stopped.", Toast.LENGTH_SHORT).show();
+//        }
+        mSensorManager.unregisterListener(this);
         unregisterReceiver(broadcastReceiver);
-		super.onDestroy();
+        stopSelf();
+
 	}
 	
 	public SensorManager getSensorManager() {
@@ -349,6 +325,12 @@ public class SensorService extends IntentService implements SensorEventListener{
 			sendMessage(String.valueOf(Sensor.TYPE_ROTATION_VECTOR), rotVals);
 			recordToFile("rotation_vector", rotVals);
 		}
+
+        // stop the service immediately after collecting the sensor data
+        if (isRecord && isBackground) {
+            mSensorManager.unregisterListener(this);
+            stopSelf();
+        }
 
 	}
 
@@ -517,44 +499,6 @@ public class SensorService extends IntentService implements SensorEventListener{
 	public void setBackground(boolean state) {
 		this.isBackground = state;
 	}
-	
-//	public void singleToggle(int toggleID, boolean toggle) {
-//		switch (toggleID) {
-//		case R.id.accSwitch:
-//			accToggle = toggle;
-//			break;
-//		case R.id.gyroSwitch:
-//			gyroToggle = toggle;
-//			break;
-//		case R.id.gravitySwitch:
-//			gravityToggle = toggle;
-//			break;
-//		case R.id.lineAccSwitch:
-//			linAccToggle = toggle;
-//			break;
-//		case R.id.magFieldSwitch:
-//			magToggle = toggle;
-//			break;
-//		case R.id.rotVecSwitch:
-//			rotVecToggle = toggle;
-//			break;
-//		case R.id.ambTempSwitch:
-//			tempToggle = toggle;
-//			break;
-//		case R.id.lightSwitch:
-//			lightToggle = toggle;
-//			break;
-//		case R.id.pressureSwitch:
-//			pressureToggle = toggle;
-//			break;
-//		case R.id.proxSwitch:
-//			proxiToggle = toggle;
-//			break;
-//		case R.id.relaHumidSwitch:
-//			relaHumToggle = toggle;
-//			break;
-//		}
-//	}
 	
 	private void sendMessage(String sensorName, float[] values) {
 		Intent intent = new Intent("SensorData");

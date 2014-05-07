@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import java.util.Calendar;
+
 /**
  * Created by yaxi on 02/05/2014.
  */
@@ -21,8 +23,13 @@ public class AlarmScheduler {
         intent.putExtra("Record", true);
         PendingIntent scheduledIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         //TODO Alarm to be fired up in 1-minute's interval
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+
+        // cancel any previous alarm
+        scheduler.cancel(scheduledIntent);
         scheduler.setInexactRepeating(
-                AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), intervalInSeconds * SECOND_TO_MILLISECOND, scheduledIntent);
+                AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), intervalInSeconds * SECOND_TO_MILLISECOND, scheduledIntent);
         Log.d(TAG, "Alarm set to be fired in every " + intervalInSeconds + " seconds.");
     }
 

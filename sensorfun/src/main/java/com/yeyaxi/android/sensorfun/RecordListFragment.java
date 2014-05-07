@@ -22,26 +22,7 @@ import java.util.ArrayList;
  */
 public class RecordListFragment extends SherlockListFragment {
 
-    //  Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//    private static final String ARG_PARAM1 = "param1";
-//    private static final String ARG_PARAM2 = "param2";
-
-    //  Rename and change types of parameters
-//    private String mParam1;
-//    private String mParam2;
-
     private OnRecordListFragmentInteractionListener mListener;
-
-    //  Rename and change types of parameters
-//    public static RecordListFragment newInstance(String param1, String param2) {
-//        RecordListFragment fragment = new RecordListFragment();
-//        Bundle args = new Bundle();
-//
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
-
     private ArrayList<File> fileArrayList = new ArrayList<File>();
     private RecordListAdapter adapter;
     /**
