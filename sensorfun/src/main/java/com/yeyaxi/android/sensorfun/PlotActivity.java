@@ -155,7 +155,7 @@ public class PlotActivity extends SherlockFragmentActivity implements
         super.onResume();
 
         layout = (LinearLayout) findViewById(R.id.chart);
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("SensorData"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(BaseActivity.MSG_SENSOR_DATA));
         if (graphicalView == null) {
             initChart();
             graphicalView = ChartFactory.getTimeChartView(PlotActivity.this, dataSet, dataRenderer, "HH:mm:ss.SSS");
@@ -178,8 +178,10 @@ public class PlotActivity extends SherlockFragmentActivity implements
         if (isRecording == true) {
             // Launch the alarm
             AlarmScheduler.scheduleAlarm(this, 3);
+        } else {
+            // not recording, kill the service
+            stopService(new Intent(this, SensorService.class));
         }
-
 
     }
 
@@ -275,7 +277,7 @@ public class PlotActivity extends SherlockFragmentActivity implements
 //        mBoundService.toggleRecord(startRecord);
         if (startRecord == true) {
             isRecording = true;
-            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent("record"));
+            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(BaseActivity.ACTION_RECORD));
 //            mBoundService.showNotification();
 
         }

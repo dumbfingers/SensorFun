@@ -42,7 +42,7 @@ public class SensorService extends Service implements SensorEventListener{
 	private SensorManager mSensorManager;
 //	private List<Sensor> deviceSensors;
 	private static final String TAG = SensorService.class.getSimpleName();
-	private LocalBroadcastManager mLocalBroadcastManager;
+//	private LocalBroadcastManager mLocalBroadcastManager;
 	
 	private float[] accVals = new float[3];
 	private float[] tempVal = new float[3];
@@ -87,9 +87,9 @@ public class SensorService extends Service implements SensorEventListener{
 
     private int NOTIFICATION_SENSOR = 1271000;
 
-    private String SERVICE_STOP_FROM_NOTIFICATION = "stop";
-    private String SERVICE_RECORDING = "record";
-    private String SERVICE_WAKE_BY_ALARM = "alarm";
+//    private String SERVICE_STOP_FROM_NOTIFICATION = "stop";
+//    private String SERVICE_RECORDING = "record";
+//    private String SERVICE_WAKE_BY_ALARM = "alarm";
 	// This is the object that receives interactions from clients.  See
 	// RemoteService for a more complete example.
 	private final IBinder mBinder = new SensorBinder();
@@ -107,7 +107,7 @@ public class SensorService extends Service implements SensorEventListener{
         {
             String action = intent.getAction();
 
-            if (action.equals(SERVICE_STOP_FROM_NOTIFICATION)) {
+            if (action.equals(BaseActivity.ACTION_STOP)) {
                 Log.d(TAG, "Sensor Service stopped via notification.");
                 AlarmScheduler.cancelAlarm(SensorService.this);
                 // cancel notification
@@ -115,12 +115,12 @@ public class SensorService extends Service implements SensorEventListener{
                 stopSelf();
             }
 
-            if (action.equals(SERVICE_RECORDING)) {
+            if (action.equals(BaseActivity.ACTION_RECORD)) {
                 toggleRecord(true);
                 showNotification();
             }
 
-            if (action.equals(SERVICE_WAKE_BY_ALARM)) {
+            if (action.equals(BaseActivity.ACTION_WAKE)) {
 //                isPlotting = false;
                 Log.d(TAG, "Alarm received." + " Type: " + sensorType);
 
@@ -143,7 +143,7 @@ public class SensorService extends Service implements SensorEventListener{
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
+//		mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
 		
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
@@ -153,12 +153,12 @@ public class SensorService extends Service implements SensorEventListener{
 		Log.d(TAG, "SensorService Created.");
 
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(SERVICE_STOP_FROM_NOTIFICATION);
-        intentFilter.addAction(SERVICE_RECORDING);
-        intentFilter.addAction(SERVICE_WAKE_BY_ALARM);
+        intentFilter.addAction(BaseActivity.ACTION_STOP);
+        intentFilter.addAction(BaseActivity.ACTION_RECORD);
+        intentFilter.addAction(BaseActivity.ACTION_WAKE);
 //        registerReceiver(broadcastReceiver, intentFilter);
 
-        mLocalBroadcastManager.registerReceiver(broadcastReceiver, intentFilter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, intentFilter);
     }
 	
 	@Override
@@ -265,7 +265,7 @@ public class SensorService extends Service implements SensorEventListener{
 //            Toast.makeText(this, "Recording Service Stopped.", Toast.LENGTH_SHORT).show();
 //        }
         mSensorManager.unregisterListener(this);
-        mLocalBroadcastManager.unregisterReceiver(broadcastReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
         stopSelf();
 
 	}
@@ -370,10 +370,8 @@ public class SensorService extends Service implements SensorEventListener{
      */
     public void showNotification() {
         // In this sample, we'll use the same text for the ticker and the expanded notification
-//        CharSequence text = getText(R.string.local_service_started);
-        Intent intentStop = new Intent(SERVICE_STOP_FROM_NOTIFICATION);
-//        intentStop.putExtra("action", SERVICE_STOP_FROM_NOTIFICATION);
-        PendingIntent piStop = PendingIntent.getBroadcast(this, 0, intentStop, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent intentStop = new Intent(BaseActivity.ACTION_STOP);
+        PendingIntent piStop = PendingIntent.getBroadcast(this, 10, intentStop, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Set the icon, scrolling text and timestamp
         NotificationCompat.Builder notiBuilder = new NotificationCompat.Builder(this)
@@ -384,7 +382,7 @@ public class SensorService extends Service implements SensorEventListener{
                 .addAction(R.drawable.ic_action_stop, "Stop", piStop);
 
         // The PendingIntent to launch our activity if the user selects this notification
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 20,
                 new Intent(this, PlotActivity.class), 0);
 
         // Set the info for the views that show in the notification panel.
@@ -532,10 +530,10 @@ public class SensorService extends Service implements SensorEventListener{
 //	}
 	
 	private void sendMessage(String sensorName, float[] values) {
-		Intent intent = new Intent("SensorData");
+		Intent intent = new Intent(BaseActivity.MSG_SENSOR_DATA);
 		intent.putExtra(sensorName, values);
         intent.putExtra("timestamp", new Date().getTime());
-		mLocalBroadcastManager.sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 	}
 	
 	/**

@@ -23,7 +23,7 @@ public class AlarmScheduler {
 //        intent.putExtra("Record", true);
 //        intent.putExtra("alarm", true);
 //        PendingIntent scheduledIntent = PendingIntent.getService(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        Intent intent = new Intent("alarm");
+        Intent intent = new Intent(BaseActivity.ACTION_WAKE);
         PendingIntent scheduledIntent = PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         //TODO Alarm to be fired up in 1-minute's interval
         Calendar calendar = Calendar.getInstance();
