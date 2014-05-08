@@ -30,7 +30,7 @@ public class AlarmScheduler {
         calendar.setTimeInMillis(System.currentTimeMillis());
 
         // cancel any previous alarm
-        scheduler.cancel(scheduledIntent);
+//        scheduler.cancel(scheduledIntent);
         scheduler.setInexactRepeating(
                 AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), intervalInSeconds * SECOND_TO_MILLISECOND, scheduledIntent);
         Log.d(TAG, "Alarm set to be fired in every " + intervalInSeconds + " seconds.");

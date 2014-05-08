@@ -116,18 +116,13 @@ public class MainActivity extends BaseActivity implements
 	protected void onPause() {
 		super.onPause();
 		// onPause invoked, set flag so that we can use alarm manager
-
 	}
 	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 	}
-	
 
-	
-
-	
 	private void startPlotActivity(String sensorType) {
 		Intent i = new Intent(this, PlotActivity.class);
 		i.putExtra("sensorType", sensorType);

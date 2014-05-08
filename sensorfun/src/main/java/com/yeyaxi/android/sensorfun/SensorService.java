@@ -79,7 +79,7 @@ public class SensorService extends Service implements SensorEventListener{
 	// Background state
 //	private boolean isBackground = false;
     // if it is plotting
-    private boolean isPlotting = false;
+//    private boolean isPlotting = false;
     // sensor to be monitored
     private int sensorType;
 
@@ -87,9 +87,6 @@ public class SensorService extends Service implements SensorEventListener{
 
     private int NOTIFICATION_SENSOR = 1271000;
 
-//    private String SERVICE_STOP_FROM_NOTIFICATION = "stop";
-//    private String SERVICE_RECORDING = "record";
-//    private String SERVICE_WAKE_BY_ALARM = "alarm";
 	// This is the object that receives interactions from clients.  See
 	// RemoteService for a more complete example.
 	private final IBinder mBinder = new SensorBinder();
@@ -116,7 +113,10 @@ public class SensorService extends Service implements SensorEventListener{
             }
 
             if (action.equals(BaseActivity.ACTION_RECORD)) {
+                Log.d(TAG, "Record command received.");
                 toggleRecord(true);
+                // unreg the listeners and wait for the alarm
+                mSensorManager.unregisterListener(SensorService.this);
                 showNotification();
             }
 
@@ -147,8 +147,6 @@ public class SensorService extends Service implements SensorEventListener{
 		
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
-        regSensorListeners();
-
         notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 		Log.d(TAG, "SensorService Created.");
 
@@ -166,21 +164,7 @@ public class SensorService extends Service implements SensorEventListener{
 
 		// We want this service to continue running until it is explicitly
 		// stopped, so return sticky.
-
-//        isRecord = intent.getBooleanExtra("Record", false);
-
-//        if (intent.getBooleanExtra(SERVICE_WAKE_BY_ALARM, false) == true) {
-//            if (isRecord) {
-//                regSensorListeners();
-//                isRecord = false;
-//            } else {
-//                mSensorManager.unregisterListener(SensorService.this);
-//                isRecord = true;
-//            }
-//        }
-
-//        isBackground = intent.getBooleanExtra("Background", false);
-//        isPlotting = intent.getBooleanExtra("Plot", false);
+        regSensorListeners();
 
         sensorType = intent.getIntExtra("sensorType", 0);
 
@@ -371,7 +355,7 @@ public class SensorService extends Service implements SensorEventListener{
     public void showNotification() {
         // In this sample, we'll use the same text for the ticker and the expanded notification
         Intent intentStop = new Intent(BaseActivity.ACTION_STOP);
-        PendingIntent piStop = PendingIntent.getBroadcast(this, 10, intentStop, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent piStop = PendingIntent.getBroadcast(this, 0, intentStop, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Set the icon, scrolling text and timestamp
         NotificationCompat.Builder notiBuilder = new NotificationCompat.Builder(this)
@@ -382,7 +366,7 @@ public class SensorService extends Service implements SensorEventListener{
                 .addAction(R.drawable.ic_action_stop, "Stop", piStop);
 
         // The PendingIntent to launch our activity if the user selects this notification
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 20,
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                 new Intent(this, PlotActivity.class), 0);
 
         // Set the info for the views that show in the notification panel.

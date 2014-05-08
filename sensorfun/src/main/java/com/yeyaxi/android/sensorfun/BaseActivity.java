@@ -6,10 +6,10 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 public class BaseActivity extends SherlockFragmentActivity{
 
-    public static final String ACTION_RECORD = "com.yeyaxi.android.sensorfun.action_record";
-    public static final String ACTION_STOP = "com.yeyaxi.android.sensorfun.action_stop";
-    public static final String ACTION_WAKE = "com.yeyaxi.android.sensorfun.action_wake";
-    public static final String MSG_SENSOR_DATA = "com.yeyaxi.android.sensorfun.msg_sensor_data";
+    public static final String ACTION_RECORD = "com.yeyaxi.android.sensorfun.ACTION_RECORD";
+    public static final String ACTION_STOP = "com.yeyaxi.android.sensorfun.ACTION_STOP";
+    public static final String ACTION_WAKE = "com.yeyaxi.android.sensorfun.ACTION_WAKE";
+    public static final String MSG_SENSOR_DATA = "com.yeyaxi.android.sensorfun.MSG_SENSOR";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
