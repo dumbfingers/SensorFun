@@ -124,12 +124,14 @@ public class SensorService extends Service implements SensorEventListener{
 //                isPlotting = false;
                 Log.d(TAG, "Alarm received." + " Type: " + sensorType);
 
+                toggleRecord(!isRecord);
+
                 if (isRecord) {
                     regSensorListeners();
-                    isRecord = false;
+//                    toggleRecord(false);
                 } else {
                     mSensorManager.unregisterListener(SensorService.this);
-                    isRecord = true;
+//                    toggleRecord(true);
                 }
             }
 
@@ -154,9 +156,9 @@ public class SensorService extends Service implements SensorEventListener{
         intentFilter.addAction(BaseActivity.ACTION_STOP);
         intentFilter.addAction(BaseActivity.ACTION_RECORD);
         intentFilter.addAction(BaseActivity.ACTION_WAKE);
-//        registerReceiver(broadcastReceiver, intentFilter);
+        registerReceiver(broadcastReceiver, intentFilter);
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, intentFilter);
+//        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, intentFilter);
     }
 	
 	@Override
@@ -249,7 +251,8 @@ public class SensorService extends Service implements SensorEventListener{
 //            Toast.makeText(this, "Recording Service Stopped.", Toast.LENGTH_SHORT).show();
 //        }
         mSensorManager.unregisterListener(this);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
+//        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
+        unregisterReceiver(broadcastReceiver);
         stopSelf();
 
 	}
@@ -271,7 +274,6 @@ public class SensorService extends Service implements SensorEventListener{
 		if (mSensor.getType() == Sensor.TYPE_ACCELEROMETER && accToggle) {
 			
 			accVals = SensorDataUtility.lowPass(event.values, accVals, 0.1f);
-			
 			sendMessage(String.valueOf(Sensor.TYPE_ACCELEROMETER), accVals);
 			recordToFile("accelerometer", accVals);
 			

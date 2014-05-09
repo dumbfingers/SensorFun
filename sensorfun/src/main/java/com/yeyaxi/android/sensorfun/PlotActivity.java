@@ -48,7 +48,6 @@ public class PlotActivity extends SherlockFragmentActivity implements
     private XYSeriesRenderer zSeriesRenderer;
 
 //    private static final int DATA_NUM = 150;
-
 //    private int counter = 0;
 
     private String chartTitle;
@@ -277,7 +276,8 @@ public class PlotActivity extends SherlockFragmentActivity implements
 //        mBoundService.toggleRecord(startRecord);
         if (startRecord == true) {
             isRecording = true;
-            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(BaseActivity.ACTION_RECORD));
+            sendBroadcast(new Intent(BaseActivity.ACTION_RECORD));
+//            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(BaseActivity.ACTION_RECORD));
 //            mBoundService.showNotification();
 
         }
