@@ -88,7 +88,7 @@ public class SensorService extends Service implements SensorEventListener{
 
     private NotificationManager notificationManager;
 
-    private int NOTIFICATION_SENSOR = 1271000;
+    private int SENSOR_RECORDING_NOTIFICATION_ID = 1271000;
 
 	// This is the object that receives interactions from clients.  See
 	// RemoteService for a more complete example.
@@ -111,7 +111,7 @@ public class SensorService extends Service implements SensorEventListener{
                 Log.d(TAG, "Sensor Service stopped via notification.");
                 AlarmScheduler.cancelAlarm(SensorService.this);
                 // cancel notification
-                notificationManager.cancel(NOTIFICATION_SENSOR);
+                notificationManager.cancel(SENSOR_RECORDING_NOTIFICATION_ID);
                 stopSelf();
             }
 
@@ -251,8 +251,8 @@ public class SensorService extends Service implements SensorEventListener{
         super.onDestroy();
 
         // Tell the user we stopped.
-        Toast.makeText(this, "Recording Service Stopped.", Toast.LENGTH_SHORT).show();
-
+        Toast.makeText(this, "Sensor Service Stopped.", Toast.LENGTH_SHORT).show();
+        notificationManager.cancel(SENSOR_RECORDING_NOTIFICATION_ID);
         mSensorManager.unregisterListener(this);
         unregisterReceiver(broadcastReceiver);
         AlarmScheduler.cancelAlarm(this);
@@ -383,6 +383,11 @@ public class SensorService extends Service implements SensorEventListener{
                 .setProgress(0, 0, true)
                 .addAction(R.drawable.ic_action_stop, "Stop", piStop);
 
+            //TODO set different coloured icons for lower version Android
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+//        } else {
+//        }
+
         // The PendingIntent to launch our activity if the user selects this notification
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                 new Intent(this, MainActivity.class), 0);
@@ -394,7 +399,7 @@ public class SensorService extends Service implements SensorEventListener{
         Notification notification = notiBuilder.build();
         notification.flags |= Notification.FLAG_ONGOING_EVENT;
         // Send the notification
-        notificationManager.notify(NOTIFICATION_SENSOR, notification);
+        notificationManager.notify(SENSOR_RECORDING_NOTIFICATION_ID, notification);
     }
 
 

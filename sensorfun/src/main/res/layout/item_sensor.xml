@@ -24,7 +24,10 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignTop="@+id/textViewSensorName"
-        android:layout_marginLeft="16dp" />
+        android:layout_marginLeft="16dp"
+        android:src="@drawable/ic_action_phone_light"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside" />
 
     <TextView
         android:id="@+id/textViewSensorInfo"

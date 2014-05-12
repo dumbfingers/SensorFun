@@ -1,5 +1,9 @@
 package com.yeyaxi.android.sensorfun;
 
+import android.app.ActivityManager;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.hardware.Sensor;
@@ -10,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.yeyaxi.android.sensorfun.util.TabsPagerAdapter;
 
@@ -69,8 +74,18 @@ public class MainActivity extends BaseActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+
+
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getSupportMenuInflater().inflate(R.menu.main, menu);
+		MenuInflater inflater = getSupportMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+
+        if (checkSensorServiceAlive() == true) {
+            menu.findItem(R.id.action_stop_record).setVisible(true);
+        } else {
+            menu.findItem(R.id.action_stop_record).setVisible(false);
+        }
+
 		return true;
 	}
 	
@@ -93,6 +108,23 @@ public class MainActivity extends BaseActivity implements
                 SherlockDialogFragment dialog = new RecordOptionDialogFragment("All Sensors");
                 dialog.show(getSupportFragmentManager(), "RecordOptionDialogFragment");
                 return true;
+            case R.id.action_stop_record:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Stop Recording")
+                        .setMessage("Do you want to stop recording services?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                stopBackgroundRecording();
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
             default:
                 return false;
         }
@@ -156,6 +188,23 @@ public class MainActivity extends BaseActivity implements
             Intent intent = new Intent(this, SensorService.class);
             intent.putExtra("sensorType", Sensor.TYPE_ALL);
             startService(intent);
+            // refresh the menu
+            invalidateOptionsMenu();
+        }
+    }
+
+    private boolean checkSensorServiceAlive() {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        return BaseActivity.isRecordServiceRunning(manager);
+    }
+
+    private void stopBackgroundRecording() {
+
+        if (checkSensorServiceAlive() == true) {
+            stopService(new Intent(this, SensorService.class));
+            AlarmScheduler.cancelAlarm(this);
+            // refresh the menu
+            invalidateOptionsMenu();
         }
     }
 }

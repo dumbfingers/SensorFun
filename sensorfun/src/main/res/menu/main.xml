@@ -6,5 +6,9 @@
         android:showAsAction="ifRoom"
         android:icon="@drawable/ic_action_select_all"
         android:title="@string/action_record_all"/>
-
+    <item
+        android:id="@+id/action_stop_record"
+        android:showAsAction="ifRoom"
+        android:title="Stop"
+        android:icon="@drawable/ic_action_stop_light"/>
 </menu>
