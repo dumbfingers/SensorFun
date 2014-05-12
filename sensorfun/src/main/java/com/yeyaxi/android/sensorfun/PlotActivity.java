@@ -1,5 +1,6 @@
 package com.yeyaxi.android.sensorfun;
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -30,9 +31,6 @@ public class PlotActivity extends SherlockFragmentActivity implements
         RecordOptionDialogFragment.OnRecordOptionDialogFragmentInteractionListener {
 
     private static final String TAG = PlotActivity.class.getSimpleName();
-    //	private SensorManager mSensorManager;
-//    private SensorService mBoundService;
-//    private boolean isBind = false;
 
     private int sensorType;
     private float[] sensorVal;
@@ -46,9 +44,6 @@ public class PlotActivity extends SherlockFragmentActivity implements
     private XYSeriesRenderer xSeriesRenderer;
     private XYSeriesRenderer ySeriesRenderer;
     private XYSeriesRenderer zSeriesRenderer;
-
-//    private static final int DATA_NUM = 150;
-//    private int counter = 0;
 
     private String chartTitle;
 
@@ -167,16 +162,11 @@ public class PlotActivity extends SherlockFragmentActivity implements
     protected void onPause() {
         super.onPause();
         isChartReady = false;
-        // send background service request
-
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
-
-//        doUnbindService();
-//        stopService(new Intent(this, SensorService.class));
-
-        if (isRecording == true) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        if (isRecording == true && BaseActivity.isRecordServiceRunning(manager)) {
             // Launch the alarm
-            AlarmScheduler.scheduleAlarm(this, 3);
+            AlarmScheduler.scheduleAlarm(this, 5);
         } else {
             // not recording, kill the service
             stopService(new Intent(this, SensorService.class));
@@ -273,13 +263,9 @@ public class PlotActivity extends SherlockFragmentActivity implements
     @Override
     public void onDialogFragmentInteraction(boolean startRecord) {
 //        Log.d(TAG, "" + startRecord);
-//        mBoundService.toggleRecord(startRecord);
         if (startRecord == true) {
             isRecording = true;
             sendBroadcast(new Intent(BaseActivity.ACTION_RECORD));
-//            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(BaseActivity.ACTION_RECORD));
-//            mBoundService.showNotification();
-
         }
     }
 }

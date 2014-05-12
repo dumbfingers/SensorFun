@@ -20,6 +20,7 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.yeyaxi.android.sensorfun.util.SensorDataUtility;
 
@@ -56,8 +57,14 @@ public class SensorService extends Service implements SensorEventListener{
 	private float[] rhVal = new float[3];
 	// Rotation Vector contains 5 elements
 	private float[] rotVals = new float[5];
+
+    private float[] stepCountVals = new float[2];
+    private float[] stepDetectVals = new float[2];
+    private float[] gameRotVals = new float[5];
+    private float[] geoMagRotVals = new float[5];
 	// This is the main switch of writing data to storage
 	private boolean isRecord = false;
+
 	// These are the separate switches
 	private boolean accToggle = false;
 	private boolean gyroToggle = false;
@@ -75,11 +82,7 @@ public class SensorService extends Service implements SensorEventListener{
     private boolean sigMotionToggle = false;
     private boolean gameRotToggle = false;
     private boolean geoMagRotToggle = false;
-    private boolean allToogle = false;
-	// Background state
-//	private boolean isBackground = false;
-    // if it is plotting
-//    private boolean isPlotting = false;
+//    private boolean allToogle = false;
     // sensor to be monitored
     private int sensorType;
 
@@ -120,6 +123,14 @@ public class SensorService extends Service implements SensorEventListener{
                 showNotification();
             }
 
+            if (action.equals(BaseActivity.ACTION_RECORD_ALL)) {
+                // record all
+                Log.d(TAG, "Record all command received.");
+                toggleRecord(true);
+                // unreg the listeners and wait for the alarm
+                mSensorManager.unregisterListener(SensorService.this);
+                showNotification();
+            }
             if (action.equals(BaseActivity.ACTION_WAKE)) {
 //                isPlotting = false;
                 Log.d(TAG, "Alarm received." + " Type: " + sensorType);
@@ -128,37 +139,30 @@ public class SensorService extends Service implements SensorEventListener{
 
                 if (isRecord) {
                     regSensorListeners();
-//                    toggleRecord(false);
                 } else {
                     mSensorManager.unregisterListener(SensorService.this);
-//                    toggleRecord(true);
                 }
             }
 
         }
     };
 
-//	public SensorService() {
-//		super("SensorService");
-//	}
-
 	@Override
 	public void onCreate() {
 		super.onCreate();
-//		mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
-		
+
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
         notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-		Log.d(TAG, "SensorService Created.");
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(BaseActivity.ACTION_STOP);
         intentFilter.addAction(BaseActivity.ACTION_RECORD);
+        intentFilter.addAction(BaseActivity.ACTION_RECORD_ALL);
         intentFilter.addAction(BaseActivity.ACTION_WAKE);
         registerReceiver(broadcastReceiver, intentFilter);
 
-//        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, intentFilter);
+        Log.d(TAG, "SensorService Created.");
     }
 	
 	@Override
@@ -228,7 +232,7 @@ public class SensorService extends Service implements SensorEventListener{
                 magToggle = true;
                 break;
             case Sensor.TYPE_ALL:
-                allToogle = true;
+                toggleAllSensors(true);
                 break;
         }
 
@@ -247,19 +251,14 @@ public class SensorService extends Service implements SensorEventListener{
         super.onDestroy();
 
         // Tell the user we stopped.
-//        if (isBackground || isRecord) {
-//            Toast.makeText(this, "Recording Service Stopped.", Toast.LENGTH_SHORT).show();
-//        }
+        Toast.makeText(this, "Recording Service Stopped.", Toast.LENGTH_SHORT).show();
+
         mSensorManager.unregisterListener(this);
-//        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
         unregisterReceiver(broadcastReceiver);
+        AlarmScheduler.cancelAlarm(this);
         stopSelf();
 
 	}
-	
-//	public SensorManager getSensorManager() {
-//		return mSensorManager;
-//	}
 
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -293,7 +292,6 @@ public class SensorService extends Service implements SensorEventListener{
 		} else if (mSensor.getType() == Sensor.TYPE_GYROSCOPE && gyroToggle) {
 			
 			gyroVals = SensorDataUtility.lowPass(event.values, gyroVals, 0.6f);
-			
 			sendMessage(String.valueOf(Sensor.TYPE_GYROSCOPE), gyroVals);
 			recordToFile("gyroscope", gyroVals);
 			
@@ -301,7 +299,6 @@ public class SensorService extends Service implements SensorEventListener{
 			
 			// By giving alpha as 1.0f, we're receiving the value without any filter
 			lightVal = SensorDataUtility.lowPass(event.values, lightVal, 1.0f);
-			
 			sendMessage(String.valueOf(Sensor.TYPE_LIGHT), lightVal);
 			recordToFile("light", lightVal);
 			
@@ -336,18 +333,37 @@ public class SensorService extends Service implements SensorEventListener{
 			recordToFile("relative_humidity", rhVal);
 			
 		} else if (mSensor.getType() == Sensor.TYPE_ROTATION_VECTOR && rotVecToggle) {
+
 			rotVals = SensorDataUtility.lowPass(event.values, rotVals, 0.6f);
 			sendMessage(String.valueOf(Sensor.TYPE_ROTATION_VECTOR), rotVals);
 			recordToFile("rotation_vector", rotVals);
-		}
 
-        // stop the service immediately after collecting the sensor data
-//        if (isRecord && isBackground) {
-//            //  wait for enough time
-//
-//            mSensorManager.unregisterListener(this);
-//            stopSelf();
-//        }
+		} else if (mSensor.getType() == Sensor.TYPE_STEP_COUNTER && stepCounterToggle) {
+            // no filter needed
+            stepCountVals = event.values;
+            sendMessage(String.valueOf(Sensor.TYPE_STEP_COUNTER), stepCountVals);
+            recordToFile("step_counter", stepCountVals);
+
+        } else if (mSensor.getType() == Sensor.TYPE_STEP_DETECTOR && stepDetectorToggle) {
+
+            stepDetectVals = event.values;
+            sendMessage(String.valueOf(Sensor.TYPE_STEP_DETECTOR), stepDetectVals);
+            recordToFile("step_detector", stepDetectVals);
+
+        } else if (mSensor.getType() == Sensor.TYPE_SIGNIFICANT_MOTION && sigMotionToggle) {
+            //
+        } else if (mSensor.getType() == Sensor.TYPE_GAME_ROTATION_VECTOR && gameRotToggle) {
+
+            gameRotVals = SensorDataUtility.lowPass(event.values, gameRotVals, 0.6f);
+            sendMessage(String.valueOf(Sensor.TYPE_GAME_ROTATION_VECTOR), gameRotVals);
+            recordToFile("game_rotation_vector", gameRotVals);
+
+        } else if (mSensor.getType() == Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR && geoMagRotToggle) {
+
+            geoMagRotVals = SensorDataUtility.lowPass(event.values, geoMagRotVals, 0.6f);
+            sendMessage(String.valueOf(Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR), geoMagRotVals);
+            recordToFile("geomagnetic_rotation_vector", geoMagRotVals);
+        }
 
 	}
 
@@ -369,7 +385,7 @@ public class SensorService extends Service implements SensorEventListener{
 
         // The PendingIntent to launch our activity if the user selects this notification
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, PlotActivity.class), 0);
+                new Intent(this, MainActivity.class), 0);
 
         // Set the info for the views that show in the notification panel.
 //        notification.setLatestEventInfo(this, getText(R.string.local_service_label),
@@ -506,7 +522,26 @@ public class SensorService extends Service implements SensorEventListener{
 
         }
 	}
-	
+
+    private void toggleAllSensors(boolean toggle) {
+        accToggle =
+        gyroToggle =
+        gravityToggle =
+        linAccToggle =
+        magToggle =
+        rotVecToggle =
+        tempToggle =
+        lightToggle =
+        pressureToggle =
+        proxiToggle =
+        relaHumToggle =
+        stepDetectorToggle =
+        stepCounterToggle =
+        sigMotionToggle =
+        gameRotToggle =
+        geoMagRotToggle = toggle;
+    }
+
 	public void toggleRecord(boolean toggle) {
 		this.isRecord = toggle;
 	}

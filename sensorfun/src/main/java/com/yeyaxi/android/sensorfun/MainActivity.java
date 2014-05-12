@@ -2,23 +2,25 @@ package com.yeyaxi.android.sensorfun;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.hardware.Sensor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.widget.TabHost;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockDialogFragment;
+import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.yeyaxi.android.sensorfun.util.TabsPagerAdapter;
 
 public class MainActivity extends BaseActivity implements
         ActionBar.TabListener,
         SensorListFragment.OnSensorFragmentInteractionListener,
-        RecordListFragment.OnRecordListFragmentInteractionListener {
+        RecordListFragment.OnRecordListFragmentInteractionListener,
+        RecordOptionDialogFragment.OnRecordOptionDialogFragmentInteractionListener {
 
 	private static final String TAG = MainActivity.class.getSimpleName();
 
-    private TabHost tabHost;
     private ViewPager viewPager;
     private TabsPagerAdapter tabsPagerAdapter;
 
@@ -65,12 +67,12 @@ public class MainActivity extends BaseActivity implements
         });
 	}
 
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		// Inflate the menu; this adds items to the action bar if it is present.
-//		getMenuInflater().inflate(R.menu.main, menu);
-//		return true;
-//	}
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getSupportMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
 	
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
@@ -85,23 +87,17 @@ public class MainActivity extends BaseActivity implements
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-//		// Pass the event to ActionBarDrawerToggle, if it returns
-//		// true, then it has handled the app icon touch event
-//        if (item.getItemId() == android.R.id.home) {
-//
-//            if (mDrawerLayout.isDrawerOpen(mSwitchView)) {
-//                mDrawerLayout.closeDrawer(mSwitchView);
-//            } else {
-//                mDrawerLayout.openDrawer(mSwitchView);
-//            }
-//        }
-		// Handle your other action bar items...
 
-		return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.action_record_all:
+                SherlockDialogFragment dialog = new RecordOptionDialogFragment("All Sensors");
+                dialog.show(getSupportFragmentManager(), "RecordOptionDialogFragment");
+                return true;
+            default:
+                return false;
+        }
 	}
-	
 
-	
 	@Override
 	protected void onStart() {
 		super.onStart();
@@ -116,43 +112,16 @@ public class MainActivity extends BaseActivity implements
 	protected void onPause() {
 		super.onPause();
 		// onPause invoked, set flag so that we can use alarm manager
+        AlarmScheduler.scheduleAlarm(this, 5);
+        sendBroadcast(new Intent(BaseActivity.ACTION_RECORD_ALL));
 	}
 	
 	@Override
 	protected void onDestroy() {
+        // cancel any alarms
+//        AlarmScheduler.cancelAlarm(this);
 		super.onDestroy();
 	}
-
-	private void startPlotActivity(String sensorType) {
-		Intent i = new Intent(this, PlotActivity.class);
-		i.putExtra("sensorType", sensorType);
-		startActivity(i);
-	}
-	
-//	private ServiceConnection mConnection = new ServiceConnection() {
-//
-//		@Override
-//		public void onServiceDisconnected(ComponentName name) {
-//			isBind = false;
-//		}
-//
-//		@Override
-//		public void onServiceConnected(ComponentName name, IBinder service) {
-//			mBoundService = ((SensorService.SensorBinder) service).getService();
-////			mBoundService.getMsg();
-//			mSensorManager = mBoundService.getSensorManager();
-//			isBind = true;
-////			detectSensors();
-//		}
-//	};
-	
-//	private void doBindService() {
-//		bindService(new Intent(this, SensorService.class), mConnection, Context.BIND_AUTO_CREATE);
-//	}
-//
-//	private void doUnbindService() {
-//		unbindService(mConnection);
-//	}
 
 
     @Override
@@ -178,5 +147,15 @@ public class MainActivity extends BaseActivity implements
     @Override
     public void onRecordListFragmentInteraction() {
 
+    }
+
+    @Override
+    public void onDialogFragmentInteraction(boolean startRecord) {
+        if (startRecord == true) {
+            // start the service
+            Intent intent = new Intent(this, SensorService.class);
+            intent.putExtra("sensorType", Sensor.TYPE_ALL);
+            startService(intent);
+        }
     }
 }

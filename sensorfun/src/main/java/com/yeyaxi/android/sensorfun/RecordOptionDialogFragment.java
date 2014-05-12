@@ -99,7 +99,7 @@ public class RecordOptionDialogFragment extends SherlockDialogFragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnRecordOptionDialogFragmentInteractionListener {
-        // TODO: Update argument type and name
+        // Update argument type and name
         public void onDialogFragmentInteraction(boolean startRecord);
     }
 
