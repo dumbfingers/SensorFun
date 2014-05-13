@@ -10,6 +10,7 @@ import android.hardware.Sensor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockDialogFragment;
@@ -28,6 +29,8 @@ public class MainActivity extends BaseActivity implements
 
     private ViewPager viewPager;
     private TabsPagerAdapter tabsPagerAdapter;
+
+    private boolean isRecording = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -143,9 +146,12 @@ public class MainActivity extends BaseActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
-		// onPause invoked, set flag so that we can use alarm manager
-        AlarmScheduler.scheduleAlarm(this, 5);
-        sendBroadcast(new Intent(BaseActivity.ACTION_RECORD_ALL));
+        Log.d(TAG, "MainActivity onPause");
+        if (checkSensorServiceAlive() == true && isRecording == true) {
+            // onPause invoked, set flag so that we can use alarm manager
+            AlarmScheduler.scheduleAlarm(this, 5);
+            sendBroadcast(new Intent(BaseActivity.ACTION_RECORD_ALL));
+        }
 	}
 	
 	@Override
@@ -184,6 +190,7 @@ public class MainActivity extends BaseActivity implements
     @Override
     public void onDialogFragmentInteraction(boolean startRecord) {
         if (startRecord == true) {
+            isRecording = true;
             // start the service
             Intent intent = new Intent(this, SensorService.class);
             intent.putExtra("sensorType", Sensor.TYPE_ALL);
