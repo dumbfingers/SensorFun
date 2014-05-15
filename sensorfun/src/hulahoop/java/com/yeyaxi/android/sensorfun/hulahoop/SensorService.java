@@ -22,7 +22,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.yeyaxi.android.sensorfun.AlarmScheduler;
 import com.yeyaxi.android.sensorfun.BaseActivity;
 import com.yeyaxi.android.sensorfun.MainActivity;
 import com.yeyaxi.android.sensorfun.R;
@@ -36,7 +35,7 @@ import java.util.Date;
 import au.com.bytecode.opencsv.CSVWriter;
 
 /**
- * 
+ * Hula-hoop
  * @author Yaxi Ye
  * @since Oct.11.2013
  */
@@ -113,7 +112,7 @@ public class SensorService extends Service implements SensorEventListener{
 
             if (action.equals(BaseActivity.ACTION_STOP)) {
                 Log.d(TAG, "Sensor Service stopped via notification.");
-                AlarmScheduler.cancelAlarm(SensorService.this);
+//                AlarmScheduler.cancelAlarm(SensorService.this);
                 // cancel notification
                 notificationManager.cancel(SENSOR_RECORDING_NOTIFICATION_ID);
                 stopSelf();
@@ -123,7 +122,7 @@ public class SensorService extends Service implements SensorEventListener{
                 Log.d(TAG, "Record command received.");
                 toggleRecord(true);
                 // unreg the listeners and wait for the alarm
-                mSensorManager.unregisterListener(SensorService.this);
+//                mSensorManager.unregisterListener(SensorService.this);
                 showNotification();
             }
 
@@ -132,22 +131,22 @@ public class SensorService extends Service implements SensorEventListener{
                 Log.d(TAG, "Record all command received.");
                 toggleRecord(true);
                 // unreg the listeners and wait for the alarm
-                mSensorManager.unregisterListener(SensorService.this);
+//                mSensorManager.unregisterListener(SensorService.this);
                 showNotification();
             }
-            if (action.equals(BaseActivity.ACTION_WAKE)) {
-//                isPlotting = false;
-                Log.d(TAG, "Alarm received." + " Type: " + sensorType);
 
-                toggleRecord(!isRecord);
-
-                if (isRecord) {
-                    regSensorListeners();
-                } else {
-                    mSensorManager.unregisterListener(SensorService.this);
-                }
-            }
-
+//            if (action.equals(BaseActivity.ACTION_WAKE)) {
+////                isPlotting = false;
+//                Log.d(TAG, "Alarm received." + " Type: " + sensorType);
+//
+//                toggleRecord(!isRecord);
+//
+//                if (isRecord) {
+//                    regSensorListeners();
+//                } else {
+//                    mSensorManager.unregisterListener(SensorService.this);
+//                }
+//            }
         }
     };
 
@@ -163,7 +162,7 @@ public class SensorService extends Service implements SensorEventListener{
         intentFilter.addAction(BaseActivity.ACTION_STOP);
         intentFilter.addAction(BaseActivity.ACTION_RECORD);
         intentFilter.addAction(BaseActivity.ACTION_RECORD_ALL);
-        intentFilter.addAction(BaseActivity.ACTION_WAKE);
+//        intentFilter.addAction(BaseActivity.ACTION_WAKE);
         registerReceiver(broadcastReceiver, intentFilter);
 
         Log.d(TAG, "SensorService Created.");
@@ -259,7 +258,7 @@ public class SensorService extends Service implements SensorEventListener{
         notificationManager.cancel(SENSOR_RECORDING_NOTIFICATION_ID);
         mSensorManager.unregisterListener(this);
         unregisterReceiver(broadcastReceiver);
-        AlarmScheduler.cancelAlarm(this);
+//        AlarmScheduler.cancelAlarm(this);
         stopSelf();
 
 	}

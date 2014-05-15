@@ -36,12 +36,14 @@
         android:layout_height="wrap_content"
         android:text="Length of Recording"
         style="@style/ListSeparator"
+        android:visibility="gone"
         android:id="@+id/textView2" />
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:visibility="gone"
         android:layout_margin="8dp">
 
         <TextView
@@ -81,6 +83,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
+        android:visibility="gone"
+
         android:id="@+id/seekBar" />
 
 </LinearLayout>

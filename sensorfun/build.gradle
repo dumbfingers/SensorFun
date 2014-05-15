@@ -20,6 +20,10 @@ android {
         hulahoop {
             packageName "com.yeyaxi.android.sensorfun.hulahoop"
         }
+
+        sensorfun {
+            packageName "com.yeyaxi.android.sensorfun"
+        }
     }
 }
 repositories {
