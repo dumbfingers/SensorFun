@@ -139,6 +139,7 @@ public class PlotActivity extends SherlockFragmentActivity implements
                 if (isChartReady == true && layout.getChildCount() > 0) {
                     addChartData(sensorVal, timestamp);
                     graphicalView.repaint();
+
                 }
             }
         }
