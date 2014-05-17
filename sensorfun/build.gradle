@@ -16,15 +16,18 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
-    productFlavors {
-        hulahoop {
-            packageName "com.yeyaxi.android.sensorfun.hulahoop"
-        }
+//    productFlavors {
+//        hulahoop {
+//            packageName "com.yeyaxi.android.sensorfun.hulahoop"
+//            versionCode 2
+//            versionName "1.0.1"
+//        }
+//
+//        sensorfun {
+//            packageName "com.yeyaxi.android.sensorfun"
+//        }
+//    }
 
-        sensorfun {
-            packageName "com.yeyaxi.android.sensorfun"
-        }
-    }
 }
 repositories {
     mavenCentral()

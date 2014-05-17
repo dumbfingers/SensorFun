@@ -18,7 +18,7 @@ public class AlarmScheduler {
 
     public static void scheduleAlarm(Context context, int intervalInSeconds) {
         AlarmManager scheduler = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-//        Intent intent = new Intent(context, SensorService.class);
+//        Intent intent = new Intent(context, com.yeyaxi.android.sensorfun.SensorService.class);
 //        intent.putExtra("Background", true);
 //        intent.putExtra("Record", true);
 //        intent.putExtra("alarm", true);

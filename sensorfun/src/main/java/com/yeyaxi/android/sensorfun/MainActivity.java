@@ -146,7 +146,7 @@ public class MainActivity extends BaseActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
-        Log.d(TAG, "MainActivity onPause");
+        Log.d(TAG, "com.yeyaxi.android.sensorfun.com.yeyaxi.android.sensorfun.MainActivity onPause");
         if (checkSensorServiceAlive() == true && isRecording == true) {
             // onPause invoked, set flag so that we can use alarm manager
             AlarmScheduler.scheduleAlarm(this, 5);

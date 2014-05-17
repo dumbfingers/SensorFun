@@ -162,7 +162,7 @@ public class SensorService extends Service implements SensorEventListener{
         intentFilter.addAction(BaseActivity.ACTION_WAKE);
         registerReceiver(broadcastReceiver, intentFilter);
 
-        Log.d(TAG, "SensorService Created.");
+        Log.d(TAG, "com.yeyaxi.android.sensorfun.com.yeyaxi.android.sensorfun.SensorService Created.");
     }
 	
 	@Override
