@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.yeyaxi.android.sensorfun"
+    package="com.yeyaxi.android.sensorfun.hulahoop"
     android:versionCode="2"
     android:versionName="1.0" >
 
@@ -17,7 +17,7 @@
         android:label="@string/app_name"
         android:theme="@style/Theme" >
         <activity
-            android:name="com.yeyaxi.android.sensorfun.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,15 +27,15 @@
         </activity>
 
         <service
-            android:name="com.yeyaxi.android.sensorfun.SensorService"
+            android:name=".SensorService"
             android:enabled="true" >
         </service>
 
         <activity
-            android:name="com.yeyaxi.android.sensorfun.PlotActivity">
+            android:name=".PlotActivity">
 
         </activity>
-        <activity android:name="com.yeyaxi.android.sensorfun.BaseActivity" >
+        <activity android:name=".BaseActivity" >
         </activity>
     </application>
 
