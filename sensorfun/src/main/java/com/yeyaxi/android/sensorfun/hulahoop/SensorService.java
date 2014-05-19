@@ -162,7 +162,7 @@ public class SensorService extends Service implements SensorEventListener{
 //        intentFilter.addAction(BaseActivity.ACTION_WAKE);
         registerReceiver(broadcastReceiver, intentFilter);
 
-        Log.d(TAG, "com.yeyaxi.android.sensorfun.com.yeyaxi.android.sensorfun.SensorService Created.");
+        Log.d(TAG, "Sensor Service Created.");
     }
 	
 	@Override
@@ -613,6 +613,7 @@ public class SensorService extends Service implements SensorEventListener{
 			// Something else is wrong. It may be one of many other states, but all we need
 			//  to know is we can neither read nor write
 			mExternalStorageAvailable = mExternalStorageWriteable = false;
+            Toast.makeText(this, "No SD card or damaged SD card.", Toast.LENGTH_LONG).show();
 		}
 		
 		return (mExternalStorageAvailable && mExternalStorageWriteable);
