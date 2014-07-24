@@ -149,7 +149,8 @@ public class MainActivity extends BaseActivity implements
         Log.d(TAG, "onPause");
         if (checkSensorServiceAlive() == true && isRecording == true) {
             // onPause invoked, set flag so that we can use alarm manager
-            AlarmScheduler.scheduleAlarm(this, 5);
+            // TODO commented out alarm service
+//            AlarmScheduler.scheduleAlarm(this, 5);
             sendBroadcast(new Intent(BaseActivity.ACTION_RECORD_ALL));
         }
 	}

@@ -119,7 +119,8 @@ public class SensorService extends Service implements SensorEventListener{
                 Log.d(TAG, "Record command received.");
                 toggleRecord(true);
                 // unreg the listeners and wait for the alarm
-                mSensorManager.unregisterListener(SensorService.this);
+                // TODO commented out alarm service
+//                mSensorManager.unregisterListener(SensorService.this);
                 showNotification();
             }
 
@@ -128,7 +129,8 @@ public class SensorService extends Service implements SensorEventListener{
                 Log.d(TAG, "Record all command received.");
                 toggleRecord(true);
                 // unreg the listeners and wait for the alarm
-                mSensorManager.unregisterListener(SensorService.this);
+                // TODO commented out alarm service
+//                mSensorManager.unregisterListener(SensorService.this);
                 showNotification();
             }
             if (action.equals(BaseActivity.ACTION_WAKE)) {

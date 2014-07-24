@@ -32,7 +32,8 @@
         </service>
 
         <activity
-            android:name="com.yeyaxi.android.sensorfun.PlotActivity">
+            android:name="com.yeyaxi.android.sensorfun.PlotActivity"
+            android:screenOrientation="portrait">
 
         </activity>
         <activity android:name="com.yeyaxi.android.sensorfun.BaseActivity" >

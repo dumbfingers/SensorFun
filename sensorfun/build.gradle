@@ -2,7 +2,7 @@ apply plugin: 'android'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.0.3"
+    buildToolsVersion '19.1.0'
 // 13/05/2014 Version 7
     defaultConfig {
         minSdkVersion 10

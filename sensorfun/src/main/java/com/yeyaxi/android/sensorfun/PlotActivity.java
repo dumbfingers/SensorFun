@@ -167,7 +167,8 @@ public class PlotActivity extends SherlockFragmentActivity implements
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         if (isRecording == true && BaseActivity.isRecordServiceRunning(manager)) {
             // Launch the alarm
-            AlarmScheduler.scheduleAlarm(this, 5);
+            // TODO commented out alarm service
+//            AlarmScheduler.scheduleAlarm(this, 5);
         } else {
             // not recording, kill the service
             stopService(new Intent(this, SensorService.class));
